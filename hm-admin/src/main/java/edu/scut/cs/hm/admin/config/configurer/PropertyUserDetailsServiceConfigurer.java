@@ -9,7 +9,7 @@ import java.util.Set;
 @ConfigurationProperties("hm.auth")
 @Data
 public class PropertyUserDetailsServiceConfigurer {
-    private String adminPassword = "$ruAnuKhOydj+VlfLEq9jFUuvcYk1keaV";
+    private String adminPassword = "password";  // 明文
     private Map<String, UserConfig> users;
 
     @Data

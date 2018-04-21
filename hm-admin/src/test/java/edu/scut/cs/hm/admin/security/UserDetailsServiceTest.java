@@ -37,17 +37,20 @@ public class UserDetailsServiceTest {
 
     @Autowired
     private UserDetailsService userDetailsService;
+    private UserDetails admin;
     private UserDetails user;
     private UserDetails otherUser;
 
     @Before
     public void before() {
+        admin = userDetailsService.loadUserByUsername("admin");
         user = userDetailsService.loadUserByUsername("user");
         otherUser = userDetailsService.loadUserByUsername("otherUser");
     }
 
     @Test
     public void testUserDetailsService() {
+        assertEquals("password", admin.getPassword());
         ExtendedUserDetailsImpl userExpected = ExtendedUserDetailsImpl.builder()
                 .username("user")
                 .password("password")
