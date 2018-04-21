@@ -1,0 +1,18 @@
+{
+  "properties": [
+    {
+      "name": "hm.auth.admin-password",
+      "type": "java.lang.String",
+      "description": "Encrypted admin password."
+    },
+    {
+      "name": "hm.security.cipher.password",
+      "type": "java.lang.String",
+      "description": "Cipher secret key for TextEncryptor."
+    },
+    {
+      "name": "hm.security.cipher.salt",
+      "type": "java.lang.String",
+      "description": "Cipher salt for TextEncryptor."
+    }
+  ] }
