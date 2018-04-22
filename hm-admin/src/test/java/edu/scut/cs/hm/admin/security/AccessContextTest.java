@@ -80,7 +80,7 @@ public class AccessContextTest {
     @Before
     public void before() {
         service = new ServiceControlledByAcl(acf);
-        user = userDetailsService.loadUserByUsername("user");
+        user = userDetailsService.loadUserByUsername("username");
     }
 
     @Test
@@ -116,7 +116,7 @@ public class AccessContextTest {
     @Test
     public void testAcl() {
         // @see application-test_acl_service.properties
-        // user@root has authority ROLE_USER@root
+        // username@root has authority ROLE_USER@root
         // [CONTAINER@container1] grant ROLE_USER@root RUA
         try(TempAuth auth = TempAuth.open(createAuthFromDetails(user))) {
             read();

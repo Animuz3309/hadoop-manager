@@ -18,7 +18,7 @@ import java.util.Objects;
 
 /**
  * The strategy which implement permission granted mechanism with considering
- * of tenant user attribute <p/>
+ * of tenant username attribute <p/>
  */
 public final class TenantBasedPermissionGrantedStrategy implements ExtPermissionGrantingStrategy {
 

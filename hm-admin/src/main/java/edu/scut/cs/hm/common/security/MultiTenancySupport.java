@@ -10,7 +10,7 @@ public final class MultiTenancySupport {
     private MultiTenancySupport() {}
 
     /**
-     * user in cases where (String) retrieved from null or incorrect objects
+     * username in cases where (String) retrieved from null or incorrect objects
      */
     public static final String NO_TENANT = null;
     public static final String ANONYMOUS_TENANT = "anonymous_tenant";

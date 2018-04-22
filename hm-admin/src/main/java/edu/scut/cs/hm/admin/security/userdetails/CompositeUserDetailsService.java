@@ -30,7 +30,7 @@ public class CompositeUserDetailsService implements UserIdentifiersDetailsServic
             Collection<ExtendedUserDetails> users = service.getUsers();
             users.forEach(e -> {
                 if (e == null) {
-                    log.error("Service {} has null in user store.", service);
+                    log.error("Service {} has null in username store.", service);
                     return;
                 }
                 // note that services has precedence， so we cannot replace details

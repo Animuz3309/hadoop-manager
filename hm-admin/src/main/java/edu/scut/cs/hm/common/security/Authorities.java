@@ -75,8 +75,8 @@ public final class Authorities {
     }
 
     /**
-     * Return 'true' if user has any of specified authorities
-     * @param userDetails user details
+     * Return 'true' if username has any of specified authorities
+     * @param userDetails username details
      * @param authoritiesNames specified authorities
      * @return
      */
@@ -95,7 +95,7 @@ public final class Authorities {
     }
 
     /**
-     * Return name of user authority of specified type
+     * Return name of username authority of specified type
      * @param type specified operation of something about authority
      * @return "ROLE_" + type.toUpperCase() + "_USER"
      */

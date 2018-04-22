@@ -4,7 +4,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
- * Process authentication for user.
+ * Process authentication for username.
  */
 public interface SuccessAuthProcessor {
 

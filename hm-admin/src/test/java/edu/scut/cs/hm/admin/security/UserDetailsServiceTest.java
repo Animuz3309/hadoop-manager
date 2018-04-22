@@ -1,5 +1,6 @@
 package edu.scut.cs.hm.admin.security;
 
+import edu.scut.cs.hm.admin.config.CachingConfiguration;
 import edu.scut.cs.hm.admin.config.JasyptConfiguration;
 import edu.scut.cs.hm.admin.config.SecurityConfiguration;
 import edu.scut.cs.hm.common.security.ExtendedUserDetailsImpl;
@@ -24,13 +25,13 @@ import static org.junit.Assert.assertEquals;
 
 
 @Slf4j
-@ActiveProfiles("test_userdetails")
+@ActiveProfiles({"test_userdetails", "dev"})
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = UserDetailsServiceTest.AppConfiguration.class)
 public class UserDetailsServiceTest {
 
     @Configuration
-    @Import({JasyptConfiguration.class, SecurityConfiguration.class})
+    @Import({CachingConfiguration.class, JasyptConfiguration.class, SecurityConfiguration.class})
     @EnableAutoConfiguration
     public static class AppConfiguration {
     }
@@ -44,7 +45,7 @@ public class UserDetailsServiceTest {
     @Before
     public void before() {
         admin = userDetailsService.loadUserByUsername("admin");
-        user = userDetailsService.loadUserByUsername("user");
+        user = userDetailsService.loadUserByUsername("username");
         otherUser = userDetailsService.loadUserByUsername("otherUser");
     }
 
@@ -52,10 +53,10 @@ public class UserDetailsServiceTest {
     public void testUserDetailsService() {
         assertEquals("password", admin.getPassword());
         ExtendedUserDetailsImpl userExpected = ExtendedUserDetailsImpl.builder()
-                .username("user")
+                .username("username")
                 .password("password")
                 .tenant("root")
-                .title("Sample user")
+                .title("Sample username")
                 .email(null)
                 .authorities(Arrays.asList(
                         new GrantedAuthorityImpl("ROLE_CONTAINER_USER", "root"),

@@ -53,7 +53,7 @@ public class PropertyAclServiceConfigurer implements AclServiceConfigurer {
      *                      \_type__/ \_id__/    \____/ \__/  \___/ \_______/ \_/
      *                                         owner^    /      /       /      ^tenant
      *                                                  /      /       /
-     *                                           tenant^      /   role or user (role always start with 'ROLE_')
+     *                                           tenant^      /   role or username (role always start with 'ROLE_')
      *                                    'grant' or 'revoke'^
      * </pre>
      * Above we omit id type, just use pattern like 'type@id' not 'type:idtype:id' ('type:s:id' s means id type is string)

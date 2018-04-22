@@ -48,11 +48,11 @@ public class AclServiceTest {
         // type = CONTAINER id = syscont so 'CONTAINER@syscont'
         Acl syscont = aclService.readAclById(SecuredType.CONTAINER.id("syscont"));
 
-        // acl = 'user@root, grant ROLE_USER@root CRUDE, revoke ROLE_USER@root D'
+        // acl = 'username@root, grant ROLE_USER@root CRUDE, revoke ROLE_USER@root D'
         assertNotNull("No acl for syscont container", syscont);
 
-        // owner = 'user@root'
-        assertEquals(new TenantPrincipalSid("user", "root"), syscont.getOwner());
+        // owner = 'username@root'
+        assertEquals(new TenantPrincipalSid("username", "root"), syscont.getOwner());
 
         // aces = 'grant ROLE_USER@root CRUDE, revoke ROLE_USER@root D'
         List<AccessControlEntry> aces = syscont.getEntries();

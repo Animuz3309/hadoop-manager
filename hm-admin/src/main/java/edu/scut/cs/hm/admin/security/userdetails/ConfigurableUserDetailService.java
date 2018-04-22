@@ -12,9 +12,9 @@ import java.util.*;
 import static edu.scut.cs.hm.admin.config.configurer.PropertyUserDetailsServiceConfigurer.UserConfig;
 
 /**
- * Just keep a Map to store user details from {@link PropertyUserDetailsServiceConfigurer}
+ * Just keep a Map to store username details from {@link PropertyUserDetailsServiceConfigurer}
  * and can't manage users like {@link org.springframework.security.provisioning.UserDetailsManager} <p/>
- * In order to add pre-defined user in Spring environment
+ * In order to add pre-defined username in Spring environment
  */
 @Slf4j
 public class ConfigurableUserDetailService implements UserIdentifiersDetailsService {
@@ -23,7 +23,7 @@ public class ConfigurableUserDetailService implements UserIdentifiersDetailsServ
     public ConfigurableUserDetailService(PropertyUserDetailsServiceConfigurer configurer) {
         Map<String, ExtendedUserDetails> detailsMap = new HashMap<>();
 
-        // fetch admin user details from configurer
+        // fetch admin username details from configurer
         String rootTenant = MultiTenancySupport.ROOT_TENANT;
         ExtendedUserDetailsImpl admin = ExtendedUserDetailsImpl.builder()
                 .username("admin")

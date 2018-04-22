@@ -1,75 +1,78 @@
 package edu.scut.cs.hm.admin.config;
 
-import edu.scut.cs.hm.admin.config.configurer.TokenServiceConfigurer;
-import edu.scut.cs.hm.common.security.token.SignedTokenServiceImpl;
-import edu.scut.cs.hm.common.security.token.TokenService;
-import edu.scut.cs.hm.common.security.token.TokenValidatorImpl;
-import edu.scut.cs.hm.common.security.token.TokenValidtor;
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.config.CacheConfiguration;
-import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
+import edu.scut.cs.hm.admin.filter.AccessContextFilter;
+import edu.scut.cs.hm.admin.filter.TokenAuthenticationFilterConfigurer;
+import edu.scut.cs.hm.admin.filter.TokenHeaderRequestMatcher;
+import edu.scut.cs.hm.admin.security.AccessContextFactory;
+import edu.scut.cs.hm.admin.security.authentication.TokenAuthProvider;
+import edu.scut.cs.hm.common.security.SecurityUtils;
+import edu.scut.cs.hm.common.security.SuccessAuthProcessor;
+import edu.scut.cs.hm.common.security.token.TokenValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.ehcache.EhCacheCache;
-import org.springframework.cache.ehcache.EhCacheCacheManager;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-
-import java.security.SecureRandom;
-import java.util.Objects;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    private final UserDetailsService userDetailsService;
+    private final AuthenticationProvider provider;
+    private final TokenAuthenticationFilterConfigurer<HttpSecurity> configurer;
+    private final AccessContextFactory aclContextFactory;
 
-    @Configuration
-    @EnableConfigurationProperties({
-            TokenServiceConfigurer.TokenValidtorConfigurer.class,
-            TokenServiceConfigurer.SignedTokenServiceConfigurer.class})
-    public static class TokenServiceConfiguration {
 
-        private CacheManager cacheManager;
+    @Autowired
+    public WebSecurityConfiguration(TokenValidator tokenValidator,
+                                    UserDetailsService userDetailsService,
+                                    SuccessAuthProcessor authProcessor,
+                                    AuthenticationProvider provider,
+                                    AccessContextFactory aclContextFactory) {
+        this.userDetailsService = userDetailsService;
+        this.provider = provider;
+        this.configurer = new TokenAuthenticationFilterConfigurer<>(
+                new TokenHeaderRequestMatcher(),
+                new TokenAuthProvider(tokenValidator, this.userDetailsService, authProcessor));
+        this.aclContextFactory = aclContextFactory;
+    }
 
-        @Autowired(required = false)
-        public void setCacheManager(CacheManager cacheManager) {
-            this.cacheManager = cacheManager;
-        }
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        final String loginUrl = "/login";
+        final String logoutUrl = "/logout";
+        http.csrf().disable()
+                .authenticationProvider(provider).userDetailsService(userDetailsService)
+                .anonymous().principal(SecurityUtils.USER_ANONYMOUS).and()
+                .authorizeRequests().antMatchers("/token/login").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers("/**").authenticated()
+                .and().headers().cacheControl().disable()
+                .and().formLogin().loginPage(loginUrl).permitAll().defaultSuccessUrl("/")
+                .and().logout().logoutUrl(logoutUrl).logoutSuccessUrl(loginUrl)
+                .and().rememberMe().key("uniqueAndSecret")
+                .and().apply(configurer);
 
-        @Bean
-        TokenService signedTokenService(TokenServiceConfigurer.SignedTokenServiceConfigurer configurer) {
-            SignedTokenServiceImpl tokenService = new SignedTokenServiceImpl();
-            tokenService.setPseudoRandomNumberBytes(configurer.getPseudoRandomNumberBytes());
-            tokenService.setServerSecret(configurer.getServerSecret());
-            tokenService.setServerInteger(configurer.getServerInteger());
-            tokenService.setSecureRandom(new SecureRandom());
-            tokenService.setDigestAlgorithm(configurer.getDigestAlgorithm());
-            return tokenService;
-        }
+        http.headers()
+                .frameOptions().sameOrigin();
 
-        @Bean
-        TokenValidtor tokenValidtor(TokenService tokenService,
-                                    TokenServiceConfigurer.TokenValidtorConfigurer configurer) {
-            // net.sf.ehcache.Cache
-            Cache cache = new Cache(
-                    new CacheConfiguration("tokenServiceCache", 1000)
-                    .memoryStoreEvictionPolicy(MemoryStoreEvictionPolicy.LFU)
-                    .eternal(false)
-                    .timeToLiveSeconds(configurer.getExpireAfterInSec() * 2)
-                    .timeToIdleSeconds(configurer.getExpireLastAccessInSec() * 2)
-            );
+        // acl service
+        http.addFilterAfter(new AccessContextFilter(aclContextFactory), SwitchUserFilter.class);
 
-            Objects.requireNonNull(((EhCacheCacheManager) cacheManager).getCacheManager()).addCache(cache);
-            return TokenValidatorImpl.builder()
-                    .cache(new EhCacheCache(cache))
-                    .expireAfterInSec(configurer.getExpireAfterInSec())
-                    .expireLastAccessInSec(configurer.getExpireLastAccessInSec())
-                    .tokenService(tokenService)
-                    .build();
+        http.httpBasic();
+    }
 
-        }
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/webjars/**")
+                .antMatchers("/static/**");
     }
 }

@@ -3,7 +3,7 @@ package edu.scut.cs.hm.common.security.token;
 /**
  * Token verification service
  */
-public interface TokenValidtor {
+public interface TokenValidator {
 
     /**
      * Get specified token if it exists and valid

@@ -1,7 +1,7 @@
 package edu.scut.cs.hm.common.security;
 
 /**
- * Common iface for object contains unique user identifiers
+ * Common iface for object contains unique username identifiers
  * <p>
  *     Here is two identifiers 'username' and 'email', and at last one of them must be not null
  * </p>

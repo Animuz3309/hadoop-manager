@@ -100,7 +100,7 @@ public class JsonImmutableSecurityObjectTest {
         final ExtendedUserDetailsImpl.Builder b = new ExtendedUserDetailsImpl.Builder();
         b.setUsername("one");
         b.setPassword("secret");
-        b.setTitle("test user");
+        b.setTitle("test username");
         b.setEmail("e@e.e");
         b.setEnabled(true);
         b.setAccountNonLocked(true);

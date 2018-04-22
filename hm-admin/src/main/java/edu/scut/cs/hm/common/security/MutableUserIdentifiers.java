@@ -1,9 +1,9 @@
 package edu.scut.cs.hm.common.security;
 
 /**
- * Mutable iface for object contains unique user identifiers
+ * Mutable iface for object contains unique username identifiers
  * <p>
- *     This iface extends {@link UserIdentifiers} and represents user identifiers can be changed
+ *     This iface extends {@link UserIdentifiers} and represents username identifiers can be changed
  * </p>
  */
 public interface MutableUserIdentifiers extends UserIdentifiers {

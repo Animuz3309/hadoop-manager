@@ -1,6 +1,7 @@
 package edu.scut.cs.hm.admin.security;
 
 import edu.scut.cs.hm.admin.config.CachingConfiguration;
+import edu.scut.cs.hm.admin.config.SecurityConfiguration;
 import edu.scut.cs.hm.admin.config.WebSecurityConfiguration;
 import edu.scut.cs.hm.common.security.token.*;
 import lombok.extern.slf4j.Slf4j;
@@ -11,23 +12,25 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.assertEquals;
 
 @Slf4j
+@ActiveProfiles("dev")
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = TokenServiceTest.AppConfiguration.class)
 public class TokenServiceTest {
 
     @Configuration
     @EnableAutoConfiguration
-    @Import({CachingConfiguration.class, WebSecurityConfiguration.TokenServiceConfiguration.class})
+    @Import({CachingConfiguration.class, SecurityConfiguration.class})
     static class AppConfiguration {
     }
 
     @Autowired
-    private TokenValidtor tokenValidtor;
+    private TokenValidator tokenValidator;
     @Autowired
     private TokenService tokenService;
 
@@ -36,13 +39,13 @@ public class TokenServiceTest {
         TokenData expectedToken = tokenService.createToken(createConfig("user1", "hash1"));
         TokenData actualToken = null;
         try {
-            actualToken = tokenValidtor.verifyToken(expectedToken.getKey(), "hash1");
+            actualToken = tokenValidator.verifyToken(expectedToken.getKey(), "hash1");
         } catch (TokenException e) {
             log.debug("Expect fail: {}", e.getMessage());
         }
 
         try {
-            actualToken = tokenValidtor.verifyToken(expectedToken.getKey(), "hash1");
+            actualToken = tokenValidator.verifyToken(expectedToken.getKey(), "hash1");
         } catch (TokenException e) {
             log.debug("Expect fail: {}", e.getMessage());
         }

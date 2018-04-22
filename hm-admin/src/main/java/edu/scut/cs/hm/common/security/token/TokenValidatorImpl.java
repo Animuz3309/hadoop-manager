@@ -8,7 +8,7 @@ import org.springframework.cache.Cache;
 @Slf4j
 @Data
 @Builder(builderClassName = "Builder")
-public class TokenValidatorImpl implements TokenValidtor {
+public class TokenValidatorImpl implements TokenValidator {
     private final Cache cache;
     private final TokenService tokenService;
     private final long expireAfterInSec;

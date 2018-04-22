@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * An implementation of user details with tenant support
+ * An implementation of username details with tenant support
  * @see edu.scut.cs.hm.common.security.ExtendedUserDetails
  */
 @Cacheable

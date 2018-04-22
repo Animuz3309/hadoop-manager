@@ -3,16 +3,21 @@
     {
       "name": "hm.auth.admin-password",
       "type": "java.lang.String",
-      "description": "Encrypted admin password."
+      "description": "(required) Encrypted admin password."
     },
     {
       "name": "hm.security.cipher.password",
       "type": "java.lang.String",
-      "description": "Cipher secret key for TextEncryptor."
+      "description": "(required) Cipher secret key for TextEncryptor."
     },
     {
       "name": "hm.security.cipher.salt",
       "type": "java.lang.String",
-      "description": "Cipher salt for TextEncryptor."
+      "description": "(required) Cipher salt for TextEncryptor."
+    },
+    {
+      "name": "hm.bcrypt.strength",
+      "type": "java.lang.String",
+      "description": "(optional) Log rounds in BCrypt which encrypt and match user password."
     }
   ] }

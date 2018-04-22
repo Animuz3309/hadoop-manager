@@ -11,7 +11,7 @@ public interface TokenData {
     String getUsername();
 
     /**
-     * Device hash, also may depend from user name, ip, mac address. It used for binding token to
+     * Device hash, also may depend from username name, ip, mac address. It used for binding token to
      * specific device, if you don't want this behavior, then leave this property null.
      * @return
      */

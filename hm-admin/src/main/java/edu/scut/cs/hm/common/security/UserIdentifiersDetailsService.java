@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.Collection;
 
 /**
- * Service which allow us to load user by name, or by its identifiers. <p/>
+ * Service which allow us to load username by name, or by its identifiers. <p/>
  * Customer iface extends Spring Security <code>UserDetailsService</code>
  * @see org.springframework.security.core.userdetails.UserDetailsService
  *

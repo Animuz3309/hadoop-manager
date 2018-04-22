@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.*;
 
 /**
- * This is a principal which is used for credentials by one of user's identifiers like username, email and so on. <p/>
+ * This is a principal which is used for credentials by one of username's identifiers like username, email and so on. <p/>
  * For example username, email is already defined in {@link UserIdentifiers}
  */
 @Data

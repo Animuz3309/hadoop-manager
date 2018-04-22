@@ -27,7 +27,7 @@ public interface TokenService {
     void removeToken(String token);
 
     /**
-     * Remove all user tokens
+     * Remove all username tokens
      * @param username
      */
     void removeUserTokens(String username);
