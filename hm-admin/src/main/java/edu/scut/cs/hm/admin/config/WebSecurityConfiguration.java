@@ -58,7 +58,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().headers().cacheControl().disable()
                 .and().formLogin().loginPage(loginUrl).permitAll().defaultSuccessUrl("/")
                 .and().logout().logoutUrl(logoutUrl).logoutSuccessUrl(loginUrl)
-                .and().rememberMe().key("uniqueAndSecret")
+                .and().rememberMe().key("uniqueAndSecret").userDetailsService(userDetailsService)
                 .and().apply(configurer);
 
         http.headers()

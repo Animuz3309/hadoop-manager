@@ -10,10 +10,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * You can use this for encode and encrypt text in your *.properties
+ * <a href="https://github.com/ulisesbocchio/jasypt-spring-boot"></a>
+ */
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = Encrypt.JUnit4JasyptConfiguration.class)
@@ -28,16 +33,24 @@ public class Encrypt {
     @Autowired
     private StringEncryptor encryptor;
 
-    @Value("${msg:$2a$08$bFLBfYL8Eb6n71D/yvLyLu9QzxDWEPG0TTx3/LgfiwaKdhfyCEdVe}")
-    private String msg;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Value("password")
+    private String text;
 
     @Test
     public void encrypt() {
-        String encode = encryptor.encrypt(msg);
-        String decode = encryptor.decrypt(encode);
-        log.info(encode);
-        log.info(decode);
-        assertEquals(msg, decode);
+        String encryptText = encryptor.encrypt(text);
+        String actualText = encryptor.decrypt(encryptText);
+
+        assertEquals(text, actualText);
+        log.info(encryptText);
+    }
+
+    @Test
+    public void encodeAndEncrypt() {
+
     }
 
 }

@@ -28,8 +28,7 @@ public class UiUser extends UiUserBase {
         }
         user.setPassword(details.getPassword() == null? null : PWD_STUB);
         Collection<? extends GrantedAuthority> authorities = details.getAuthorities();
-        List<UiRole> roles = authorities.stream().map(UiRole::fromAuthority).collect(Collectors.toList());
-        roles.sort(null);
+        List<UiRole> roles = authorities.stream().map(UiRole::fromAuthority).sorted().collect(Collectors.toList());
         user.setRoles(roles);
         user.setTenant(MultiTenancySupport.getTenant(details));
         user.setAccountNonExpired(details.isAccountNonExpired());
