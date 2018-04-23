@@ -26,10 +26,41 @@
         <guava.version>23.0</guava.version>
         <commons-codec.version>1.10</commons-codec.version>
 
-        <webjars.bootstrap>3.3.7</webjars.bootstrap>
-        <webjars.font-awesome>4.6.3</webjars.font-awesome>
-        <webjars.metisMenu>1.1.3</webjars.metisMenu>
+        <!-- webjars version -->
+        <webjars.bootstrap.version>3.3.7</webjars.bootstrap.version>
+        <webjars.font-awesome.version>4.6.3</webjars.font-awesome.version>
+        <webjars.metisMenu.version>1.1.3</webjars.metisMenu.version>
+
+        <!-- maven plugin version -->
+        <minify-maven-plugin.version>1.7.6</minify-maven-plugin.version>
+        <lesscss-maven-plugin.version>1.7.0.1.1</lesscss-maven-plugin.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>aliyun nexus-maven</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>aliyun nexus-maven</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
     <dependencies>
         <dependency>
@@ -118,25 +149,97 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
-            <version>${webjars.bootstrap}</version>
+            <version>${webjars.bootstrap.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>font-awesome</artifactId>
-            <version>${webjars.font-awesome}</version>
+            <version>${webjars.font-awesome.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>metisMenu</artifactId>
-            <version>${webjars.metisMenu}</version>
+            <version>${webjars.metisMenu.version}</version>
         </dependency>
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <!-- exclude source files of js and less-->
+                    <exclude>js/**</exclude>
+                    <exclude>less/**</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.lesscss</groupId>
+                    <artifactId>lesscss-maven-plugin</artifactId>
+                    <version>${lesscss-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>default-compile-less</id>
+                            <!-- When omitted defaults to 'generate-sources' -->
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                            <configuration>
+                                <sourceDirectory>${project.basedir}/src/main/resources/less</sourceDirectory>
+                                <outputDirectory>${project.build.directory}/classes/static/css</outputDirectory>
+                                <compress>true</compress>
+                                <includes>
+                                    <include>**.less</include>
+                                </includes>
+                                <outputFileFormat>style.min.css</outputFileFormat>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>com.samaxes.maven</groupId>
+                    <artifactId>minify-maven-plugin</artifactId>
+                    <version>${minify-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>default-minify-js</id>
+                            <!-- When omitted defaults to 'process-resources' -->
+                            <goals>
+                                <goal>minify</goal>
+                            </goals>
+                            <configuration>
+                                <charset>utf-8</charset>
+                                <webappSourceDir>${project.basedir}/src/main</webappSourceDir>
+                                <webappTargetDir>${project.build.directory}/classes</webappTargetDir>
+                                <jsSourceDir>resources/js</jsSourceDir>
+                                <jsTargetDir>static/js</jsTargetDir>
+                                <cssTargetDir>static/css</cssTargetDir>
+                                <jsFinalFile>bundle.js</jsFinalFile>
+                                <jsSourceIncludes>
+                                    <jsSourceInclude>**.js</jsSourceInclude>
+                                </jsSourceIncludes>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.lesscss</groupId>
+                <artifactId>lesscss-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.samaxes.maven</groupId>
+                <artifactId>minify-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

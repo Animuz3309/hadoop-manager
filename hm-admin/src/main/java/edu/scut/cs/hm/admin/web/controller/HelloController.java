@@ -1,6 +1,7 @@
-package edu.scut.cs.hm.admin.web;
+package edu.scut.cs.hm.admin.web.controller;
 
 import edu.scut.cs.hm.admin.web.model.UiHeader;
+import edu.scut.cs.hm.common.security.token.TokenException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,5 +22,10 @@ public class HelloController {
     public String login(@ModelAttribute("header") UiHeader header) {
         header.setViewName("login");
         return "login";
+    }
+
+    @RequestMapping("/tokenex")
+    public String tokenException() {
+        throw new TokenException("a mock TokenException");
     }
 }
