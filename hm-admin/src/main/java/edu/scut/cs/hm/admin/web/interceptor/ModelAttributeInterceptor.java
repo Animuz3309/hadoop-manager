@@ -19,11 +19,10 @@ public class ModelAttributeInterceptor extends HandlerInterceptorAdapter {
     private UiHeader uiHeader;
     private ExtendedUserDetailsImpl.Builder userBuilder;
 
-    public ModelAttributeInterceptor(UserDetailsService userDetailsService, String appName) {
+    public ModelAttributeInterceptor(UserDetailsService userDetailsService, UiHeader uiHeader) {
         Assert.notNull(userDetailsService, "userDetailsService is null");
         this.userDetailsService = userDetailsService;
-        this.uiHeader = new UiHeader();
-        this.uiHeader.setAppName(appName);
+        this.uiHeader = uiHeader;
         this.userBuilder = ExtendedUserDetailsImpl.builder();
     }
 
@@ -46,7 +45,7 @@ public class ModelAttributeInterceptor extends HandlerInterceptorAdapter {
         }
         uiUser = UiUser.fromDetails(userBuilder.build());
 
-        modelAndView.addObject("header", uiHeader);
+        modelAndView.addObject("head", uiHeader);
         modelAndView.addObject("user", uiUser);
     }
 }

@@ -19,13 +19,7 @@ public class HelloController {
     }
 
     @RequestMapping("/login")
-    public String login(@ModelAttribute("header") UiHeader header) {
-        header.setViewName("login");
+    public String login() {
         return "login";
-    }
-
-    @RequestMapping("/tokenex")
-    public String tokenException() {
-        throw new TokenException("a mock TokenException");
     }
 }

@@ -1,6 +1,5 @@
 package edu.scut.cs.hm.admin.web.controller;
 
-import edu.scut.cs.hm.common.security.token.TokenException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
@@ -9,10 +8,8 @@ import org.springframework.boot.autoconfigure.web.servlet.error.AbstractErrorCon
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,7 +23,8 @@ import java.util.Map;
 import static org.springframework.http.MediaType.TEXT_HTML_VALUE;
 
 @Slf4j
-@Controller("${server.error.path:${error.path:/error}}")
+@Controller
+@RequestMapping("/error")
 public final class CustomerErrorController extends AbstractErrorController {
     private static final String ERROR_PATH_PREFIX = "error/";
     private final ErrorProperties errorProperties;

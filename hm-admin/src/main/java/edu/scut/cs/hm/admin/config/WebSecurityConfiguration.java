@@ -56,7 +56,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/**").authenticated()
                 .and().headers().cacheControl().disable()
-                .and().formLogin().loginPage(loginUrl).permitAll().defaultSuccessUrl("/")
+                .and().formLogin().loginPage(loginUrl).permitAll().defaultSuccessUrl("/hello")
                 .and().logout().logoutUrl(logoutUrl).logoutSuccessUrl(loginUrl)
                 .and().rememberMe().key("uniqueAndSecret").userDetailsService(userDetailsService)
                 .and().apply(configurer);
@@ -72,7 +72,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/webjars/**")
-                .antMatchers("/static/**");
+        // be care for not /static/**
+        web.ignoring().antMatchers(
+                "/webjars/**",
+                "/js/**",
+                "/css/**",
+                "/font/**",
+                "/img/**");
     }
 }

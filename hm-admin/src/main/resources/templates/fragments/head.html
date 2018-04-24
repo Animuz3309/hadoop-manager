@@ -1,0 +1,16 @@
+<head xmlns:th="http://www.thymeleaf.org">
+    <meta charset="utf-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" th:content="${head.description}">
+    <meta name="author" th:content="${head.author}">
+
+    <title th:text="${head.appName} + (${head.viewName} ?|' - '${head.viewName}|:'')"></title>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/metisMenu/metisMenu.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/font-awesome/css/font-awesome.min.css}"/>
+
+    <!-- customer style-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.min.css}">
+</head>

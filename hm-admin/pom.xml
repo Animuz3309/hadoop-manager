@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
 
     <name>hm-admin</name>
-    <description>hadoop manager tool admin</description>
+    <description>An Docker based hadoop manager tool - Admin</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -172,6 +172,7 @@
                     <exclude>js/**</exclude>
                     <exclude>less/**</exclude>
                 </excludes>
+                <filtering>true</filtering>
             </resource>
         </resources>
         <pluginManagement>
@@ -192,7 +193,7 @@
                                 <outputDirectory>${project.build.directory}/classes/static/css</outputDirectory>
                                 <compress>true</compress>
                                 <includes>
-                                    <include>**.less</include>
+                                    <include>**/*.less</include>
                                 </includes>
                                 <outputFileFormat>style.min.css</outputFileFormat>
                             </configuration>
@@ -220,7 +221,7 @@
                                 <cssTargetDir>static/css</cssTargetDir>
                                 <jsFinalFile>bundle.js</jsFinalFile>
                                 <jsSourceIncludes>
-                                    <jsSourceInclude>**.js</jsSourceInclude>
+                                    <jsSourceInclude>**/*.js</jsSourceInclude>
                                 </jsSourceIncludes>
                             </configuration>
                         </execution>
