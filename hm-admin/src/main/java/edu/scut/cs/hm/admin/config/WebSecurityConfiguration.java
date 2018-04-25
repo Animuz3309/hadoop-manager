@@ -56,7 +56,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/**").authenticated()
                 .and().headers().cacheControl().disable()
-                .and().formLogin().loginPage(loginUrl).permitAll().defaultSuccessUrl("/hello")
+                .and().formLogin().loginPage(loginUrl).permitAll().defaultSuccessUrl("/dashboard")
                 .and().logout().logoutUrl(logoutUrl).logoutSuccessUrl(loginUrl)
                 .and().rememberMe().key("uniqueAndSecret").userDetailsService(userDetailsService)
                 .and().apply(configurer);

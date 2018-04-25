@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head"></head>
+<body>
+<div id="wrapper">
+    <nav th:replace="fragments/navigation"></nav>
+    <div id="page-wrapper" th:replace="dashboard/dashboard"></div>
+</div>
+</body>
+<th:block th:replace="fragments/script"/>
+</html>
