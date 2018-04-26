@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 public class Encrypt {
 
     @Configuration
-    @Import(JasyptConfiguration.class)
+    @Import({JasyptConfiguration.class})
     static class JUnit4JasyptConfiguration {
 
     }
@@ -33,10 +33,10 @@ public class Encrypt {
     @Autowired
     private StringEncryptor encryptor;
 
-    @Autowired
+    @Autowired(required = false)
     private PasswordEncoder passwordEncoder;
 
-    @Value("password")
+    @Value("http://222.201.145.145:2370")
     private String text;
 
     @Test
