@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.kv;
+package edu.scut.cs.hm.common.kv;
 
 import lombok.Data;
 

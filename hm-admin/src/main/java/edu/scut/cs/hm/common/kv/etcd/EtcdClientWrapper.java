@@ -1,14 +1,16 @@
-package edu.scut.cs.hm.kv.etcd;
+package edu.scut.cs.hm.common.kv.etcd;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import edu.scut.cs.hm.kv.DeleteDirOptions;
-import edu.scut.cs.hm.kv.KeyValueStorage;
-import edu.scut.cs.hm.kv.KvNode;
-import edu.scut.cs.hm.kv.WriteOptions;
+import edu.scut.cs.hm.common.kv.*;
+import edu.scut.cs.hm.common.mb.ConditionalMessageBusWrapper;
+import edu.scut.cs.hm.common.mb.ConditionalSubscriptions;
+import edu.scut.cs.hm.common.mb.MessageBus;
+import edu.scut.cs.hm.common.mb.MessageBusImpl;
 import lombok.extern.slf4j.Slf4j;
 import mousio.etcd4j.EtcdClient;
 import mousio.etcd4j.promises.EtcdResponsePromise;
 import mousio.etcd4j.requests.EtcdKeyDeleteRequest;
+import mousio.etcd4j.requests.EtcdKeyGetRequest;
 import mousio.etcd4j.requests.EtcdKeyPutRequest;
 import mousio.etcd4j.requests.EtcdKeyRequest;
 import mousio.etcd4j.responses.EtcdException;
@@ -30,18 +32,96 @@ public class EtcdClientWrapper implements KeyValueStorage {
 
     private final EtcdClient etcd;
     private final String prefix;
+    private final MessageBus<KvStorageEvent> bus;
     private final ExecutorService executor;
 
     public EtcdClientWrapper(EtcdClient etcd, String prefix) {
         this.etcd = etcd;
         this.prefix = prefix;
 
-        // TODO etcd CRUD event listeners
+        // etcd CRUD message bus
+        // when init there is no subscription in MessageBus
+        this.bus = MessageBusImpl.builder(
+                // message type
+                KvStorageEvent.class,
+                // wrapped this MessageBus to a ConditionalMessageBusWrapper
+                (s) -> new ConditionalMessageBusWrapper<>(s, KvStorageEvent::getKey, KvUtils::predicate))
+                    .id(getClass().getName())
+                    .build();
+
         // execute event listener
         this.executor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
                 .setNameFormat(getClass().getName() + "-bus-%d")
                 .setDaemon(true)
                 .build());
+    }
+
+    /**
+     *
+     * @param index Set that etcd server should wait for a certain change index
+     */
+    private void eventWhirligig(final long index) {
+        try {
+            // getAll key in etcd
+            EtcdKeyGetRequest req = this.etcd.get("").recursive();
+            if (index > 0) {
+                req.waitForChange(index);
+            } else {
+                req.waitForChange();
+            }
+            EtcdResponsePromise<EtcdKeysResponse> promise = req.send();
+            final boolean debug = log.isDebugEnabled();
+            promise.addListener(rp -> {
+                try {
+                    EtcdKeysResponse r = rp.get();
+
+                    // immediate subscribe for next event
+                    eventWhirligig(r.node.modifiedIndex + 1);
+
+                    /**
+                     * handle this response
+                     */
+
+                    if (debug) {
+                        log.debug("{} {}={} (ttl:{}) {}", r.etcdIndex, r.node.key, r.node.value, r.node.ttl, r.action);
+                    }
+
+                    KvStorageEvent.Crud action = null;
+                    switch (r.action) {
+                        case compareAndDelete:
+                        case delete:
+                        case expire:
+                            action = KvStorageEvent.Crud.DELETE;
+                            break;
+                        case compareAndSwap:
+                        case set:
+                        case update:
+                            action = KvStorageEvent.Crud.UPDATE;
+                            break;
+                        case create:
+                            action = KvStorageEvent.Crud.CREATE;
+                            break;
+                    }
+
+                    if (action != null) {
+                        KvStorageEvent e = new KvStorageEvent(
+                                r.node.modifiedIndex,
+                                r.node.key,
+                                r.node.value,
+                                r.node.ttl,
+                                action);
+
+                        // MessageBus handle this message
+                        this.executor.submit(() -> bus.accept(e));
+                    }
+
+                } catch (Exception e) {
+                    log.error("Error when process event response", e);
+                }
+            });
+        } catch (Exception e) {
+            log.error("Error when process events", e);
+        }
     }
 
     private KvNode toNode(EtcdKeysResponse resp) {
@@ -224,6 +304,12 @@ public class EtcdClientWrapper implements KeyValueStorage {
         } catch (Exception e) {
             throw new RuntimeException("unchecked", e);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public ConditionalSubscriptions<KvStorageEvent, String> subscriptions() {
+        return (ConditionalSubscriptions<KvStorageEvent, String>) bus.asSubscriptions();
     }
 
     @Override

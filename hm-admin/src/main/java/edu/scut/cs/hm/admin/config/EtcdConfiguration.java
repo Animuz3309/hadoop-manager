@@ -1,7 +1,7 @@
 package edu.scut.cs.hm.admin.config;
 
 import edu.scut.cs.hm.admin.config.configurer.KvConfigurer;
-import edu.scut.cs.hm.kv.etcd.EtcdClientWrapper;
+import edu.scut.cs.hm.common.kv.etcd.EtcdClientWrapper;
 import lombok.extern.slf4j.Slf4j;
 import mousio.etcd4j.EtcdClient;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

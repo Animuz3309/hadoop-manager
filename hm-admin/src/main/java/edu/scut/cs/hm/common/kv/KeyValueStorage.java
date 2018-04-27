@@ -1,4 +1,6 @@
-package edu.scut.cs.hm.kv;
+package edu.scut.cs.hm.common.kv;
+
+import edu.scut.cs.hm.common.mb.ConditionalSubscriptions;
 
 import java.util.List;
 import java.util.Map;
@@ -71,6 +73,13 @@ public interface KeyValueStorage {
      * @return
      */
     Map<String, String> map(String prefix);
+
+    /**
+     * Return Subscriptions for key value events of this storage. <p/>
+     * Note that subscription may be on '/key' - or on key with its childs '/key*' (also '/key/*')
+     * @return
+     */
+    ConditionalSubscriptions<KvStorageEvent, String> subscriptions();
 
     /**
      * Get the prefix of key

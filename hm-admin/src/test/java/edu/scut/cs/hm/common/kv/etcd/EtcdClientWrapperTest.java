@@ -1,7 +1,7 @@
-package edu.scut.cs.hm.kv.etcd;
+package edu.scut.cs.hm.common.kv.etcd;
 
 import edu.scut.cs.hm.admin.config.EtcdConfiguration;
-import edu.scut.cs.hm.kv.KeyValueStorage;
+import edu.scut.cs.hm.common.kv.KeyValueStorage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +9,15 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-@ActiveProfiles("dev")
+@TestPropertySource(properties = {
+        "hm.kv.etcd-urls=http://127.0.0.1:2379"
+})
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = EtcdClientWrapperTest.Config.class)
 public class EtcdClientWrapperTest {
