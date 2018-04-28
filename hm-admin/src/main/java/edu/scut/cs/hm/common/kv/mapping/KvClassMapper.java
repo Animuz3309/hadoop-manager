@@ -24,7 +24,7 @@ public class KvClassMapper<T> {
         private final KvMapperFactory mapperFactory;
         private final Class<T> type;
         private String prefix;
-        private KvObjectFactory<T> factory;
+        private KvObjectFactory<T> factory; // factory to create specified type object
 
         Builder(KvMapperFactory mapperFactory, Class<T> type) {
             this.mapperFactory = mapperFactory;
@@ -48,9 +48,9 @@ public class KvClassMapper<T> {
 
     private final Class<T> type;
     private final String prefix;
-    private final KvMapperFactory mapper;
+    private final KvMapperFactory mapper;       // get specified mapping like NodeMapping or LeafMapping
     private final KeyValueStorage storage;
-    private final AbstractMapping<T> mapping;
+    private final AbstractMapping<T> mapping;   // the specified mapping get from 'mapper'
 
     public static <T> Builder<T> builder(KvMapperFactory mf, Class<T> type) {
         return new Builder<>(mf, type);
@@ -61,7 +61,8 @@ public class KvClassMapper<T> {
         this.mapper = builder.mapperFactory;
         this.prefix = builder.prefix;
         this.type = builder.type;
-        this.mapping = this.mapper.getMapping(type, MoreObjects.firstNonNull(builder.factory, (KvObjectFactory<T>) FACTORY));
+        this.mapping = this.mapper.getMapping(type,
+                MoreObjects.firstNonNull(builder.factory, (KvObjectFactory<T>) FACTORY));
         this.storage = mapper.getStorage();
     }
 

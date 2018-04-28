@@ -11,8 +11,12 @@ public class KvStorageEvent {
     /**
      * index of node, like modifiedIndex in etcd
      * just like an long unique id of node
+     * it is primary key and unique
      */
     private final long index;
+    /**
+     * like a name, maybe the path in k-v storage
+     */
     private final String key;
     private final String value;
     private final long ttl;
