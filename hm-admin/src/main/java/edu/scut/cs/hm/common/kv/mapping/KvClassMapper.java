@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * According to Class type to get actual java object store in KeyValueStorage
+ * According to Class type to load/save actual java object store in KeyValueStorage
+ * indeed use {@link AbstractMapping} to load/save value in KeyValueStorage
  * @param <T> the object class type
  */
 @Slf4j
@@ -48,9 +49,9 @@ public class KvClassMapper<T> {
 
     private final Class<T> type;
     private final String prefix;
-    private final KvMapperFactory mapper;       // get specified mapping like NodeMapping or LeafMapping
+    private final KvMapperFactory mapperFactory;       // get specified mapping like NodeMapping or LeafMapping
     private final KeyValueStorage storage;
-    private final AbstractMapping<T> mapping;   // the specified mapping get from 'mapper'
+    private final AbstractMapping<T> mapping;          // the specified mapping get from 'mapperFactory'
 
     public static <T> Builder<T> builder(KvMapperFactory mf, Class<T> type) {
         return new Builder<>(mf, type);
@@ -58,12 +59,12 @@ public class KvClassMapper<T> {
 
     @SuppressWarnings("unchecked")
     KvClassMapper(Builder<T> builder) {
-        this.mapper = builder.mapperFactory;
+        this.mapperFactory = builder.mapperFactory;
         this.prefix = builder.prefix;
         this.type = builder.type;
-        this.mapping = this.mapper.getMapping(type,
+        this.mapping = this.mapperFactory.getMapping(type,
                 MoreObjects.firstNonNull(builder.factory, (KvObjectFactory<T>) FACTORY));
-        this.storage = mapper.getStorage();
+        this.storage = mapperFactory.getStorage();
     }
 
     public Class<T> getType() {

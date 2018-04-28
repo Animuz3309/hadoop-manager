@@ -25,7 +25,7 @@
         <jasypt.version>2.0.0</jasypt.version>
         <guava.version>23.0</guava.version>
         <commons-codec.version>1.10</commons-codec.version>
-        <etcd.version>2.13.0</etcd.version>
+        <etcd.version>2.16.0</etcd.version>
         <netty-all.version>4.1.7.Final</netty-all.version>
 
         <!-- webjars version -->

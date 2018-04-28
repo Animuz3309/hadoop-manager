@@ -9,22 +9,35 @@ import edu.scut.cs.hm.common.kv.KeyValueStorage;
  */
 abstract class AbstractMapping<T> {
     protected final Class<T> type;
-    protected final KvMapperFactory mapper;
+    protected final KvMapperFactory mapperFactory;
 
-    AbstractMapping(KvMapperFactory mapper, Class<T> type) {
-        this.mapper = mapper;
+    AbstractMapping(KvMapperFactory mapperFactory, Class<T> type) {
+        this.mapperFactory = mapperFactory;
         this.type = type;
     }
 
     protected KeyValueStorage getStorage() {
-        return this.mapper.getStorage();
+        return this.mapperFactory.getStorage();
     }
 
     protected ObjectMapper getObjectMapper() {
-        return this.mapper.getObjectMapper();
+        return this.mapperFactory.getObjectMapper();
     }
 
+    /**
+     * save value in the path in k-v storage, save filed in object one by one
+     * and when save one field in object will call 'callback'
+     * @param path
+     * @param object
+     * @param callback
+     */
     abstract void save(String path, T object, KvSaveCallback callback);
+
+    /**
+     * load value from path
+     * @param path
+     * @param object
+     */
     abstract void load(String path, T object);
     abstract <S extends T> S load(String path, String name, Class<S> type);
 }

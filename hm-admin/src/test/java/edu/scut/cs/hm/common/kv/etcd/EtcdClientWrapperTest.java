@@ -15,11 +15,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-@TestPropertySource(properties = {
-        "hm.kv.etcd-urls=http://127.0.0.1:2379"
-})
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = EtcdClientWrapperTest.Config.class)
+@TestPropertySource(properties = {
+        "hm.kv.etcd-urls = http://222.201.145.145:2370",
+        "hm.kv.prefix    = /test"
+})
 public class EtcdClientWrapperTest {
 
     @Configuration

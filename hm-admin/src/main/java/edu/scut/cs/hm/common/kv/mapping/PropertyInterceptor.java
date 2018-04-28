@@ -2,6 +2,8 @@ package edu.scut.cs.hm.common.kv.mapping;
 
 /**
  * do something with KvProperty before save and read
+ * @see KvProperty#get(Object)
+ * @see KvProperty#set(Object, String)
  */
 public interface PropertyInterceptor {
 

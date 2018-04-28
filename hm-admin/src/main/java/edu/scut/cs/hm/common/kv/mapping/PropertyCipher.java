@@ -3,6 +3,9 @@ package edu.scut.cs.hm.common.kv.mapping;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.util.StringUtils;
 
+/**
+ * encrypt the string value of property
+ */
 public class PropertyCipher implements PropertyInterceptor {
 
     private final TextEncryptor encryptor;

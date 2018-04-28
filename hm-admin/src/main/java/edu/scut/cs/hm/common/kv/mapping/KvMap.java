@@ -25,7 +25,7 @@ public class KvMap<T> {
 
     @Data
     public static class Builder<T, V> {
-        private KvMapperFactory mapper;     // factory to get local obj vs remote node in k-v storage mapping
+        private KvMapperFactory mapperFactory;  // factory to get local obj vs remote node in k-v storage mapping
         private String path;                // the node path in remote k-v storage
         private KvMapAdapter<T> adapter = KvMapAdapter.direct();    // the adapter to get value from k-v node
         private final Class<T> type;        // type of obj
@@ -53,7 +53,7 @@ public class KvMap<T> {
         }
 
         public Builder<T, V> mapper(KvMapperFactory factory) {
-            setMapper(factory);
+            setMapperFactory(factory);
             return this;
         }
 
@@ -131,7 +131,7 @@ public class KvMap<T> {
 
     @SuppressWarnings("unchecked")
     private KvMap(Builder builder) {
-        Assert.notNull(builder.mapper, "mapper is null");
+        Assert.notNull(builder.mapperFactory, "mapperFactory is null");
         Assert.notNull(builder.path, "path is null");
         this.adapter = builder.adapter;
         this.localListener = builder.localListener;
@@ -142,8 +142,8 @@ public class KvMap<T> {
         // the object type need to map
         Class<Object> mapperType = MoreObjects.firstNonNull(builder.valueType, (Class<Object>)builder.type);
 
-        // object mapper (map java obj to k-v storage)
-        this.mapper = builder.mapper.buildClassMapper(mapperType)
+        // object mapperFactory (map java obj to k-v storage)
+        this.mapper = builder.mapperFactory.buildClassMapper(mapperType)
                 .prefix(builder.path)       // prefix in k-v storage
                 .factory(builder.factory)
                 .build();
@@ -151,11 +151,11 @@ public class KvMap<T> {
         // subscribe KvEvent Listener with specified key(prefix aka path) on k-v storage
         // we can see this on EtcdClientWrapper#eventWhirligig(long)
         // MessageBus.accept() will invoke this listener
-        builder.mapper.getStorage().subscriptions().subscribeOnKey(this::onKvEvent, builder.path);
+        builder.mapperFactory.getStorage().subscriptions().subscribeOnKey(this::onKvEvent, builder.path);
 
     }
 
-    // the listener subscribe on this.mapper.getStorage() to listen KvStorageEvent
+    // the listener subscribe on this.mapperFactory.getStorage() to listen KvStorageEvent
     // we can see this on EtcdClientWrapper#eventWhirligig(long)
     // MessageBus.accept() will invoke this listener
     private void onKvEvent(KvStorageEvent e) {
@@ -411,6 +411,10 @@ public class KvMap<T> {
     private final class ValueHolder {
         private final String key;   // path name of node in k-v storage
         private volatile T value;
+        // keep the node's modified index value in k-v storage
+        // we can compare the old index value and new value from node in k-v storage to judge whether node's value modified
+        // if modified we need to dirty this.value
+        // see #dirty(String prop, long newIndex)
         private final Map<String, Long> index = new ConcurrentHashMap<>();
         private volatile boolean dirty = true;
         private volatile boolean barrier = false;
@@ -429,7 +433,7 @@ public class KvMap<T> {
             T old;
             KvMapLocalEvent.Action action;
             synchronized (this) {
-                checkValue(value);
+                checkValue(val);
                 // we must not publish dirty value;
                 old = getIfPresent();
                 this.dirty = false;
@@ -440,6 +444,7 @@ public class KvMap<T> {
                 this.value = val;
             }
             onLocal(action, this, old, val);
+            // flush value in the k-v storage
             flush();
             return old;
         }
@@ -466,8 +471,9 @@ public class KvMap<T> {
             Assert.notNull(obj, "Adapter " + adapter + " return null from " + this.value + " that is not allowed");
             mapper.save(key, obj, (name, res) -> {
                 synchronized (this) {
-                    // keep name - KvNode's index map
-                    // name maybe the path that store obj in k-v storage
+                    // the name is prop name (prop name in 'obj') if is null -> means this
+                    // res is KvNode which record the prop value
+                    // e.g. /test/entries/one/text - "3upn2g9jjquh2"
                     index.put(toIndexKey(name), res.getIndex());
                 }
             });

@@ -12,10 +12,10 @@ import java.util.function.Function;
  * @see KvMapperFactory#loadProps(Class, Function)
  */
 final class KvProperty implements KvPropertyContext {
-    private final Field field;
+    private final Field field;                  // class field          e.g. [String name]
+    private final String key;                   // the name of field    e.g. String name -> 'name'
+    private final JavaType type;                // java type of field   e.g. java.lang.String
     private final KvMapperFactory factory;
-    private final String key;
-    private final JavaType type;
     private final FieldSetter<Object> setter;
     private final PropertyInterceptor interceptors[];
 

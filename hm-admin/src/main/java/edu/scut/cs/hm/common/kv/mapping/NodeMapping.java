@@ -21,20 +21,20 @@ import java.util.Map;
 class NodeMapping<T> extends AbstractMapping<T> {
     private static final String PROP_TYPE = "@class";
     private final Map<Class, Map<String, KvProperty>> props = new HashMap<>();
-    private final KvObjectFactory<T> factory;
+    private final KvObjectFactory<T> objectFactory;
 
-    private NodeMapping(KvMapperFactory mapper, Class<T> type, Map<String, KvProperty> map, KvObjectFactory<T> factory) {
-        super(mapper, type);
+    private NodeMapping(KvMapperFactory mapperFactory, Class<T> type, Map<String, KvProperty> map, KvObjectFactory<T> objectFactory) {
+        super(mapperFactory, type);
         this.props.put(type, map);
-        this.factory = factory;
+        this.objectFactory = objectFactory;
     }
 
-    static <T> NodeMapping<T> makeIfHasProps(KvMapperFactory mapper, Class<T> type, KvObjectFactory<T> factory) {
-        Map<String, KvProperty> map = mapper.loadProps(type, p -> p);
+    static <T> NodeMapping<T> makeIfHasProps(KvMapperFactory mapperFactory, Class<T> type, KvObjectFactory<T> objectFactory) {
+        Map<String, KvProperty> map = mapperFactory.loadProps(type, p -> p);
         if(map.isEmpty()) {
             return null;
         }
-        return new NodeMapping<>(mapper, type, map, factory);
+        return new NodeMapping<>(mapperFactory, type, map, objectFactory);
     }
 
     @Override
@@ -149,7 +149,7 @@ class NodeMapping<T> extends AbstractMapping<T> {
         if (p != null) {
             return p.values();
         }
-        Map<String, KvProperty> map = this.mapper.loadProps(clazz, t -> t);
+        Map<String, KvProperty> map = this.mapperFactory.loadProps(clazz, t -> t);
         this.props.put(clazz, map);
         return map.values();
     }
@@ -157,7 +157,7 @@ class NodeMapping<T> extends AbstractMapping<T> {
     @Override
     <S extends T> S load(String path, String name, Class<S> type) {
         Class<S> actualType = resolveType(path, type);
-        S object = actualType.cast(factory.create(name, actualType));
+        S object = actualType.cast(objectFactory.create(name, actualType));
         load(path, object);
         return actualType.cast(object);
     }

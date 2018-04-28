@@ -2,6 +2,7 @@ package edu.scut.cs.hm.common.kv.etcd;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import edu.scut.cs.hm.common.kv.*;
+import edu.scut.cs.hm.common.kv.mapping.KvMap;
 import edu.scut.cs.hm.common.mb.ConditionalMessageBusWrapper;
 import edu.scut.cs.hm.common.mb.ConditionalSubscriptions;
 import edu.scut.cs.hm.common.mb.MessageBus;
@@ -54,10 +55,14 @@ public class EtcdClientWrapper implements KeyValueStorage {
                 .setNameFormat(getClass().getName() + "-bus-%d")
                 .setDaemon(true)
                 .build());
+
+        eventWhirligig(-1);
     }
 
     /**
-     *
+     * use MessageBus to handle KvStorageEvent to listener subscribe in this.bus
+     * we can use {@link #subscriptions()} to get the subscription api to subscribe listener
+     * e.g. {@link edu.scut.cs.hm.common.kv.mapping.KvMap#KvMap(KvMap.Builder)} the last line
      * @param index Set that etcd server should wait for a certain change index
      */
     private void eventWhirligig(final long index) {

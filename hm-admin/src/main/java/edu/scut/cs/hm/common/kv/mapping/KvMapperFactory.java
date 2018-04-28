@@ -6,18 +6,13 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.common.collect.ImmutableMap;
 import edu.scut.cs.hm.common.kv.KeyValueStorage;
 import edu.scut.cs.hm.common.utils.FindHandlerUtil;
-import edu.scut.cs.hm.common.validate.JsrValidityImpl;
-import edu.scut.cs.hm.common.validate.Validity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.util.Assert;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -29,16 +24,13 @@ public class KvMapperFactory {
     private final KeyValueStorage storage;
     private final Map<Class<?>, FieldSetter> setters;
     private final Map<Class<?>, PropertyInterceptor> interceptors;
-    private final Validator validator;
 
     @SuppressWarnings("unchecked")
     public KvMapperFactory(ObjectMapper objectMapper,
                            KeyValueStorage storage,
-                           TextEncryptor encryptor,
-                           Validator validator) {
+                           TextEncryptor encryptor) {
         this.objectMapper = objectMapper;
         this.storage = storage;
-        this.validator = validator;
 
         ImmutableMap.Builder<Class<?>, FieldSetter> builder = ImmutableMap.builder();
         builder.put(Map.class, (field, value) -> {
@@ -85,6 +77,7 @@ public class KvMapperFactory {
                 KvProperty property = new KvProperty(this, field.getName(), field, javaType);
                 b.put(property.getKey(), func.apply(property));
             }
+            clazz = clazz.getSuperclass();
         }
         return b.build();
     }
@@ -94,6 +87,13 @@ public class KvMapperFactory {
         return FindHandlerUtil.findByClass(type, setters);
     }
 
+    /**
+     * If 'type' has props return {@link NodeMapping}, otherwise return {@link LeafMapping}
+     * @param type
+     * @param factory
+     * @param <T>
+     * @return
+     */
     <T> AbstractMapping<T> getMapping(Class<T> type, KvObjectFactory<T> factory) {
         AbstractMapping<T> mapping = NodeMapping.makeIfHasProps(this, type, factory);
         if(mapping == null) {
@@ -134,14 +134,5 @@ public class KvMapperFactory {
             instances[i] = instance;
         }
         return instances;
-    }
-
-    public <T> Validity validate(String path, T object) {
-        Set<ConstraintViolation<T>> res = validator.validate(object);
-        Validity validity = new JsrValidityImpl(path, res);
-        if(!validity.isValid()) {
-            log.warn("Invalid {}", validity.getMessage());
-        }
-        return validity;
     }
 }
