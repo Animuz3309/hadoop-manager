@@ -39,8 +39,8 @@ class NodeMapping<T> extends AbstractMapping<T> {
 
     @Override
     void save(String path, T object, KvSaveCallback callback) {
-        // we must read index of all node but, we can not create node in single command,
-        // so we use index of last sub node
+        // we must read index of all swarmNode but, we can not create swarmNode in single command,
+        // so we use index of last sub swarmNode
         Collection<KvProperty> props = getProps(object);
         if(props.isEmpty()) {
             throw new IllegalArgumentException("The path '" + path +
@@ -132,7 +132,7 @@ class NodeMapping<T> extends AbstractMapping<T> {
             try {
                 node = storage.get(proppath);
                 if(node == null) {
-                    // when node is absent we must not invoke setter
+                    // when swarmNode is absent we must not invoke setter
                     continue;
                 }
             } catch (Exception e) {

@@ -13,7 +13,7 @@ public interface KeyValueStorage {
     /**
      * Get the value of a key
      * @param key the key
-     * @return  the node with corresponding value or null when not found value
+     * @return  the swarmNode with corresponding value or null when not found value
      */
     KvNode get(String key);
 

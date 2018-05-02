@@ -15,7 +15,7 @@ public enum SecuredType {
     CLUSTER,
 
     /**
-     * physical computer node
+     * physical computer swarmNode
      */
     NODE,
 
@@ -25,7 +25,7 @@ public enum SecuredType {
     CONTAINER,
 
     /**
-     * image placed local node
+     * image placed local swarmNode
      */
     LOCAL_IMAGE,
 

@@ -1,7 +1,7 @@
 package edu.scut.cs.hm.common.kv.mapping;
 
 /**
- * do something with KvProperty before save and read
+ * do something with {@link KvMapping} annotation field before save and read from k-v storage
  * @see KvProperty#get(Object)
  * @see KvProperty#set(Object, String)
  */

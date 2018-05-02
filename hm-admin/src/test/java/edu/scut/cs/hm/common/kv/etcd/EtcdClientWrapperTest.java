@@ -1,6 +1,6 @@
 package edu.scut.cs.hm.common.kv.etcd;
 
-import edu.scut.cs.hm.admin.config.EtcdConfiguration;
+import edu.scut.cs.hm.admin.config.KvConfiguration;
 import edu.scut.cs.hm.common.kv.KeyValueStorage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +25,7 @@ public class EtcdClientWrapperTest {
 
     @Configuration
     @EnableAutoConfiguration
-    @Import(EtcdConfiguration.class)
+    @Import(KvConfiguration.class)
     public static class Config {
     }
 

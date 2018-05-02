@@ -15,7 +15,7 @@ public final class KvUtils {
             last--;
         }
         if (pattern.charAt(last - 1) == '/' && keyLen == last - 1) {
-            //when operation act on current node then key does not contain a end slash
+            //when operation act on current swarmNode then key does not contain a end slash
             last--;
         }
         return key.regionMatches(0, pattern, 0, last);

@@ -2,7 +2,7 @@ package edu.scut.cs.hm.common.kv.mapping;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.MoreObjects;
-import edu.scut.cs.hm.admin.config.EtcdConfiguration;
+import edu.scut.cs.hm.admin.config.KvConfiguration;
 import edu.scut.cs.hm.common.kv.KeyValueStorage;
 import edu.scut.cs.hm.common.utils.UUIDs;
 import lombok.Data;
@@ -36,15 +36,14 @@ public class KvMapTest {
 
     @Configuration
     @EnableAutoConfiguration
-    @Import(EtcdConfiguration.class)
+    @Import(KvConfiguration.class)
     public static class AppConfig {
 
         @Bean
         KvMapperFactory factory(KeyValueStorage etcd) {
             return new KvMapperFactory(new ObjectMapper(),
                     etcd,
-                    Mockito.mock(TextEncryptor.class),
-                    Mockito.mock(Validator.class));
+                    Mockito.mock(TextEncryptor.class));
         }
     }
 

@@ -2,7 +2,7 @@ package edu.scut.cs.hm.common.security;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.scut.cs.hm.common.json.JacksonUtils;
+import edu.scut.cs.hm.common.utils.JacksonUtils;
 import lombok.Data;
 import org.junit.Test;
 import org.springframework.security.core.Authentication;

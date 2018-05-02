@@ -3,7 +3,7 @@ package edu.scut.cs.hm.common.kv.mapping;
 /*
     KeyValueStorage 是一个抽象的key-value存储器，它存储的方式是一个string key 对应一个 KvNode
 
-    我们生成了一个实现，基于Etcd的KeyValueStorage，我们将etcd中的路径path作为key，将获取的etcd node 解包为KvNode
+    我们生成了一个实现，基于Etcd的KeyValueStorage，我们将etcd中的路径path作为key，将获取的etcd swarmNode 解包为KvNode
 
     举例：@see src/test/java/edu.scut.cs.hm.common.kv.mapping.KvMapTest
         存储一个对象Entry

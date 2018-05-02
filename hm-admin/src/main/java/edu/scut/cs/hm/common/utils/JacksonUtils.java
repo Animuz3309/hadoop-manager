@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.common.json;
+package edu.scut.cs.hm.common.utils;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -11,6 +11,9 @@ import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
 import java.util.TimeZone;
 
+/**
+ * Jackson utils to get Jackson {@link ObjectMapper}
+ */
 public final class JacksonUtils {
 
     public static final String JSON_DATETIME_FORMAT_PATTERN = "yyyy/MM/dd HH:mm:ss";

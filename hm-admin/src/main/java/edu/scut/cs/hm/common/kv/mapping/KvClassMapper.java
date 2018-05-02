@@ -126,8 +126,8 @@ public class KvClassMapper<T> {
         this.storage.setDir(prefix, WriteOptions.builder().failIfExists(true).build());
     }
     /**
-     * Load object from specified node. Name of node can be obtained from {@link #list()}.
-     * @param name name of node
+     * Load object from specified swarmNode. Name of swarmNode can be obtained from {@link #list()}.
+     * @param name name of swarmNode
      * @return object or null
      */
     public T load(String name) {
@@ -135,8 +135,8 @@ public class KvClassMapper<T> {
     }
 
     /**
-     * Load object from specified node. Name of node can be obtained from {@link #list()}.
-     * @param name name of node
+     * Load object from specified swarmNode. Name of swarmNode can be obtained from {@link #list()}.
+     * @param name name of swarmNode
      * @param type null or instantiable type, must be a subtype of {@link T}
      * @return object or null
      */

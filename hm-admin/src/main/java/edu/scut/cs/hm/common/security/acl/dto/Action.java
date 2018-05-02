@@ -7,7 +7,7 @@ import org.springframework.security.acls.model.Permission;
 /**
  * Customer implements Spring Securit Acl <code>Permission</code> for action
  * <p>
- *     Particular type of permission to do with docker containers, physical nodes and so on,
+ *     Particular type of permission to do with docker containers, physical swarmNode and so on,
  *     we use 6-bits to represent 6 permissions
  * </p>
  */

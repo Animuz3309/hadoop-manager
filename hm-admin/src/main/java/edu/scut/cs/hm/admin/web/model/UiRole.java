@@ -25,9 +25,9 @@ public class UiRole implements Comparable<UiRole> {
         if (o == null) {
             return 1;
         }
-        int compare = ObjectUtils.compare(this.tenant, o.tenant, false);
+        int compare = ObjectUtils.compare(getTenant(), o.getTenant());
         if(compare == 0) {
-            compare = ObjectUtils.compare(this.name, o.name, false);
+            compare = ObjectUtils.compare(getName(), o.getName());
         }
         return compare;
     }

@@ -74,7 +74,7 @@ public class SecurityConfiguration {
      * @return
      */
     @Bean
-    TextEncryptor textEncryptor(@Value("${hm.security.cipher.password}") String password,
+    public TextEncryptor textEncryptor(@Value("${hm.security.cipher.password}") String password,
                                 @Value("${hm.security.cipher.salt}") String salt) {
         // on wrong configuration system will pass prop expressions '${prop}' as value, we need to detect this
         Assert.isTrue(StringUtils.hasText(password) && !password.startsWith("${"),
@@ -90,7 +90,7 @@ public class SecurityConfiguration {
      * @return
      */
     @Bean
-    PasswordEncoder getPasswordEncoder(@Value("${hm.bcrypt.strength:8}") int bcryptStrength) {
+    public PasswordEncoder getPasswordEncoder(@Value("${hm.bcrypt.strength:8}") int bcryptStrength) {
         return new BCryptPasswordEncoder(bcryptStrength);
     }
 
@@ -100,14 +100,14 @@ public class SecurityConfiguration {
      * @return
      */
     @Bean
-    AccessDecisionManager accessDecisionManager() {
+    public AccessDecisionManager accessDecisionManager() {
         ImmutableList.Builder<AccessDecisionVoter<?>> lb = ImmutableList.builder();
         lb.add(new AdminRoleVoter());
         return new AffirmativeBased(lb.build());
     }
 
     @Bean
-    TenantService tenantService() {
+    public TenantService tenantService() {
         return new TempTenantService();
     }
 
@@ -139,7 +139,7 @@ public class SecurityConfiguration {
      * 许可授予策略
      */
     @Bean
-    ExtPermissionGrantingStrategy extPermissionGrantingStrategy(TenantService tenantService, UserDetailsService userDetailsService) {
+    public ExtPermissionGrantingStrategy extPermissionGrantingStrategy(TenantService tenantService, UserDetailsService userDetailsService) {
         PermissionGrantingJudgeDefaultBehavior behavior = new PermissionGrantingJudgeDefaultBehavior(tenantService);
         return new TenantBasedPermissionGrantedStrategy(behavior, userDetailsService, tenantService);
     }
@@ -148,7 +148,7 @@ public class SecurityConfiguration {
      * 维护权限继承树
      */
     @Bean
-    RoleHierarchy roleHierarchy() {
+    public RoleHierarchy roleHierarchy() {
         return RoleHierarchyImpl.builder()
                 .childs(Authorities.ADMIN_ROLE, Authorities.USER_ROLE)
                 .build();
@@ -158,7 +158,7 @@ public class SecurityConfiguration {
      * 从authentication获取sid的策略
      */
     @Bean
-    SidRetrievalStrategy sidRetrievalStrategy(RoleHierarchy roleHierarchy) {
+    public SidRetrievalStrategy sidRetrievalStrategy(RoleHierarchy roleHierarchy) {
         return new TenantSidRetrievalStrategy(roleHierarchy);
     }
 
@@ -166,7 +166,7 @@ public class SecurityConfiguration {
      * AccessContext factory to create AccessContext which keep the authentication information
      */
     @Bean
-    AccessContextFactory aclContextFactory(AclService aclService,
+    public AccessContextFactory aclContextFactory(AclService aclService,
                                            ExtPermissionGrantingStrategy pgs,
                                            SidRetrievalStrategy sidStrategy) {
         return new AccessContextFactory(aclService, pgs, sidStrategy);
@@ -194,7 +194,7 @@ public class SecurityConfiguration {
 
         @Bean
         @Order
-        ConfigurableAclService configurableAclService(PermissionGrantingStrategy pgs) {
+        public ConfigurableAclService configurableAclService(PermissionGrantingStrategy pgs) {
             ConfigurableAclService.Builder b = ConfigurableAclService.builder();
             for (AclServiceConfigurer configurer: configurers) {
                 configurer.configure(b);
@@ -204,7 +204,7 @@ public class SecurityConfiguration {
 
         @Bean
         @Order(Ordered.HIGHEST_PRECEDENCE)
-        ProvidersAclService providersAclService(PermissionGrantingStrategy pgs) {
+        public ProvidersAclService providersAclService(PermissionGrantingStrategy pgs) {
             ProvidersAclService service = new ProvidersAclService(pgs);
             if(providers != null) {
                 service.getProviders().putAll(providers);
@@ -214,7 +214,7 @@ public class SecurityConfiguration {
 
         @Bean
         @Primary
-        AclService compositeAclService(List<AbstractAclService> services) {
+        public AclService compositeAclService(List<AbstractAclService> services) {
             return new CompositeAclService(services);
         }
     }
@@ -235,7 +235,7 @@ public class SecurityConfiguration {
         }
 
         @Bean
-        TokenService signedTokenService(TokenServiceConfigurer configurer) {
+        public TokenService signedTokenService(TokenServiceConfigurer configurer) {
             SignedTokenServiceImpl tokenService = new SignedTokenServiceImpl();
             tokenService.setPseudoRandomNumberBytes(configurer.getPseudoRandomNumberBytes());
             tokenService.setServerSecret(configurer.getServerSecret());
@@ -246,7 +246,7 @@ public class SecurityConfiguration {
         }
 
         @Bean
-        TokenValidator tokenValidator(TokenService tokenService,
+        public TokenValidator tokenValidator(TokenService tokenService,
                                       TokenServiceConfigurer configurer) {
             // net.sf.ehcache.Cache
             Cache cache = new Cache(
@@ -272,13 +272,13 @@ public class SecurityConfiguration {
      * @return
      */
     @Bean
-    SuccessAuthProcessor successAuthProcessor() {
+    public SuccessAuthProcessor successAuthProcessor() {
         return (auth, userDetails) -> {
             Set<GrantedAuthority> authorities = new HashSet<>(userDetails.getAuthorities());
             authorities.add(Authorities.USER);
 
             // we add GA for username, because we do not implement ACL tuning for this,
-            // and anyway check cluster and node access
+            // and anyway check cluster and swarmNode access
             authorities.add(Authorities.fromName(SecuredType.LOCAL_IMAGE.admin()));
             authorities.add(Authorities.fromName(SecuredType.REMOTE_IMAGE.admin()));
             authorities.add(Authorities.fromName(SecuredType.NETWORK.admin()));
@@ -294,7 +294,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    AuthenticationProvider userCompositedAuthProvider(UserIdentifiersDetailsService userDetailsService,
+    public AuthenticationProvider userCompositedAuthProvider(UserIdentifiersDetailsService userDetailsService,
                                                       PasswordEncoder passwordEncoder,
                                                       SuccessAuthProcessor successAuthProcessor) {
         return new UserCompositeAuthProvider(userDetailsService, passwordEncoder, successAuthProcessor);

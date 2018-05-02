@@ -2,6 +2,9 @@ package edu.scut.cs.hm.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Closeable utils to close class implement {@link AutoCloseable}
+ */
 @Slf4j
 public final class Closeables {
     private Closeables() {}

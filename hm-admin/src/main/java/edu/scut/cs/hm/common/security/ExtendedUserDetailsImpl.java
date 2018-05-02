@@ -214,6 +214,9 @@ public class ExtendedUserDetailsImpl implements ExtendedUserDetails, Comparable<
      */
     @Override
     public int compareTo(UserDetails o) {
-        return ObjectUtils.compare(this.username, o.getUsername(), false);
+        if (o == null) {
+            return 1;
+        }
+        return ObjectUtils.compare(getUsername(), o.getUsername());
     }
 }
