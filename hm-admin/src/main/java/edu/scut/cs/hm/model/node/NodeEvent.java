@@ -62,7 +62,7 @@ public class NodeEvent extends Event implements WithCluster, WithAction {
         }
     }
 
-    public static final String BUS = "bus.hm.swarmNode";
+    public static final String BUS = "bus.hm.node";
 
     private final NodeInfo old;
     private final NodeInfo current;

@@ -38,13 +38,6 @@ public class KvMapTest {
     @EnableAutoConfiguration
     @Import(KvConfiguration.class)
     public static class AppConfig {
-
-        @Bean
-        KvMapperFactory factory(KeyValueStorage etcd) {
-            return new KvMapperFactory(new ObjectMapper(),
-                    etcd,
-                    Mockito.mock(TextEncryptor.class));
-        }
     }
 
     @Autowired

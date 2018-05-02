@@ -24,6 +24,10 @@ public enum StandardAction {
         this.value = value;
     }
 
+    public String value() {
+        return value;
+    }
+
     private static final Map<String, Severity> severityMap = ImmutableMap.<String, Severity>builder()
             .put(DIE.value, Severity.ERROR)
             .put(OFFLINE.value, Severity.WARNING)

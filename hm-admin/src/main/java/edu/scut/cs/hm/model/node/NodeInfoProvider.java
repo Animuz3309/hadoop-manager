@@ -6,14 +6,19 @@ package edu.scut.cs.hm.model.node;
 public interface NodeInfoProvider {
 
     /**
-     * Get {@link NodeInfo} from name of swarmNode
-     * @param node name of swarmNode
+     * Get {@link NodeInfo} from name of node
+     * @param node name of node
      * @return NodeInfo
      */
-    NodeInfo getNodeInf(String node);
+    NodeInfo getNodeInfo(String node);
 
+    /**
+     * Get node's cluster
+     * @param node
+     * @return
+     */
     default String getNodeCluster(String node) {
-        NodeInfo nodeInfo = getNodeInf(node);
+        NodeInfo nodeInfo = getNodeInfo(node);
         return nodeInfo == null ? null : nodeInfo.getCluster();
     }
 }

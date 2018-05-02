@@ -314,6 +314,18 @@ public class KvMap<T> {
     }
 
     /**
+     * Compute a value if the value of key is not exists
+     * @param key
+     * @param func
+     * @return
+     */
+    public T computeIfAbsent(String key, Function<String, ? extends T> func) {
+        ValueHolder holder = getOrCreateHolder(key);
+        return  holder.computeIfAbsent(func);
+    }
+
+
+    /**
      * Invoke on key. If ValueHolder exists then passed to fun, otherwise null. If func return null value will be removed.
      * @param key key
      * @param func handler

@@ -2,7 +2,7 @@ package edu.scut.cs.hm.common.security;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.scut.cs.hm.common.utils.JacksonUtils;
+import edu.scut.cs.hm.common.utils.JacksonUtil;
 import lombok.Data;
 import org.junit.Test;
 import org.springframework.security.core.Authentication;
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 public class JsonImmutableSecurityObjectTest {
-    private static final ObjectMapper mapper = JacksonUtils.objectMapperBuilder();
+    private static final ObjectMapper mapper = JacksonUtil.objectMapperBuilder();
 
     @Test
     public void testMap2Json() throws Exception {
@@ -44,9 +44,9 @@ public class JsonImmutableSecurityObjectTest {
         MockBean mockBean = new MockBean();
         mockBean.date = new Date();
 
-        DateFormat dateFormat = new SimpleDateFormat(JacksonUtils.JSON_DATETIME_FORMAT_PATTERN);
-        dateFormat.setTimeZone(JacksonUtils.DEFAULT_TIMEZONE);
-        DateTimeFormatter localDateTimeFormat = DateTimeFormatter.ofPattern(JacksonUtils.JSON_DATETIME_FORMAT_PATTERN);
+        DateFormat dateFormat = new SimpleDateFormat(JacksonUtil.JSON_DATETIME_FORMAT_PATTERN);
+        dateFormat.setTimeZone(JacksonUtil.DEFAULT_TIMEZONE);
+        DateTimeFormatter localDateTimeFormat = DateTimeFormatter.ofPattern(JacksonUtil.JSON_DATETIME_FORMAT_PATTERN);
 
         assertEquals(String.format("{\"date\":\"%s\"}", dateFormat.format(mockBean.date)),
                 mapper.writeValueAsString(mockBean));

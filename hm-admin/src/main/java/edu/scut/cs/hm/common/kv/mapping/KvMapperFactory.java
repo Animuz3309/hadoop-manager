@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.common.collect.ImmutableMap;
 import edu.scut.cs.hm.common.kv.KeyValueStorage;
-import edu.scut.cs.hm.common.utils.FindHandlerUtil;
+import edu.scut.cs.hm.common.utils.FindHandlerUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.util.Assert;
@@ -84,7 +84,7 @@ public class KvMapperFactory {
 
     @SuppressWarnings("unchecked")
     <T> FieldSetter<T> getSetter(Class<T> type) {
-        return FindHandlerUtil.findByClass(type, setters);
+        return FindHandlerUtils.findByClass(type, setters);
     }
 
     /**

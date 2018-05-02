@@ -14,11 +14,11 @@ import java.util.TimeZone;
 /**
  * Jackson utils to get Jackson {@link ObjectMapper}
  */
-public final class JacksonUtils {
+public final class JacksonUtil {
 
     public static final String JSON_DATETIME_FORMAT_PATTERN = "yyyy/MM/dd HH:mm:ss";
     public static final TimeZone DEFAULT_TIMEZONE = TimeZone.getDefault();
-    private JacksonUtils() {}
+    private JacksonUtil() {}
 
     /**
      * Build Jackson ObjectMapper with default for our customize settings <p/>

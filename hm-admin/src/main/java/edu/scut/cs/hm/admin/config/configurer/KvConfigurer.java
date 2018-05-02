@@ -9,5 +9,5 @@ public class KvConfigurer {
 
     private String[] etcdUrls;
 
-    private String prefix;
+    private String prefix = "/hm";
 }

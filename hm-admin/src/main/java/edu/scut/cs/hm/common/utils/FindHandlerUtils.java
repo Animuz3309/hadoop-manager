@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public final class FindHandlerUtil {
-    private FindHandlerUtil() {}
+public final class FindHandlerUtils {
+    private FindHandlerUtils() {}
 
     /**
      * This method find appropriate handler by class hierarchy, if got none, then it find by interface hierarchy.

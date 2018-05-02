@@ -77,7 +77,7 @@ public class NodeRegistrationImpl implements NodeRegistration, AutoCloseable {
      * @param ttl time in seconds
      */
     public void setTtl(int ttl) {
-        final int min = nodeService.getConfig().getMinTtl();
+        final int min = nodeService.getNodeServiceConfig().getMinTtl();
         if(ttl < min) {
             ttl = min;
         }
@@ -321,7 +321,7 @@ public class NodeRegistrationImpl implements NodeRegistration, AutoCloseable {
      * @param address new address of node or null
      * @return new docker service, or old when address same as old
      */
-    DockerService setAddress(String address) {
+    public DockerService setAddress(String address) {
         synchronized (lock) {
             update(this.builder::getAddress, this.builder::setAddress, address);
             if(docker != null && docker.getAddress().equals(address)) {
