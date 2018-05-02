@@ -40,6 +40,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+/**
+ * Node service for save/load physical node
+ */
 @Slf4j
 @Data
 @Service

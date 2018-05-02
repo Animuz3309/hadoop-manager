@@ -49,12 +49,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         final String loginUrl = "/login";
         final String logoutUrl = "/logout";
+        final String apiPrefix = "/api/";
+        final String apiLoginUrl = apiPrefix + "token/login";
         http.csrf().disable()
                 .authenticationProvider(provider).userDetailsService(userDetailsService)
                 .anonymous().principal(SecurityUtils.USER_ANONYMOUS).and()
-                .authorizeRequests().antMatchers("/token/login").permitAll()
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/**").authenticated()
+                .authorizeRequests().antMatchers(apiLoginUrl).permitAll()    // ajax获取api token
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()          // allow CORS option calls
+                .antMatchers("/**", apiPrefix + "**").authenticated()
                 .and().headers().cacheControl().disable()
                 .and().formLogin().loginPage(loginUrl).permitAll().defaultSuccessUrl("/dashboard")
                 .and().logout().logoutUrl(logoutUrl).logoutSuccessUrl(loginUrl)
