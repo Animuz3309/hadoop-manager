@@ -1,16 +1,12 @@
 package edu.scut.cs.hm.admin.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.scut.cs.hm.common.kv.KeyValueStorage;
-import edu.scut.cs.hm.common.kv.mapping.KvMapperFactory;
 import edu.scut.cs.hm.common.mb.MessageBus;
 import edu.scut.cs.hm.common.mb.MessageBuses;
-import edu.scut.cs.hm.docker.model.DockerLogEvent;
-import edu.scut.cs.hm.docker.model.DockerServiceEvent;
+import edu.scut.cs.hm.docker.model.events.DockerLogEvent;
+import edu.scut.cs.hm.docker.model.events.DockerServiceEvent;
 import edu.scut.cs.hm.model.node.NodeEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.encrypt.TextEncryptor;
 
 @Configuration
 public class MbConfiguration {

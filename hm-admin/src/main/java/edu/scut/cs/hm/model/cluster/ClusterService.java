@@ -1,5 +1,6 @@
 package edu.scut.cs.hm.model.cluster;
 
+import edu.scut.cs.hm.admin.service.NodeService;
 import edu.scut.cs.hm.docker.DockerService;
 
 import java.util.Arrays;
@@ -79,9 +80,18 @@ public interface ClusterService {
      */
     Set<String> getServices();
 
+
     /**
      * Get executor
+     * TODO refactor
      * @return
      */
     ExecutorService getExecutor();
+
+    /**
+     * Get NodeService
+     * TODO refactor
+     * @return
+     */
+    NodeService getNodeService();
 }

@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.docker;
+package edu.scut.cs.hm.docker.model.events;
 
 import lombok.Data;
 

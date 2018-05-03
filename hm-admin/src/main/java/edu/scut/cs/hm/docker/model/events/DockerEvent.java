@@ -1,8 +1,9 @@
-package edu.scut.cs.hm.docker.model;
+package edu.scut.cs.hm.docker.model.events;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.scut.cs.hm.docker.model.SwarmNode;
 import lombok.Data;
 
 /**

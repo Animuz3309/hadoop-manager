@@ -15,7 +15,7 @@ import edu.scut.cs.hm.docker.DockerConfig;
 import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.docker.DockerServiceImpl;
 import edu.scut.cs.hm.docker.DockerServiceSecurityWrapper;
-import edu.scut.cs.hm.docker.model.DockerServiceEvent;
+import edu.scut.cs.hm.docker.model.events.DockerServiceEvent;
 import io.netty.handler.ssl.ClientAuth;
 import io.netty.handler.ssl.JdkSslContext;
 import lombok.extern.slf4j.Slf4j;

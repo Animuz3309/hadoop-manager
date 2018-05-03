@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.docker.model;
+package edu.scut.cs.hm.docker.model.network;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

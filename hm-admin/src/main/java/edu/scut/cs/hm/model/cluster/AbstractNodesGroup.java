@@ -4,13 +4,14 @@ import com.google.common.collect.ImmutableSet;
 import edu.scut.cs.hm.admin.security.SecuredType;
 import edu.scut.cs.hm.admin.security.TempAuth;
 import edu.scut.cs.hm.admin.security.acl.AclModifier;
+import edu.scut.cs.hm.admin.service.NodeService;
 import edu.scut.cs.hm.common.security.SecurityUtils;
 import edu.scut.cs.hm.common.security.acl.TenantPrincipalSid;
 import edu.scut.cs.hm.common.security.acl.dto.AclSource;
 import edu.scut.cs.hm.common.security.acl.dto.ObjectIdentityData;
 import edu.scut.cs.hm.docker.DockerService;
-import edu.scut.cs.hm.docker.model.Network;
-import edu.scut.cs.hm.docker.swarm.NetworkManager;
+import edu.scut.cs.hm.docker.model.network.Network;
+import edu.scut.cs.hm.docker.model.swarm.NetworkManager;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -338,8 +339,12 @@ public abstract class AbstractNodesGroup<C extends AbstractNodesGroupConfig<C>> 
         flush();
     }
 
-    public ClusterService getClusterService() {
+    protected ClusterService getClusterService() {
         return service;
+    }
+
+    protected NodeService getNodeService() {
+        return service.getNodeService();
     }
 
     private class CreateNetworkTask implements Runnable {

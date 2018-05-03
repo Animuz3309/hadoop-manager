@@ -1,7 +1,9 @@
 package edu.scut.cs.hm.docker;
 
+import edu.scut.cs.hm.docker.arg.GetContainersArg;
 import edu.scut.cs.hm.docker.arg.GetEventsArg;
-import edu.scut.cs.hm.docker.model.Network;
+import edu.scut.cs.hm.docker.model.container.DockerContainer;
+import edu.scut.cs.hm.docker.model.network.Network;
 import edu.scut.cs.hm.docker.res.ServiceCallResult;
 
 import java.util.List;
@@ -52,6 +54,15 @@ public interface DockerService {
      * @return
      */
     boolean isOnline();
+
+    /**
+     * Retrieve list of Docker containers
+     * @param arg
+     * @return
+     */
+    List<DockerContainer> getContainers(GetContainersArg arg);
+
+
 
     /**
      * Subscribe a watcher in GetEventsArg to Docker event api

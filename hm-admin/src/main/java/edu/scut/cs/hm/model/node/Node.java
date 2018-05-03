@@ -1,5 +1,5 @@
 package edu.scut.cs.hm.model.node;
-import edu.scut.cs.hm.docker.DockerServiceAddress;
+import edu.scut.cs.hm.model.DockerServiceAddress;
 import edu.scut.cs.hm.model.Named;
 
 /**

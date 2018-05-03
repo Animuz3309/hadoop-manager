@@ -1,5 +1,9 @@
 package edu.scut.cs.hm.common.utils;
 
+import com.google.common.collect.ImmutableList;
+
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Consumer;
 
 public final class Sugar {
@@ -11,4 +15,15 @@ public final class Sugar {
         }
         setter.accept(val);
     }
+
+    /**
+     * Make immutable collection, make empty collection for nulls.
+     * @param src
+     * @param <I>
+     * @return
+     */
+    public static <I> List<I> immutableList(Collection<? extends I> src) {
+        return src == null ? ImmutableList.of() : ImmutableList.copyOf(src);
+    }
+
 }

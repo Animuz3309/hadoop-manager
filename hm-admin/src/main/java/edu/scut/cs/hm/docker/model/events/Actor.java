@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.docker.model;
+package edu.scut.cs.hm.docker.model.events;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

@@ -1,10 +1,10 @@
 package edu.scut.cs.hm.model.cluster;
 
-import edu.scut.cs.hm.docker.swarm.ContainersManager;
+import edu.scut.cs.hm.docker.model.swarm.ContainersManager;
 import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.docker.arg.NodeUpdateArg;
 import edu.scut.cs.hm.docker.res.ServiceCallResult;
-import edu.scut.cs.hm.docker.swarm.NetworkManager;
+import edu.scut.cs.hm.docker.model.swarm.NetworkManager;
 import edu.scut.cs.hm.model.Named;
 import edu.scut.cs.hm.model.WithAcl;
 import edu.scut.cs.hm.model.node.NodeInfo;

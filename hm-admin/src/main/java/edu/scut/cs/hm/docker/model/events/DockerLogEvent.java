@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.docker.model;
+package edu.scut.cs.hm.docker.model.events;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import edu.scut.cs.hm.model.LogEvent;

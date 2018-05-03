@@ -1,7 +1,7 @@
 package edu.scut.cs.hm.admin.config;
 
 import edu.scut.cs.hm.admin.config.configurer.DockerConfigurer;
-import edu.scut.cs.hm.docker.DockerEventConfig;
+import edu.scut.cs.hm.docker.model.events.DockerEventConfig;
 import edu.scut.cs.hm.model.node.NodeServiceConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

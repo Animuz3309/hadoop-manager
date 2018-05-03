@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.docker.swarm;
+package edu.scut.cs.hm.docker.model.swarm;
 
 /**
  * Tool for manage cluster containers <p/>

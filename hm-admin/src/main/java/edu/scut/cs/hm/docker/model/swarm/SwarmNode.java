@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.docker.model;
+package edu.scut.cs.hm.docker.model.swarm;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

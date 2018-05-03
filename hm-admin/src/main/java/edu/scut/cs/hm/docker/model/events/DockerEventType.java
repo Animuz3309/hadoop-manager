@@ -1,8 +1,7 @@
-package edu.scut.cs.hm.docker.model;
+package edu.scut.cs.hm.docker.model.events;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import edu.scut.cs.hm.model.Event;
 
 import java.util.HashMap;
 import java.util.Map;

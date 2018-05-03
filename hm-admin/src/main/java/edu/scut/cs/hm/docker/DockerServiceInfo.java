@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.docker.model;
+package edu.scut.cs.hm.docker;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
