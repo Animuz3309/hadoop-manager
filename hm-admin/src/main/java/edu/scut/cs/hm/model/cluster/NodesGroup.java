@@ -12,6 +12,7 @@ import edu.scut.cs.hm.model.node.NodeInfo;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * Interface represent node group
@@ -22,6 +23,7 @@ public interface NodesGroup extends Named, WithAcl {
     enum Feature {
         /**
          * nodes in group is united by single 'swarm' service
+         * less use now, so we don't support it at this moment
          */
         SWARM,
 
@@ -41,6 +43,10 @@ public interface NodesGroup extends Named, WithAcl {
      * flush k-v storage
      */
     void flush();
+
+    AbstractNodesGroupConfig<?> getConfig();
+    void setConfig(AbstractNodesGroupConfig<?> config);
+    void updateConfig(Consumer<AbstractNodesGroupConfig<?>> consumer);
 
     /**
      * Try to init cluster if it not init yet
