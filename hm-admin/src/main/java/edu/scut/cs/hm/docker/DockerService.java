@@ -1,7 +1,7 @@
 package edu.scut.cs.hm.docker;
 
 import edu.scut.cs.hm.docker.arg.GetEventsArg;
-import edu.scut.cs.hm.model.ServiceCallResult;
+import edu.scut.cs.hm.docker.res.ServiceCallResult;
 
 /**
  * Docker client API

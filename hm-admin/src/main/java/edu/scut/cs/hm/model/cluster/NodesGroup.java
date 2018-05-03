@@ -1,6 +1,6 @@
 package edu.scut.cs.hm.model.cluster;
 
-import edu.scut.cs.hm.model.ServiceCallResult;
+import edu.scut.cs.hm.docker.res.ServiceCallResult;
 import edu.scut.cs.hm.model.Named;
 import edu.scut.cs.hm.model.WithAcl;
 import edu.scut.cs.hm.model.node.NodeInfo;

@@ -5,7 +5,7 @@ import edu.scut.cs.hm.admin.security.AccessContextFactory;
 import edu.scut.cs.hm.admin.security.SecuredType;
 import edu.scut.cs.hm.common.security.acl.dto.Action;
 import edu.scut.cs.hm.docker.arg.GetEventsArg;
-import edu.scut.cs.hm.model.ServiceCallResult;
+import edu.scut.cs.hm.docker.res.ServiceCallResult;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.util.Assert;
 

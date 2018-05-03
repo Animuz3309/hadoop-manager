@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.scut.cs.hm.docker.arg.GetEventsArg;
 import edu.scut.cs.hm.docker.model.DockerServiceEvent;
 import edu.scut.cs.hm.docker.model.DockerServiceInfo;
-import edu.scut.cs.hm.model.ServiceCallResult;
+import edu.scut.cs.hm.docker.res.ServiceCallResult;
 import edu.scut.cs.hm.model.node.NodeInfoProvider;
 import lombok.Data;
 import org.springframework.util.Assert;
