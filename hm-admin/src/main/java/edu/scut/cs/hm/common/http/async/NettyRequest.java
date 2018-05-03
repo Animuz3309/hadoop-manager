@@ -28,6 +28,7 @@ import java.util.concurrent.ExecutionException;
  * We create our implementation based on {@link org.springframework.http.client.Netty4ClientHttpRequest }
  * due to need consume of endless stream with "TransferEncoding: chunked", which default implementation does not allow.
  */
+@SuppressWarnings("deprecation")
 class NettyRequest implements ClientHttpRequest, AsyncClientHttpRequest {
     private final HttpHeaders headers = new HttpHeaders();
 

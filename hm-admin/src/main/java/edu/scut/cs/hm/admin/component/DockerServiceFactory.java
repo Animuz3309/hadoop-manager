@@ -21,8 +21,6 @@ import io.netty.handler.ssl.JdkSslContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.client.AsyncClientHttpRequestInterceptor;
@@ -135,6 +133,7 @@ public class DockerServiceFactory {
         });
     }
 
+    @SuppressWarnings("deprecation")
     private AsyncRestTemplate createRestTemplate(String addr) {
         // we use async client because usual client does not allow to interruption in some case
         NettyRequestFactory factory = new NettyRequestFactory();

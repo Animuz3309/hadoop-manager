@@ -25,6 +25,7 @@ import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
 @Data
+@SuppressWarnings("deprecation")
 public class NettyRequestFactory implements ClientHttpRequestFactory, AsyncClientHttpRequestFactory,
         InitializingBean, DisposableBean {
 
