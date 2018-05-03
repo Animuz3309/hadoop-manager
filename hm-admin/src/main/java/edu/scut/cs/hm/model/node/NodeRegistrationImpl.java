@@ -63,8 +63,8 @@ public class NodeRegistrationImpl implements NodeRegistration, AutoCloseable {
         }
         this.logFetcher = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder()
                 .setDaemon(true)
-                .setNameFormat("swarmNode-" + name + "-log-fetcher-%d")
-                .setUncaughtExceptionHandler((thread, ex) -> log.error("Uncaught exception in '" + name + "' swarmNode log fetcher.", ex))
+                .setNameFormat("node-" + name + "-log-fetcher-%d")
+                .setUncaughtExceptionHandler((thread, ex) -> log.error("Uncaught exception in '" + name + "' node log fetcher.", ex))
                 .build());
     }
 
@@ -104,7 +104,7 @@ public class NodeRegistrationImpl implements NodeRegistration, AutoCloseable {
     private void subscribe() {
         DockerEventConfig cfg = nodeService.getDockerEventConfig();
         final int periodInSeconds = cfg.getPeriodInSeconds();
-        log.info("Register log fetcher from {} swarmNode, repeat every {} seconds", name, periodInSeconds);
+        log.info("Register log fetcher from {} node, repeat every {} seconds", name, periodInSeconds);
         Assert.isNull(this.logFuture, "Future of docker logging is not null");
         logFuture = logFetcher.scheduleAtFixedRate(
                 () -> {

@@ -278,7 +278,7 @@ public class SecurityConfiguration {
             authorities.add(Authorities.USER);
 
             // we add GA for username, because we do not implement ACL tuning for this,
-            // and anyway check cluster and swarmNode access
+            // and anyway check cluster and node access
             authorities.add(Authorities.fromName(SecuredType.LOCAL_IMAGE.admin()));
             authorities.add(Authorities.fromName(SecuredType.REMOTE_IMAGE.admin()));
             authorities.add(Authorities.fromName(SecuredType.NETWORK.admin()));

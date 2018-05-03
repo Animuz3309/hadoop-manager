@@ -22,7 +22,7 @@ public interface NodeRegistration {
     String getCluster();
 
     /**
-     * Time for swarmNode registration in seconds.
+     * Time for node registration in seconds.
      * @return seconds or negative value when is not applicable.
      */
     int getTtl();
@@ -40,7 +40,7 @@ public interface NodeRegistration {
     ObjectIdentity getOid();
 
     /**
-     * Get Docker Service of this swarmNode
+     * Get Docker Service of this node
      * @return
      */
     DockerService getDocker();

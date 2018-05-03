@@ -8,7 +8,7 @@ import org.springframework.util.Assert;
 import java.time.ZonedDateTime;
 
 /**
- * Event of swarmNode Health
+ * Event of node Health
  */
 @Data
 public class NodeHealthEvent implements EventWithTime, WithCluster {

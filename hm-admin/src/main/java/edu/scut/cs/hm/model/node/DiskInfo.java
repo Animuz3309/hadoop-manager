@@ -3,7 +3,7 @@ package edu.scut.cs.hm.model.node;
 import lombok.Data;
 
 /**
- * Information of disk on swarmNode
+ * Information of disk on node
  */
 @Data
 public class DiskInfo {

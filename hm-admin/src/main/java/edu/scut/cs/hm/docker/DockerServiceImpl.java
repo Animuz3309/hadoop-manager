@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.scut.cs.hm.docker.arg.GetEventsArg;
 import edu.scut.cs.hm.docker.model.DockerServiceEvent;
 import edu.scut.cs.hm.docker.model.DockerServiceInfo;
-import edu.scut.cs.hm.docker.res.ServiceCallResult;
+import edu.scut.cs.hm.model.ServiceCallResult;
 import edu.scut.cs.hm.model.node.NodeInfoProvider;
 import lombok.Data;
 import org.springframework.util.Assert;
@@ -23,6 +23,7 @@ public class DockerServiceImpl implements DockerService {
         private String node;
         private String cluster;
         private DockerConfig config;
+        @SuppressWarnings("deprecation")
         private AsyncRestTemplate restTemplate;
         private NodeInfoProvider nodeInfoProvider;
         private Consumer<DockerServiceEvent> eventConsumer;
@@ -47,6 +48,7 @@ public class DockerServiceImpl implements DockerService {
             return this;
         }
 
+        @SuppressWarnings("deprecation")
         public Builder restTemplate(AsyncRestTemplate restTemplate) {
             setRestTemplate(restTemplate);
             return this;
@@ -80,6 +82,7 @@ public class DockerServiceImpl implements DockerService {
     private final String node;
     private final String cluster;
     private final DockerConfig config;
+    @SuppressWarnings("deprecation")
     private final AsyncRestTemplate restTemplate;
     private final NodeInfoProvider nodeInfoProvider;
     private final Consumer<DockerServiceEvent> eventConsumer;

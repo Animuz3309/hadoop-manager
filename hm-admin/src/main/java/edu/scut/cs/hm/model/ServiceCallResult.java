@@ -1,6 +1,7 @@
-package edu.scut.cs.hm.docker.res;
+package edu.scut.cs.hm.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import edu.scut.cs.hm.docker.res.ResultCode;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 

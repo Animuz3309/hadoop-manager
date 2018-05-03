@@ -3,13 +3,13 @@ import edu.scut.cs.hm.docker.DockerServiceAddress;
 import edu.scut.cs.hm.model.Named;
 
 /**
- * Represent physical docker swarmNode
+ * Represent physical docker node
  */
 public interface Node extends Named, DockerServiceAddress {
 
     /**
-     * Name of swarmNode. It can be host name.
-     * @return name of swarmNode
+     * Name of node. It can be host name.
+     * @return name of node
      */
     String getName();
 }

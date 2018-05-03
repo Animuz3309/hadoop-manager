@@ -8,8 +8,8 @@ import lombok.Data;
 import java.util.Map;
 
 /**
- * Represent swarm swarmNode
- * The swarmNode == host on which runs docker service.
+ * Represent swarm node
+ * The swarm node == host on which runs docker service.
  */
 @AllArgsConstructor(onConstructor = @__(@JsonCreator))
 @Data

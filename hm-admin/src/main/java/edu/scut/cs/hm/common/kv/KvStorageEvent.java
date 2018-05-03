@@ -9,8 +9,8 @@ import lombok.Data;
 public class KvStorageEvent {
 
     /**
-     * index of swarmNode, like modifiedIndex in etcd
-     * just like an long unique id of swarmNode
+     * index of node, like modifiedIndex in etcd
+     * just like an long unique id of node
      * it is primary key and unique
      */
     private final long index;

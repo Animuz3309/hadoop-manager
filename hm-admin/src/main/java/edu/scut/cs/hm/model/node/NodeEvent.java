@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.util.Assert;
 
 /**
- * Event of swarmNode changes. Usually clean different caches.
+ * Event of node changes. Usually clean different caches.
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -84,7 +84,7 @@ public class NodeEvent extends Event implements WithCluster, WithAction {
 
     /**
      * Method leaved for backward capability and must never return null.
-     * @return current, or if it null then old, swarmNode info.
+     * @return current, or if it null then old, node info.
      */
     public NodeInfo getNode() {
         NodeInfo ni = this.getCurrent();
@@ -113,11 +113,11 @@ public class NodeEvent extends Event implements WithCluster, WithAction {
         ONLINE, OFFLINE,
         CREATE, UPDATE, DELETE,
         /**
-         * This event raise before swarmNode delete. You can cancel this through call {@link NodeEvent#cancel()}.
+         * This event raise before node delete. You can cancel this through call {@link NodeEvent#cancel()}.
          */
         PRE_DELETE(true),
         /**
-         * This event raise before swarmNode delete. You can cancel this through call {@link NodeEvent#cancel()}.
+         * This event raise before node delete. You can cancel this through call {@link NodeEvent#cancel()}.
          */
         PRE_UPDATE(true);
         boolean pre;

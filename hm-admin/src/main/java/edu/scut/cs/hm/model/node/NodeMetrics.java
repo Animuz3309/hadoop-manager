@@ -13,7 +13,7 @@ import java.util.Map;
 import static edu.scut.cs.hm.common.utils.Sugar.setIfNotNull;
 
 /**
- * Health data and statistics about swarmNode.
+ * Health data and statistics about node.
  */
 @Data
 @JsonInclude(JsonInclude.Include.ALWAYS)    // for info we want to see all fields include nulls

@@ -25,9 +25,9 @@ public class KvMap<T> {
 
     @Data
     public static class Builder<T, V> {
-        private KvMapperFactory mapperFactory;  // factory to get local obj vs remote swarmNode in k-v storage mapping
-        private String path;                // the swarmNode path in remote k-v storage
-        private KvMapAdapter<T> adapter = KvMapAdapter.direct();    // the adapter to get value from k-v swarmNode
+        private KvMapperFactory mapperFactory;  // factory to get local obj vs remote node in k-v storage mapping
+        private String path;                // the node path in remote k-v storage
+        private KvMapAdapter<T> adapter = KvMapAdapter.direct();    // the adapter to get value from k-v node
         private final Class<T> type;        // type of obj
         private final Class<V> valueType;   // type of obj
         /**
@@ -165,7 +165,7 @@ public class KvMap<T> {
         KvStorageEvent.Crud action = e.getAction();     // the even action
 
         if (key == null) {
-            // it means that someone remove mapped swarmNode with all entries, we must clear map
+            // it means that someone remove mapped node with all entries, we must clear map
             if (action == KvStorageEvent.Crud.DELETE) {
                 List<ValueHolder> set;
                 synchronized (map) {
@@ -180,13 +180,13 @@ public class KvMap<T> {
             return;
         }
 
-        String property = KvUtils.child(this.mapper.getPrefix(), path, 1);  // child swarmNode
+        String property = KvUtils.child(this.mapper.getPrefix(), path, 1);  // child node
         ValueHolder holder = null;
 
         if(property != null) {
-            // get the child swarmNode's mapped value
+            // get the child node's mapped value
             holder = getOrCreateHolder(key);
-            // dirty local value if remote swarmNode value is modified
+            // dirty local value if remote node value is modified
             holder.dirty(property, index);
         } else {
             switch (action) {
@@ -421,10 +421,10 @@ public class KvMap<T> {
      * Hold the exact value, as a Cache
      */
     private final class ValueHolder {
-        private final String key;   // path name of swarmNode in k-v storage
+        private final String key;   // path name of node in k-v storage
         private volatile T value;
-        // keep the swarmNode's modified index value in k-v storage
-        // we can compare the old index value and new value from swarmNode in k-v storage to judge whether swarmNode's value modified
+        // keep the node's modified index value in k-v storage
+        // we can compare the old index value and new value from node in k-v storage to judge whether node's value modified
         // if modified we need to dirty this.value
         // see #dirty(String prop, long newIndex)
         private final Map<String, Long> index = new ConcurrentHashMap<>();
@@ -496,7 +496,7 @@ public class KvMap<T> {
         }
 
         /**
-         * newIndex is the modifiedIndex of swarmNode in k-v storage
+         * newIndex is the modifiedIndex of node in k-v storage
          * if oldIndex != null && oldIndex != newIndex -> value is dirty in local
          * @param prop
          * @param newIndex

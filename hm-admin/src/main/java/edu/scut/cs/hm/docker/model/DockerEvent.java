@@ -32,7 +32,7 @@ public class DockerEvent {
     private long time;
 
     /**
-     * Returns the swarmNode when working against docker swarm
+     * Returns the node when working against docker swarm
      */
     private SwarmNode swarmNode;
 

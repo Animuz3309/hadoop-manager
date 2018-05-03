@@ -3,13 +3,13 @@ package edu.scut.cs.hm.common.kv;
 import lombok.Data;
 
 /**
- * Represent the key-value swarmNode on the etcd server
+ * Represent the key-value node on the etcd server
  */
 @Data
 public class KvNode {
 
     /**
-     * Index of swarmNode, usually used of CAS operations.
+     * Index of node, usually used of CAS operations.
      */
     private final long index;
     private final String value;
