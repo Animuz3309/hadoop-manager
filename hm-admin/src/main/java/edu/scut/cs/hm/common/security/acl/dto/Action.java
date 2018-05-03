@@ -19,7 +19,7 @@ public enum Action implements Permission {
     EXECUTE(4),
     /**
      * Permission to change internal structure or enclosing items in docker container <p/>
-     * like install hadoop.jar in a container
+     * like install hadoop.jar in a container or nodes in a cluster
      */
     ALTER_INSIDE(5),
     ;
