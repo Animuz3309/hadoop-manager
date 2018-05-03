@@ -28,6 +28,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -52,17 +53,19 @@ public class NodeService implements NodeInfoProvider, NodeRegistry {
     private final MessageBus<NodeEvent> nodeEventBus;
     private final MessageBus<DockerLogEvent> dockerLogBus;
     private final KvMap<NodeRegistrationImpl> nodes;
-    private final DockerServiceFactory dockerServiceFactory;
     private final ExecutorService executor;
 
+    private DockerServiceFactory dockerServiceFactory;
+
     @Autowired
-    public NodeService(DockerConfigurer configurer,
+    public NodeService(NodeServiceConfig nodeServiceConfig,
+                       DockerEventConfig dockerEventConfig,
                        KvMapperFactory kvmf,
                        @Qualifier(NodeEvent.BUS) MessageBus<NodeEvent> nodeEventBus,
                        @Qualifier(DockerLogEvent.BUS) MessageBus<DockerLogEvent> dockerLogBus,
                        DockerServiceFactory dockerServiceFactory) {
-        this.nodeServiceConfig = configurer.getNodes();                // get NodeServiceConfig
-        this.dockerEventConfig = configurer.getEvents();               // get DockerEventConfig
+        this.nodeServiceConfig = nodeServiceConfig;                // get NodeServiceConfig
+        this.dockerEventConfig = dockerEventConfig;                // get DockerEventConfig
         this.nodeEventBus = nodeEventBus;
         this.dockerLogBus = dockerLogBus;
 
@@ -81,9 +84,9 @@ public class NodeService implements NodeInfoProvider, NodeRegistry {
                 .mapper(kvmf)
                 .build();
 
-        log.info("{} initialized with nodeServiceConfig: {}", getClass().getSimpleName(), this.nodeServiceConfig);
-
         this.dockerServiceFactory = dockerServiceFactory;
+
+        log.info("{} initialized with nodeServiceConfig: {}", getClass().getSimpleName(), this.nodeServiceConfig);
 
         this.executor = ExecutorUtils.executorBuilder()
                 .name(getClass().getSimpleName())
@@ -94,7 +97,7 @@ public class NodeService implements NodeInfoProvider, NodeRegistry {
                         int nodes = this.nodes.list().size();
                         int maxNodes = this.nodeServiceConfig.getMaxNodes();
                         if(nodes > maxNodes) {
-                            hint = "\nNote that 'nodeServiceConfig.maxNodes'=" + maxNodes + " but storage has 'nodes'=" + nodes;
+                            hint = "\nNote that 'nodeServiceConfig.maxNodes'=" + maxNodes + " but storage has 'node'=" + nodes;
                         }
                     } catch (Exception e) {
                         //supress
@@ -118,7 +121,7 @@ public class NodeService implements NodeInfoProvider, NodeRegistry {
                 }
                 default: {
                     NodeRegistrationImpl nr = this.nodes.getIfPresent(key);
-                    // update events will send from node registration
+                    // update event will send from node registration
                     if (nr != null && action == KvStorageEvent.Crud.CREATE) {
                         fireNodeModification(nr, NodeEvent.Action.CREATE, null, nr.getNodeInfo());
                     }
@@ -129,7 +132,7 @@ public class NodeService implements NodeInfoProvider, NodeRegistry {
 
     @PostConstruct
     public void init() {
-        nodes.load();   // load all nodes from k-v storage
+        nodes.load();   // load all node from k-v storage
     }
 
     /**
@@ -286,7 +289,7 @@ public class NodeService implements NodeInfoProvider, NodeRegistry {
     }
 
     /**
-     * Get name of all nodes
+     * Get name of all node
      * @return
      */
     public Collection<String> getNodeNames() {
@@ -418,7 +421,7 @@ public class NodeService implements NodeInfoProvider, NodeRegistry {
     public DockerService createNodeDockerService(NodeRegistrationImpl nr) {
         // we intentionally register node without specifying cluster
         DockerConfig config = DockerConfig.builder().host(nr.getAddress()).build();
-        return dockerServiceFactory.createDockerService(config, (b) -> b.setNode(nr.getName()));
+        return dockerServiceFactory.createDockerService(config, this, (b) -> b.setNode(nr.getName()));
     }
 
     /**

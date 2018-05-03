@@ -7,7 +7,7 @@ import lombok.Data;
 
 /**
  * Representation of a Docker event.
- * <a href="https://github.com/moby/moby/blob/master/docs/api/v1.24.md#Monitor Docker's events">Docker api#Monitor Docker's events</a>
+ * <a href="https://github.com/moby/moby/blob/master/docs/api/v1.24.md#Monitor Docker's event">Docker api#Monitor Docker's event</a>
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -15,7 +15,7 @@ import lombok.Data;
 public class DockerEvent {
 
     /**
-     * Status of docker image or container. List of statuses is available in Docker api#Monitor Docker's events
+     * Status of docker image or container. List of statuses is available in Docker api#Monitor Docker's event
      */
     private String status;
 
@@ -37,19 +37,19 @@ public class DockerEvent {
     private SwarmNode swarmNode;
 
     /**
-     * Event type. List of statuses is available in Docker api#Monitor Docker's events
+     * Event type. List of statuses is available in Docker api#Monitor Docker's event
      */
     @JsonProperty("Type")
     private DockerEventType type;
 
     /**
-     * Event action. List of statuses is available in Docker api#Monitor Docker's events
+     * Event action. List of statuses is available in Docker api#Monitor Docker's event
      */
     @JsonProperty("Action")
     private String action;
 
     /**
-     *  Actor describes something that generates events
+     *  Actor describes something that generates event
      */
     @JsonProperty("Actor")
     private Actor actor;

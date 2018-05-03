@@ -6,8 +6,8 @@ import lombok.Data;
 import java.util.Map;
 
 /**
- * Actor describes something that generates events
- * <a href="https://github.com/moby/moby/blob/master/docs/api/v1.24.md#Monitor Docker's events">Docker api#Monitor Docker's events</a>
+ * Actor describes something that generates event
+ * <a href="https://github.com/moby/moby/blob/master/docs/api/v1.24.md#Monitor Docker's event">Docker api#Monitor Docker's event</a>
  */
 @Data
 public class Actor {

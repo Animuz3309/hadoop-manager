@@ -9,7 +9,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 /**
- * Information about Docker service and its nodes.
+ * Information about Docker service and its node.
  */
 @Data
 public class DockerServiceInfo {

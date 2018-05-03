@@ -1,5 +1,5 @@
-<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0"
-     xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
+<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0" th:fragment="nav(tab)">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -32,12 +32,13 @@
         <div class="sidebar-nav navbar-collapse">
             <ul class="nav" id="side-menu">
                 <li>
-                    <a th:href="@{/dashboard}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                    <a th:href="@{/dashboard}" th:class="${tab eq 'dashboard'} ? active"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                 </li>
                 <li>
-                    <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Nodes</a>
+                    <a href="#" th:class="${tab eq 'node'} ? active"><i class="fa fa-edit fa-fw"></i> Nodes</a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
+</html>

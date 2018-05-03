@@ -125,7 +125,7 @@ public class EtcdClientWrapper implements KeyValueStorage {
                 }
             });
         } catch (Exception e) {
-            log.error("Error when process events", e);
+            log.error("Error when process event", e);
         }
     }
 

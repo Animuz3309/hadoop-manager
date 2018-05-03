@@ -255,7 +255,7 @@ public class NodeRegistrationImpl implements NodeRegistration, AutoCloseable {
             cache = null;
             ni = getNodeInfo();
         }
-        if(!Objects.equals(oldni, ni)) {//we try to reduce count of unnecessary 'update' events
+        if(!Objects.equals(oldni, ni)) {//we try to reduce count of unnecessary 'update' event
             fireNodeChanged(NodeEvent.Action.UPDATE, oldni, ni);
         }
         if(nmnew != null) {

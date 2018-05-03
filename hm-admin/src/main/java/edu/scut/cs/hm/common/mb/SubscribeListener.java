@@ -3,7 +3,7 @@ package edu.scut.cs.hm.common.mb;
 import java.util.function.Consumer;
 
 /**
- * Iface for listeners which listen subscribe/unsubscribe events
+ * Iface for listeners which listen subscribe/unsubscribe event
  * @param <M>
  */
 public interface SubscribeListener<M> {

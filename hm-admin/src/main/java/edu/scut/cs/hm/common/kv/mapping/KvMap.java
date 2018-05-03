@@ -31,11 +31,11 @@ public class KvMap<T> {
         private final Class<T> type;        // type of obj
         private final Class<V> valueType;   // type of obj
         /**
-         * Note that it invoke at events caused by map user. For events from KV storage use {@link #setListener(Consumer)}.
+         * Note that it invoke at event caused by map user. For event from KV storage use {@link #setListener(Consumer)}.
          */
         private Consumer<KvMapLocalEvent<T>> localListener;
         /**
-         * Note that it handle events from KV storage. For events caused by map user use {@link #setLocalListener(Consumer)} .
+         * Note that it handle event from KV storage. For event caused by map user use {@link #setLocalListener(Consumer)} .
          */
         private Consumer<KvMapEvent<T>> listener;
         private KvObjectFactory<V> factory;
@@ -68,8 +68,8 @@ public class KvMap<T> {
         }
 
         /**
-         * Note that it invoke at events caused by map user. For events from KV storage use {@link #setListener(Consumer)}.
-         * @param consumer handler for local events causet by invoking of map methods
+         * Note that it invoke at event caused by map user. For event from KV storage use {@link #setListener(Consumer)}.
+         * @param consumer handler for local event causet by invoking of map methods
          * @return this
          */
         public Builder<T, V> localListener(Consumer<KvMapLocalEvent<T>> consumer) {
@@ -78,8 +78,8 @@ public class KvMap<T> {
         }
 
         /**
-         * Note that it handle events from KV storage. For events caused by map user use {@link #setLocalListener(Consumer)} .
-         * @param listener handler for KV storage events.
+         * Note that it handle event from KV storage. For event caused by map user use {@link #setLocalListener(Consumer)} .
+         * @param listener handler for KV storage event.
          * @return this
          */
         public Builder<T, V> listener(Consumer<KvMapEvent<T>> listener) {

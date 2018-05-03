@@ -1,12 +1,12 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head"></head>
-<body>
-<div id="wrapper">
-    <nav th:replace="fragments/navigation"></nav>
-    <div id="page-wrapper" th:replace="dashboard/dashboard"></div>
-</div>
-</body>
-<th:block th:replace="fragments/script"/>
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout">
+<th:block layout:fragment="content">
+    <nav th:replace="fragments/navigation :: nav('dashboard')"></nav>
+    <div id="page-wrapper" >
+        <div class="row" th:replace="dashboard/title"></div>
+        <div class="row" th:replace="dashboard/panels"></div>
+    </div>
+</th:block>
 </html>

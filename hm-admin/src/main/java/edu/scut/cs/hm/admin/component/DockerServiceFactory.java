@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.client.AsyncClientHttpRequestInterceptor;
@@ -46,12 +47,10 @@ import java.util.function.Consumer;
  */
 @Slf4j
 @Component
-@EnableConfigurationProperties(DockerConfigurer.class)
 public class DockerServiceFactory {
     // TODO no registryRepository
     private final ObjectMapper objectMapper;
     private final AccessContextFactory aclContextFactory;
-    private final NodeService nodeService;
     private final MessageBus<DockerServiceEvent> dockerServiceEventMessageBus;
     private final ResourceLoader resourceLoader;
     private final ExecutorService executor;
@@ -73,13 +72,11 @@ public class DockerServiceFactory {
     @Autowired
     public DockerServiceFactory(ObjectMapper objectMapper,
                                 AccessContextFactory aclContextFactory,
-                                NodeService nodeService,
                                 @Qualifier(DockerServiceEvent.BUS) MessageBus<DockerServiceEvent> dockerServiceEventMessageBus,
                                 ResourceLoader resourceLoader,
-                                DockerConfigurer configurer) {
+                                DockerConfigurer.AgentConfig agentConfig) {
         this.objectMapper = objectMapper;
         this.aclContextFactory = aclContextFactory;
-        this.nodeService = nodeService;
         this.dockerServiceEventMessageBus = dockerServiceEventMessageBus;
         this.resourceLoader = resourceLoader;
         this.executor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
@@ -88,10 +85,10 @@ public class DockerServiceFactory {
                 .setUncaughtExceptionHandler((thread, ex) -> log.error("Uncaught exception.", ex))
                 .build());
 
-        this.checkSsl = configurer.isCheckSsl();
-        this.keystore = configurer.getAgentRootCertKeystore();
-        this.storepass = configurer.getAgentRootCertStorepass();
-        this.password = configurer.getAgentPassword();
+        this.checkSsl = agentConfig.isCheckSsl();
+        this.keystore = agentConfig.getRootCertKeystore();
+        this.storepass = agentConfig.getRootCertStorepass();
+        this.password = agentConfig.getPassword();
     }
 
     /**
@@ -101,6 +98,7 @@ public class DockerServiceFactory {
      * @return
      */
     public DockerService createDockerService(DockerConfig dockerConfig,
+                                             NodeService nodeService,
                                              Consumer<DockerServiceImpl.Builder> dockerConsumer) {
         DockerServiceImpl.Builder b = DockerServiceImpl.builder();
         b.config(dockerConfig);

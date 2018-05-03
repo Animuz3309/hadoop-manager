@@ -28,11 +28,15 @@ import java.util.concurrent.ExecutionException;
  * We create our implementation based on {@link org.springframework.http.client.Netty4ClientHttpRequest }
  * due to need consume of endless stream with "TransferEncoding: chunked", which default implementation does not allow.
  */
-public class NettyRequest implements ClientHttpRequest, AsyncClientHttpRequest {
+class NettyRequest implements ClientHttpRequest, AsyncClientHttpRequest {
     private final HttpHeaders headers = new HttpHeaders();
+
     private final Bootstrap bootstrap;
+
     private final URI uri;
+
     private final HttpMethod method;
+
     private final ByteBufOutputStream body;
 
     private boolean executed = false;
@@ -68,13 +72,18 @@ public class NettyRequest implements ClientHttpRequest, AsyncClientHttpRequest {
      *
      * @throws IllegalStateException if this request has been executed
      */
-    private void assertNotExecuted() {
+    protected void assertNotExecuted() {
         Assert.state(!this.executed, "ClientHttpRequest already executed");
     }
 
     @Override
     public HttpMethod getMethod() {
         return this.method;
+    }
+
+    @Override
+    public String getMethodValue() {
+        return this.method.name();
     }
 
     @Override
@@ -152,4 +161,5 @@ public class NettyRequest implements ClientHttpRequest, AsyncClientHttpRequest {
 
         return nettyRequest;
     }
+
 }

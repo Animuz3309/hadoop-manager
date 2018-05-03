@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class NodeServiceConfig {
     /**
-     * Maximal value of expected nodes count. <p/>
+     * Maximal value of expected node count. <p/>
      * It not limit, it used for allocate some resources, so you can
      * exceed this value, but then performance may degrade.
      */
@@ -16,7 +16,7 @@ public class NodeServiceConfig {
      */
     private int minTtl = 60;
     /**
-     * Time between nodes update
+     * Time between node update
      */
     private int updateSeconds = 60;
 }
