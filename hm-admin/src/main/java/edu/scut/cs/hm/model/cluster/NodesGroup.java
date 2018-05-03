@@ -1,14 +1,22 @@
 package edu.scut.cs.hm.model.cluster;
 
+import edu.scut.cs.hm.docker.swarm.ContainersManager;
+import edu.scut.cs.hm.docker.DockerService;
+import edu.scut.cs.hm.docker.arg.NodeUpdateArg;
 import edu.scut.cs.hm.docker.res.ServiceCallResult;
+import edu.scut.cs.hm.docker.swarm.NetworkManager;
 import edu.scut.cs.hm.model.Named;
 import edu.scut.cs.hm.model.WithAcl;
 import edu.scut.cs.hm.model.node.NodeInfo;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Interface represent node group
+ * node group means real cluster like swarm or docker in swarm mode cluster,
+ * or combination of node satisfy {@link java.util.function.Predicate}
  */
 public interface NodesGroup extends Named, WithAcl {
     enum Feature {
@@ -70,5 +78,67 @@ public interface NodesGroup extends Named, WithAcl {
      */
     List<NodeInfo> getNodes();
 
-    ServiceCallResult updateNode()
+    /**
+     * Update node but not only attributes of physical node, some 'node in docker swarm cluster' attr
+     * @param arg
+     * @return
+     */
+    ServiceCallResult updateNode(NodeUpdateArg arg);
+
+    /**
+     * Collections with names of other intersected NodesGroups. Note that it
+     * not mean 'enclosed' relationship. <p/>
+     * The 'Real Cluster' means 'swarm cluster' or 'docker in swarm mode cluster'
+     * Any RealCluster always return empty collection.
+     * For example 'all' - return all real clusters
+     * @return
+     */
+    Collection<String> getGroups();
+
+    /**
+     *
+     * @param id name of node, when we add a node use the name
+     * @return
+     */
+    boolean hasNode(String id);
+
+    /**
+     * When we use swarm or 'docker in swarm mode' we return manager node's docker service
+     * @return
+     */
+    DockerService getDocker();
+
+    /**
+     * @see Feature
+     * @return
+     */
+    Set<Feature> getFeatures();
+
+    /**
+     * SpEL string which applied to images. It evaluated over object with 'tag(name)' and 'label(key, val)' functions,
+     * also it has 'r(regexp)' function which can combined with other,
+     * like: <code>'spel:tag(r(".*_dev")) or label("dev", "true")'</code>.
+     * @return
+     */
+    String getImageFilter();
+
+    void setImageFilter(String imageFilter);
+
+    /**
+     * Tool for managing cluster containers, it replace for direct access to docker service
+     * @return non null value
+     */
+    ContainersManager getContainers();
+
+    /**
+     * Tool for managing network between containers
+     * @return
+     */
+    NetworkManager getNetworks();
+
+    /**
+     * Default network name
+     * @return
+     */
+    String getDefaultNetworkName();
 }
