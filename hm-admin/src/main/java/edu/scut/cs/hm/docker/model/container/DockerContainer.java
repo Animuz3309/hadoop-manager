@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import edu.scut.cs.hm.docker.model.network.Port;
+import edu.scut.cs.hm.model.ContainerBaseIface;
 import edu.scut.cs.hm.model.WithNode;
 import lombok.Data;
 import org.springframework.util.Assert;

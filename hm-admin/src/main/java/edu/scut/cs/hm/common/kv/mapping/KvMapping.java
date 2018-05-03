@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation of object fileds, which define mapping between fields and key value storage records. <p/>
+ * Annotation of object fileds, which define mapping between fields and key value volume records. <p/>
  * Note that complex values (like list or map) must be immutable.
  */
 @Retention(RetentionPolicy.RUNTIME)

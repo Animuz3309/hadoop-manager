@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.docker.model.storage;
+package edu.scut.cs.hm.docker.model.volume;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

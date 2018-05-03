@@ -16,7 +16,7 @@ public final class ExecutorUtils {
     public static final Executor DIRECT = Runnable::run;
 
     /**
-     * Executor deffer tasks into internal storage and run its only at {@link #flush()} .
+     * Executor deffer tasks into internal volume and run its only at {@link #flush()} .
      */
     public static class DeferredExecutor implements Executor {
         private final Object lock = new Object();

@@ -84,7 +84,7 @@ public class KvClassMapper<T> {
     }
 
     /**
-     * Save object to storage and return object that allow check for object modifications.
+     * Save object to volume and return object that allow check for object modifications.
      * @param name the name of path
      * @param object
      * @return
@@ -100,7 +100,7 @@ public class KvClassMapper<T> {
     }
 
     /**
-     * list same objects in storage
+     * list same objects in volume
      * if {@link #prefix} doesn't exist then create new
      * @return
      */

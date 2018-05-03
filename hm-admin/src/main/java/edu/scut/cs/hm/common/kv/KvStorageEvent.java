@@ -3,7 +3,7 @@ package edu.scut.cs.hm.common.kv;
 import lombok.Data;
 
 /**
- * Event of Key-value storage
+ * Event of Key-value volume
  */
 @Data
 public class KvStorageEvent {
@@ -15,7 +15,7 @@ public class KvStorageEvent {
      */
     private final long index;
     /**
-     * like a name, maybe the path in k-v storage
+     * like a name, maybe the path in k-v volume
      */
     private final String key;
     private final String value;

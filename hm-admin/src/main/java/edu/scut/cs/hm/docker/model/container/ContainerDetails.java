@@ -7,6 +7,7 @@ import edu.scut.cs.hm.common.utils.StringUtils;
 import edu.scut.cs.hm.docker.model.mount.Mount;
 import edu.scut.cs.hm.docker.model.network.NetworkSettings;
 import edu.scut.cs.hm.docker.model.SwarmNode;
+import edu.scut.cs.hm.model.ContainerBaseIface;
 import lombok.Data;
 
 import java.util.Date;

@@ -75,7 +75,7 @@ public interface KeyValueStorage {
     Map<String, String> map(String prefix);
 
     /**
-     * Return Subscriptions for key value event of this storage. <p/>
+     * Return Subscriptions for key value event of this volume. <p/>
      * Note that subscription may be on '/key' - or on key with its childs '/key*' (also '/key/*')
      * @return
      */

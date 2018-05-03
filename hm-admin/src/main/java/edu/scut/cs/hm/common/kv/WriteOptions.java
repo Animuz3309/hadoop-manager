@@ -5,7 +5,7 @@ import org.springframework.util.Assert;
 
 /**
  * Options of write operation <p/>
- * Some Key-Value storage engine may not implement all set of options.
+ * Some Key-Value volume engine may not implement all set of options.
  */
 @Data
 public class WriteOptions {

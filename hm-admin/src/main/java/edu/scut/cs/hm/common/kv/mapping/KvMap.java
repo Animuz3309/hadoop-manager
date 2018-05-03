@@ -17,25 +17,25 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * KeyValue storage map of directory. <p/>
- * The local cached storage of value in remote Key-Value storage
+ * KeyValue volume map of directory. <p/>
+ * The local cached volume of value in remote Key-Value volume
  */
 @Slf4j
 public class KvMap<T> {
 
     @Data
     public static class Builder<T, V> {
-        private KvMapperFactory mapperFactory;  // factory to get local obj vs remote node in k-v storage mapping
-        private String path;                // the node path in remote k-v storage
+        private KvMapperFactory mapperFactory;  // factory to get local obj vs remote node in k-v volume mapping
+        private String path;                // the node path in remote k-v volume
         private KvMapAdapter<T> adapter = KvMapAdapter.direct();    // the adapter to get value from k-v node
         private final Class<T> type;        // type of obj
         private final Class<V> valueType;   // type of obj
         /**
-         * Note that it invoke at event caused by map user. For event from KV storage use {@link #setListener(Consumer)}.
+         * Note that it invoke at event caused by map user. For event from KV volume use {@link #setListener(Consumer)}.
          */
         private Consumer<KvMapLocalEvent<T>> localListener;
         /**
-         * Note that it handle event from KV storage. For event caused by map user use {@link #setLocalListener(Consumer)} .
+         * Note that it handle event from KV volume. For event caused by map user use {@link #setLocalListener(Consumer)} .
          */
         private Consumer<KvMapEvent<T>> listener;
         private KvObjectFactory<V> factory;
@@ -68,7 +68,7 @@ public class KvMap<T> {
         }
 
         /**
-         * Note that it invoke at event caused by map user. For event from KV storage use {@link #setListener(Consumer)}.
+         * Note that it invoke at event caused by map user. For event from KV volume use {@link #setListener(Consumer)}.
          * @param consumer handler for local event causet by invoking of map methods
          * @return this
          */
@@ -78,8 +78,8 @@ public class KvMap<T> {
         }
 
         /**
-         * Note that it handle event from KV storage. For event caused by map user use {@link #setLocalListener(Consumer)} .
-         * @param listener handler for KV storage event.
+         * Note that it handle event from KV volume. For event caused by map user use {@link #setLocalListener(Consumer)} .
+         * @param listener handler for KV volume event.
          * @return this
          */
         public Builder<T, V> listener(Consumer<KvMapEvent<T>> listener) {
@@ -116,7 +116,7 @@ public class KvMap<T> {
     static final String THIS = " this";
     private final KvClassMapper<Object> mapper;                             // crud obj with specified mapping
     private final KvMapAdapter<T> adapter;                                  // set and get value
-    private final Consumer<KvMapEvent<T>> listener;                         // listen remote k-v storage event
+    private final Consumer<KvMapEvent<T>> listener;                         // listen remote k-v volume event
     private final Consumer<KvMapLocalEvent<T>> localListener;               // listen local kvmap event
     private final Map<String, ValueHolder> map = new LinkedHashMap<>();     // hold the value
     private final boolean passDirty;                                        // whether pass dirty value
@@ -142,13 +142,13 @@ public class KvMap<T> {
         // the object type need to map
         Class<Object> mapperType = MoreObjects.firstNonNull(builder.valueType, (Class<Object>)builder.type);
 
-        // object mapperFactory (map java obj to k-v storage)
+        // object mapperFactory (map java obj to k-v volume)
         this.mapper = builder.mapperFactory.buildClassMapper(mapperType)
-                .prefix(builder.path)       // prefix in k-v storage
+                .prefix(builder.path)       // prefix in k-v volume
                 .factory(builder.factory)
                 .build();
 
-        // subscribe KvEvent Listener with specified key(prefix aka path) on k-v storage
+        // subscribe KvEvent Listener with specified key(prefix aka path) on k-v volume
         // we can see this on EtcdClientWrapper#eventWhirligig(long)
         // MessageBus.accept() will invoke this listener
         builder.mapperFactory.getStorage().subscriptions().subscribeOnKey(this::onKvEvent, builder.path);
@@ -159,8 +159,8 @@ public class KvMap<T> {
     // we can see this on EtcdClientWrapper#eventWhirligig(long)
     // MessageBus.accept() will invoke this listener
     private void onKvEvent(KvStorageEvent e) {
-        final long index = e.getIndex();                // the index that the identify the obj in k-v storage is primary key and unique
-        String path = e.getKey();                       // the full obj path in k-v storage
+        final long index = e.getIndex();                // the index that the identify the obj in k-v volume is primary key and unique
+        String path = e.getKey();                       // the full obj path in k-v volume
         String key = this.mapper.getName(path);         // get relative name from full path.
         KvStorageEvent.Crud action = e.getAction();     // the even action
 
@@ -267,7 +267,7 @@ public class KvMap<T> {
     }
 
     /**
-     * Get exists value from storage. Not load it, even if dirty.
+     * Get exists value from volume. Not load it, even if dirty.
      * @param key key
      * @return value or null if not exists or dirty.
      */
@@ -283,7 +283,7 @@ public class KvMap<T> {
     }
 
     /**
-     * Put and save value into storage.
+     * Put and save value into volume.
      * @param key key
      * @param val value
      * @return old value if exists
@@ -294,10 +294,10 @@ public class KvMap<T> {
     }
 
     /**
-     * Remove value directly from storage, from map it will be removed at event.
+     * Remove value directly from volume, from map it will be removed at event.
      *
      * @param key key for remove
-     * @return gives value only if present, not load it, this mean that you may obtain null, event storage has value
+     * @return gives value only if present, not load it, this mean that you may obtain null, event volume has value
      */
     public T remove(String key) {
         ValueHolder valueHolder;
@@ -364,7 +364,7 @@ public class KvMap<T> {
     }
 
     /**
-     * Gives Immutable set of keys. Note that it not load keys from storage. <p/>
+     * Gives Immutable set of keys. Note that it not load keys from volume. <p/>
      * For load keys you need to use {@link #load()}.
      * @return set of keys, never null.
      */
@@ -421,10 +421,10 @@ public class KvMap<T> {
      * Hold the exact value, as a Cache
      */
     private final class ValueHolder {
-        private final String key;   // path name of node in k-v storage
+        private final String key;   // path name of node in k-v volume
         private volatile T value;
-        // keep the node's modified index value in k-v storage
-        // we can compare the old index value and new value from node in k-v storage to judge whether node's value modified
+        // keep the node's modified index value in k-v volume
+        // we can compare the old index value and new value from node in k-v volume to judge whether node's value modified
         // if modified we need to dirty this.value
         // see #dirty(String prop, long newIndex)
         private final Map<String, Long> index = new ConcurrentHashMap<>();
@@ -456,7 +456,7 @@ public class KvMap<T> {
                 this.value = val;
             }
             onLocal(action, this, old, val);
-            // flush value in the k-v storage
+            // flush value in the k-v volume
             flush();
             return old;
         }
@@ -466,7 +466,7 @@ public class KvMap<T> {
         }
 
         /**
-         * save in the k-v storage
+         * save in the k-v volume
          */
         void flush() {
             Object obj;
@@ -496,7 +496,7 @@ public class KvMap<T> {
         }
 
         /**
-         * newIndex is the modifiedIndex of node in k-v storage
+         * newIndex is the modifiedIndex of node in k-v volume
          * if oldIndex != null && oldIndex != newIndex -> value is dirty in local
          * @param prop
          * @param newIndex
@@ -513,7 +513,7 @@ public class KvMap<T> {
         }
 
         /**
-         * load from k-v storage
+         * load from k-v volume
          */
         synchronized void load() {
             if (barrier) {
@@ -523,7 +523,7 @@ public class KvMap<T> {
             barrier = true;
             try {
                 T old = (dirty && !passDirty) ? null : value;
-                Object obj = mapper.load(key, adapter.getType(old));    // load object from k-v storage
+                Object obj = mapper.load(key, adapter.getType(old));    // load object from k-v volume
                 T newVal;
                 if (obj != null || old != null) {
                     // set load object(obj) to source(old)
@@ -550,14 +550,14 @@ public class KvMap<T> {
          */
         synchronized T get() {
             if (dirty) {
-                // if dirty load obj from k-v storage
+                // if dirty load obj from k-v volume
                 load();
             }
             return value;
         }
 
         /**
-         * if dirty return null , otherwise load value from k-v storage
+         * if dirty return null , otherwise load value from k-v volume
          */
         synchronized T getIfPresent() {
             if (dirty) {

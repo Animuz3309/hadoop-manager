@@ -339,11 +339,11 @@ public abstract class AbstractNodesGroup<C extends AbstractNodesGroupConfig<C>> 
         flush();
     }
 
-    protected ClusterService getClusterService() {
+    public ClusterService getClusterService() {
         return service;
     }
 
-    protected NodeService getNodeService() {
+    public NodeService getNodeService() {
         return service.getNodeService();
     }
 

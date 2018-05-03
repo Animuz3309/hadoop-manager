@@ -111,7 +111,7 @@ public class KvMapperFactory {
     }
 
     /**
-     * Get k-v storage
+     * Get k-v volume
      */
     public KeyValueStorage getStorage() {
         return storage;

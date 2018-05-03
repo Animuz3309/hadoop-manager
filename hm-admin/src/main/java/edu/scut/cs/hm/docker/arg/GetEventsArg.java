@@ -2,6 +2,7 @@ package edu.scut.cs.hm.docker.arg;
 
 import com.google.common.util.concurrent.SettableFuture;
 import edu.scut.cs.hm.docker.model.events.DockerEvent;
+import edu.scut.cs.hm.model.WithInterrupter;
 import lombok.Builder;
 import lombok.Data;
 

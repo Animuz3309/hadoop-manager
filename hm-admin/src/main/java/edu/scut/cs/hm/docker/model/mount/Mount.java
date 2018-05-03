@@ -56,7 +56,7 @@ public class Mount {
          */
         BIND,
         /**
-         * the type for remote storage volumes
+         * the type for remote volume volumes
          */
         VOLUME,
         /**

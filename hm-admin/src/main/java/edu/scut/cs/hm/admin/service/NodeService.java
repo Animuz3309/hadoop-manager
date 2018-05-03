@@ -95,7 +95,7 @@ public class NodeService implements NodeInfoProvider, NodeRegistry {
                         int nodes = this.nodes.list().size();
                         int maxNodes = this.nodeServiceConfig.getMaxNodes();
                         if(nodes > maxNodes) {
-                            hint = "\nNote that 'nodeServiceConfig.maxNodes'=" + maxNodes + " but storage has 'node'=" + nodes;
+                            hint = "\nNote that 'nodeServiceConfig.maxNodes'=" + maxNodes + " but volume has 'node'=" + nodes;
                         }
                     } catch (Exception e) {
                         //supress
@@ -130,7 +130,7 @@ public class NodeService implements NodeInfoProvider, NodeRegistry {
 
     @PostConstruct
     public void init() {
-        nodes.load();   // load all node from k-v storage
+        nodes.load();   // load all node from k-v volume
     }
 
     /**

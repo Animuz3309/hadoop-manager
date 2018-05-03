@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.docker.model.container;
+package edu.scut.cs.hm.model;
 
 import edu.scut.cs.hm.docker.model.swarm.SwarmUtils;
 import edu.scut.cs.hm.model.Labels;

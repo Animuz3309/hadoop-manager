@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.docker.model.storage;
+package edu.scut.cs.hm.docker.model.volume;
 
 /**
  * The access mode of a file system or file: <code>read-write</code> or <code>read-only</code>.

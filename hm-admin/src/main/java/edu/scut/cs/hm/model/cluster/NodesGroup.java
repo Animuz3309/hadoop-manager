@@ -1,6 +1,6 @@
 package edu.scut.cs.hm.model.cluster;
 
-import edu.scut.cs.hm.docker.model.swarm.ContainersManager;
+import edu.scut.cs.hm.model.container.ContainersManager;
 import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.docker.arg.NodeUpdateArg;
 import edu.scut.cs.hm.docker.res.ServiceCallResult;
@@ -51,7 +51,7 @@ public interface NodesGroup extends Named, WithAcl {
     void clean();
 
     /**
-     * flush k-v storage
+     * flush k-v volume
      */
     void flush();
 

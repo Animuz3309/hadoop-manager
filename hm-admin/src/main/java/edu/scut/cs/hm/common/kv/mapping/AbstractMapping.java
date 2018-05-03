@@ -25,7 +25,7 @@ abstract class AbstractMapping<T> {
     }
 
     /**
-     * save value in the path in k-v storage, save filed in object one by one
+     * save value in the path in k-v volume, save filed in object one by one
      * and when save one field in object will call 'callback'
      * @param path
      * @param object

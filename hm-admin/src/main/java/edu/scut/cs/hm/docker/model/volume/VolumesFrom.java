@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.docker.model.storage;
+package edu.scut.cs.hm.docker.model.volume;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
