@@ -5,9 +5,13 @@ import edu.scut.cs.hm.admin.security.AccessContextFactory;
 import edu.scut.cs.hm.admin.security.SecuredType;
 import edu.scut.cs.hm.common.security.acl.dto.Action;
 import edu.scut.cs.hm.docker.arg.GetEventsArg;
+import edu.scut.cs.hm.docker.model.Network;
 import edu.scut.cs.hm.docker.res.ServiceCallResult;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.util.Assert;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Wrap DockerService with ACL Security
@@ -72,5 +76,13 @@ public class DockerServiceSecurityWrapper implements DockerService {
     public ServiceCallResult subscribeToEvents(GetEventsArg arg) {
         checkServiceAccess(Action.READ);
         return service.subscribeToEvents(arg);
+    }
+
+    @Override
+    public List<Network> getNetworks() {
+        AccessContext context = aclContextFactory.getContext();
+        checkServiceAccessInternal(context, Action.READ);
+        return service.getNetworks().stream().filter((net) -> context.isGranted(SecuredType.NETWORK.id(net.getId()), Action.READ))
+                .collect(Collectors.toList());
     }
 }

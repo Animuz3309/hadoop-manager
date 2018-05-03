@@ -4,12 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.scut.cs.hm.docker.arg.GetEventsArg;
 import edu.scut.cs.hm.docker.model.DockerServiceEvent;
 import edu.scut.cs.hm.docker.model.DockerServiceInfo;
+import edu.scut.cs.hm.docker.model.Network;
 import edu.scut.cs.hm.docker.res.ServiceCallResult;
 import edu.scut.cs.hm.model.node.NodeInfoProvider;
 import lombok.Data;
 import org.springframework.util.Assert;
 import org.springframework.web.client.AsyncRestTemplate;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -127,6 +129,11 @@ public class DockerServiceImpl implements DockerService {
     }
 
     @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
     public String getAddress() {
         return null;
     }
@@ -138,6 +145,11 @@ public class DockerServiceImpl implements DockerService {
 
     @Override
     public ServiceCallResult subscribeToEvents(GetEventsArg arg) {
+        return null;
+    }
+
+    @Override
+    public List<Network> getNetworks() {
         return null;
     }
 }

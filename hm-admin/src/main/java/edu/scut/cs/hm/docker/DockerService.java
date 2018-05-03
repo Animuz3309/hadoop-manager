@@ -1,7 +1,10 @@
 package edu.scut.cs.hm.docker;
 
 import edu.scut.cs.hm.docker.arg.GetEventsArg;
+import edu.scut.cs.hm.docker.model.Network;
 import edu.scut.cs.hm.docker.res.ServiceCallResult;
+
+import java.util.List;
 
 /**
  * Docker client API
@@ -56,4 +59,6 @@ public interface DockerService {
      * @return
      */
     ServiceCallResult subscribeToEvents(GetEventsArg arg);
+
+    List<Network> getNetworks();
 }

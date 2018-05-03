@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Service of nodes group (include nodes group or real cluster)
@@ -77,4 +78,10 @@ public interface ClusterService {
      * @return
      */
     Set<String> getServices();
+
+    /**
+     * Get executor
+     * @return
+     */
+    ExecutorService getExecutor();
 }

@@ -37,7 +37,18 @@ public interface NodesGroup extends Named, WithAcl {
          */
         FORBID_NODE_ADDITION,
         ;
+
     }
+
+    /**
+     * Try to init cluster if it not init yet
+     */
+    void init();
+
+    /**
+     * Clean resources of node group (for example destroy cluster)
+     */
+    void clean();
 
     /**
      * flush k-v storage
@@ -49,14 +60,11 @@ public interface NodesGroup extends Named, WithAcl {
     void updateConfig(Consumer<AbstractNodesGroupConfig<?>> consumer);
 
     /**
-     * Try to init cluster if it not init yet
+     * State of cluster.
+     * @see #init()
+     * @return state, can not be null.
      */
-    void init();
-
-    /**
-     * Clean resources of node group (for example destroy cluster)
-     */
-    void clean();
+    NodeGroupState getState();
 
     /**
      * Identifier of cluster
@@ -71,12 +79,27 @@ public interface NodesGroup extends Named, WithAcl {
     String getTitle();
 
     /**
+     * SpEL string which applied to images. It evaluated over object with 'tag(name)' and 'label(key, val)' functions,
+     * also it has 'r(regexp)' function which can combined with other,
+     * like: <code>'spel:tag(r(".*_dev")) or label("dev", "true")'</code>.
+     * @return
+     */
+    String getImageFilter();
+    void setImageFilter(String imageFilter);
+
+    /**
      * Cluster description
      * @return
      */
     String getDescription();
+    void setDescrition(String descrition);
 
-    void setDescrition();
+    /**
+     *
+     * @param id name of node, when we add a node use the name
+     * @return
+     */
+    boolean hasNode(String id);
 
     /**
      * Return copy of all current nodes collection
@@ -102,13 +125,6 @@ public interface NodesGroup extends Named, WithAcl {
     Collection<String> getGroups();
 
     /**
-     *
-     * @param id name of node, when we add a node use the name
-     * @return
-     */
-    boolean hasNode(String id);
-
-    /**
      * When we use swarm or 'docker in swarm mode' we return manager node's docker service
      * @return
      */
@@ -119,16 +135,6 @@ public interface NodesGroup extends Named, WithAcl {
      * @return
      */
     Set<Feature> getFeatures();
-
-    /**
-     * SpEL string which applied to images. It evaluated over object with 'tag(name)' and 'label(key, val)' functions,
-     * also it has 'r(regexp)' function which can combined with other,
-     * like: <code>'spel:tag(r(".*_dev")) or label("dev", "true")'</code>.
-     * @return
-     */
-    String getImageFilter();
-
-    void setImageFilter(String imageFilter);
 
     /**
      * Tool for managing cluster containers, it replace for direct access to docker service
