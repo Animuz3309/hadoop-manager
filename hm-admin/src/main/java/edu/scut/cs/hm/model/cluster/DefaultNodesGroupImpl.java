@@ -1,6 +1,7 @@
 package edu.scut.cs.hm.model.cluster;
 
 import com.google.common.collect.ImmutableSet;
+import edu.scut.cs.hm.admin.component.FilterFactory;
 import edu.scut.cs.hm.admin.service.NodeStorage;
 import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.docker.VirtualDockerService;
@@ -8,15 +9,19 @@ import edu.scut.cs.hm.docker.arg.GetContainersArg;
 import edu.scut.cs.hm.docker.arg.NodeUpdateArg;
 import edu.scut.cs.hm.docker.model.container.DockerContainer;
 import edu.scut.cs.hm.docker.res.ServiceCallResult;
+import edu.scut.cs.hm.admin.component.ContainerCreator;
 import edu.scut.cs.hm.model.container.ContainersManager;
 import edu.scut.cs.hm.model.container.ContainerRegistration;
 import edu.scut.cs.hm.model.container.ContainerStorage;
+import edu.scut.cs.hm.model.container.SwarmClusterContainers;
 import edu.scut.cs.hm.model.ds.DiscoveryStorage;
+import edu.scut.cs.hm.model.filter.Filter;
 import edu.scut.cs.hm.model.node.Node;
 import edu.scut.cs.hm.model.node.NodeInfo;
 import lombok.Builder;
 import lombok.Singular;
 import lombok.ToString;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.util.*;
@@ -24,6 +29,8 @@ import java.util.*;
 /**
  * Node group managed 'manually', not like cluster united by docker in swarm mode or swarm.
  * It allow to view multiple nodes as single entity.
+ *
+ * with DockerService {@link VirtualDockerService} and ContainersManager {@link SwarmClusterContainers}
  */
 @ToString(callSuper = true)
 public class DefaultNodesGroupImpl extends AbstractNodesGroup<DefaultNodesGroupConfig> {
@@ -34,7 +41,7 @@ public class DefaultNodesGroupImpl extends AbstractNodesGroup<DefaultNodesGroupC
      */
     @Override
     public boolean hasNode(String id) {
-        return false;
+        return getNodeStorage().hasNode(predicate, id);
     }
 
     /**
@@ -44,42 +51,39 @@ public class DefaultNodesGroupImpl extends AbstractNodesGroup<DefaultNodesGroupC
      */
     @Override
     public List<NodeInfo> getNodes() {
-        return null;
+        return getNodesInternal();
     }
 
     /**
-     * Update node but not only attributes of physical node, some 'node in docker swarm cluster' attr
+     * Not supported
      *
-     * @param arg
-     * @return
+     * @return not support result
      */
     @Override
     public ServiceCallResult updateNode(NodeUpdateArg arg) {
-        return null;
+        return ServiceCallResult.unsupported();
     }
 
     /**
-     * Collections with names of other intersected NodesGroups. Note that it
-     * not mean 'enclosed' relationship. <p/>
-     * The 'Real Cluster' means 'swarm cluster' or 'docker in swarm mode cluster'
-     * Any RealCluster always return empty collection.
-     * For example 'all' - return all real clusters
+     * Get the collection of nodes's cluster name which satisfied filter {@link #predicate}
      *
      * @return
      */
     @Override
     public Collection<String> getGroups() {
-        return null;
+        Set<String> clusters = new HashSet<>();
+        getNodesInternal().forEach(n -> clusters.add(n.getCluster()));
+        return clusters;
     }
 
     /**
-     * When we use swarm or 'docker in swarm mode' we return manager node's docker service
+     * Return {@link VirtualDockerService}
      *
      * @return
      */
     @Override
     public DockerService getDocker() {
-        return null;
+        return this.service;
     }
 
     /**
@@ -89,7 +93,7 @@ public class DefaultNodesGroupImpl extends AbstractNodesGroup<DefaultNodesGroupC
      */
     @Override
     public ContainersManager getContainers() {
-        return null;
+        return this.containers;
     }
 
     public interface ContainersProvider {
@@ -133,12 +137,18 @@ public class DefaultNodesGroupImpl extends AbstractNodesGroup<DefaultNodesGroupC
 
     private final ContainersProvider DEFAULT_CONTAINERS_PROVIDER = new DefaultContainersProvider();
     private final VirtualDockerService service;
+
+    private Filter predicate;
+    private FilterFactory filterFactory;        // autowired
     private ContainersManager containers;
-    private ContainerStorage containerStorage;
+    private ContainerStorage containerStorage;  // autowired
+    private ContainerCreator containerCreator;  // autowired
     private ContainersProvider containersProvider;
+
 
     @Builder
     public DefaultNodesGroupImpl(DiscoveryStorage discoveryStorage,
+                                 Filter predicate,
                                  DefaultNodesGroupConfig config,
                                  @Singular Set<Feature> features) {
         super(config, discoveryStorage, ImmutableSet.<Feature>builder()
@@ -146,6 +156,40 @@ public class DefaultNodesGroupImpl extends AbstractNodesGroup<DefaultNodesGroupC
                 .build());
         this.containersProvider = DEFAULT_CONTAINERS_PROVIDER;
         this.service = new VirtualDockerService(this);
+
+        this.predicate = predicate;
+    }
+
+    @Override
+    protected void initImpl() {
+        if (predicate != null) {
+            config.setNodeFilter(predicate.getExpression());
+        } else {
+            this.predicate = filterFactory.createFilter(config.getNodeFilter());
+        }
+        this.containers = new SwarmClusterContainers(this::getDocker, this.containerCreator);
+    }
+
+    // beanFactory动态注入，而不是一开始就由框架产生
+    @Autowired
+    public void setContainerStorage(ContainerStorage containerStorage) {
+        this.containerStorage = containerStorage;
+    }
+
+    // beanFactory动态注入，而不是一开始就由框架产生
+    @Autowired
+    public void setContainerCreator(ContainerCreator containerCreator) {
+        this.containerCreator = containerCreator;
+    }
+
+    // beanFactory动态注入，而不是一开始就由框架产生
+    @Autowired
+    public void setFilterFactory(FilterFactory filterFactory) {
+        this.filterFactory = filterFactory;
+    }
+
+    public void setContainersProvider(ContainersProvider containersProvider) {
+        this.containersProvider = containersProvider;
     }
 
     public ContainerStorage getContainerStorage() {
@@ -154,5 +198,9 @@ public class DefaultNodesGroupImpl extends AbstractNodesGroup<DefaultNodesGroupC
 
     public List<DockerContainer> getContainersImpl(GetContainersArg arg) {
         return this.containersProvider.getContainers(this, arg);
+    }
+
+    private List<NodeInfo> getNodesInternal() {
+        return getNodeStorage().getNodes(predicate);
     }
 }

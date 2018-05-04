@@ -1,12 +1,127 @@
 package edu.scut.cs.hm.common.utils;
 
 import java.util.function.IntPredicate;
+import java.util.function.Supplier;
 
 /**
  * My StringUtils
  */
 public final class StringUtils {
     private StringUtils() {}
+
+    public static String before(String s, char c) {
+        return beforeOr(s, c, () -> {
+            // we throw exception for preserve old behavior
+            throw new IllegalArgumentException("String '" + s + "' must contains '" + c + "'.");
+        });
+    }
+
+    /**
+     * Return part of 's' before 'c'
+     * @param s string which may contain char 'c'
+     * @param c char
+     * @param ifNone supplier of value which is used when 'c' is not present in 's' (null not allowed)
+     * @return part of 's' before 'c' or 'ifNone.get()'
+     */
+    public static String beforeOr(String s, char c, Supplier<String> ifNone) {
+        int pos = s.indexOf(c);
+        if(pos < 0) {
+            return ifNone.get();
+        }
+        return s.substring(0, pos);
+    }
+
+    public static String after(String s, char c) {
+        int pos = s.indexOf(c);
+        if(pos < 0) {
+            throw new IllegalArgumentException("String '" + s + "' must contains '" + c + "'.");
+        }
+        return s.substring(pos + 1);
+    }
+
+    public static String beforeLast(String s, char c) {
+        int pos = s.lastIndexOf(c);
+        if(pos < 0) {
+            throw new IllegalArgumentException("String '" + s + "' must contains '" + c + "'.");
+        }
+        return s.substring(0, pos);
+    }
+
+    public static String afterLast(String s, char c) {
+        int pos = s.lastIndexOf(c);
+        if(pos < 0) {
+            throw new IllegalArgumentException("String '" + s + "' must contains '" + c + "'.");
+        }
+        return s.substring(pos + 1);
+    }
+
+    /**
+     * Split string into two pieces at last appearing of delimiter.
+     * @param s string
+     * @param c delimiter
+     * @return null if string does not contains delimiter
+     */
+    public static String[] splitLast(String s, char c) {
+        int pos = s.lastIndexOf(c);
+        if(pos < 0) {
+            return null;
+        }
+        return new String[] {s.substring(0, pos), s.substring(pos + 1)};
+    }
+
+    /**
+     * Split string into two pieces at last appearing of delimiter.
+     * @param s string
+     * @param delimiter delimiter
+     * @return null if string does not contains delimiter
+     */
+    public static String[] splitLast(String s, String delimiter) {
+        int pos = s.lastIndexOf(delimiter);
+        if(pos < 0) {
+            return null;
+        }
+        return new String[] {s.substring(0, pos), s.substring(pos + delimiter.length())};
+    }
+
+    /**
+     * Return string which contains only chars for which charJudge give true.
+     * @param src source string, may be null
+     * @param charJudge predicate which consume codePoint (not chars)
+     * @return string, null when incoming string is null
+     */
+    public static String retain(String src, IntPredicate charJudge) {
+        if (src == null) {
+            return null;
+        }
+        final int length = src.length();
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int cp = src.codePointAt(i);
+            if(charJudge.test(cp)) {
+                sb.appendCodePoint(cp);
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Retain only characters which is {@link #isAz09(int)}
+     * @param src source string, may be null
+     * @return string, null when incoming string is null
+     */
+    public static String retainAz09(String src) {
+        return retain(src, StringUtils::isAz09);
+    }
+
+    /**
+     * Retain chars which is acceptable as file name or part of url on most operation systems. <p/>
+     * It: <code>'A'-'z', '0'-'9', '_', '-', '.'</code>
+     * @param src source string, may be null
+     * @return string, null when incoming string is null
+     */
+    public static String retainForFileName(String src) {
+        return retain(src, StringUtils::isAz09);
+    }
 
     /**
      * Test that specified codePoint is an ASCII letter or digit
