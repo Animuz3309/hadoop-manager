@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 /**
  * Cluster ACL provider
- * TODO need to finish, before it we need to finish nodes group and cluster module
+ * TODO need to finish, before it we need to finish nodes group and ngroup module
  * @see edu.scut.cs.hm.admin.security.acl.ProvidersAclService
  * @see edu.scut.cs.hm.admin.config.SecurityConfiguration.AclServiceConfiguration#providers
  */

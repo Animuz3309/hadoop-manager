@@ -216,6 +216,7 @@ public class NodeMetrics {
     }
 
     public enum State {
+        PENDING,    // if node is on but not inside cluster yet -> set status pending
         UNHEALTHY,
         HEALTHY,
         DISCONNECTED,

@@ -19,7 +19,7 @@ public class NodeHealthEvent implements EventWithTime, WithCluster {
     public NodeHealthEvent(String name, String cluster, NodeMetrics health) {
         Assert.notNull(name, "name is null");
         this.name = name;
-        this.cluster = cluster; //cluster can be null
+        this.cluster = cluster; //ngroup can be null
         Assert.notNull(health, "health is null");
         this.health = health;
     }

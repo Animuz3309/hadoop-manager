@@ -77,7 +77,7 @@ public class Task {
 
         /**
          * LogDriver specifies the LogDriver to use for tasks created from this
-         * spec. If not present, the one on cluster default on swarm.Spec will be
+         * spec. If not present, the one on ngroup default on swarm.Spec will be
          * used, finally falling back to the engine default if not specified.
          */
         @JsonProperty("LogDriver")

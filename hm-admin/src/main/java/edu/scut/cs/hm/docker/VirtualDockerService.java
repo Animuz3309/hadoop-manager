@@ -13,7 +13,7 @@ import edu.scut.cs.hm.docker.model.swarm.SwarmNode;
 import edu.scut.cs.hm.docker.model.swarm.Task;
 import edu.scut.cs.hm.docker.model.volume.Volume;
 import edu.scut.cs.hm.docker.res.*;
-import edu.scut.cs.hm.model.cluster.DefaultNodesGroupImpl;
+import edu.scut.cs.hm.model.cluster.DefaultCluster;
 import edu.scut.cs.hm.model.node.Node;
 import edu.scut.cs.hm.model.node.NodeInfo;
 import edu.scut.cs.hm.model.node.NodeUtils;
@@ -36,7 +36,7 @@ public class VirtualDockerService implements DockerService {
     }
 
     /**
-     * Get the Name of cluster {@link DefaultNodesGroupImpl}
+     * Get the Name of ngroup {@link DefaultCluster}
      * Note: only one of {@link #getCluster()} or {@link #getNode()} can has non null value
      * @return not null
      */
@@ -271,7 +271,7 @@ public class VirtualDockerService implements DockerService {
     }
 
     /**
-     * Not supported, because we don't know which node in the group(cluster) should create the container
+     * Not supported, because we don't know which node in the group(ngroup) should create the container
      * and don't like nodes group united by swarm or docker in swarm mode can judge this by balance strategy
      * TODO in the feature we need to define our own strategy to create container in nodes group
      * @return not support
@@ -313,7 +313,7 @@ public class VirtualDockerService implements DockerService {
     }
 
     /**
-     * Not support, because we don't know which node in the group(cluster) should subscribe the event
+     * Not support, because we don't know which node in the group(ngroup) should subscribe the event
      * @@return  not support
      */
     @Override
@@ -336,7 +336,7 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public Network getNetwork(String id) {
-        throw new UnsupportedOperationException("Virtual cluster does not support.");
+        throw new UnsupportedOperationException("Virtual ngroup does not support.");
     }
 
     /**
@@ -345,7 +345,7 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public List<Network> getNetworks() {
-        throw new UnsupportedOperationException("Virtual cluster does not support.");
+        throw new UnsupportedOperationException("Virtual ngroup does not support.");
     }
 
     /**
@@ -417,12 +417,12 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public ImageDescriptor pullImage(String name, Consumer<ProcessEvent> watcher) {
-        throw new UnsupportedOperationException("Virtual cluster does not support.");
+        throw new UnsupportedOperationException("Virtual ngroup does not support.");
     }
 
     /**
      * return low-level information on the image name, not pull image.
-     * Get the first image we found (more than one node has the image of same name in the cluster)
+     * Get the first image we found (more than one node has the image of same name in the ngroup)
      * @param name name with tag (otherwise retrieved the last image)
      * @return image of null when it not found
      */
@@ -497,7 +497,7 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public InspectResponse getSwarm() {
-        throw new UnsupportedOperationException("Virtual cluster does not support.");
+        throw new UnsupportedOperationException("Virtual ngroup does not support.");
     }
 
     /**
@@ -506,7 +506,7 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public SwarmInitResult initSwarm(SwarmInitCmd cmd) {
-        throw new UnsupportedOperationException("Virtual cluster does not support.");
+        throw new UnsupportedOperationException("Virtual ngroup does not support.");
     }
 
     /**
@@ -515,7 +515,7 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public ServiceCallResult joinSwarm(SwarmJoinCmd cmd) {
-        throw new UnsupportedOperationException("Virtual cluster does not support.");
+        throw new UnsupportedOperationException("Virtual ngroup does not support.");
     }
 
     /**
@@ -524,7 +524,7 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public ServiceCallResult leaveSwarm(SwarmLeaveArg arg) {
-        throw new UnsupportedOperationException("Virtual cluster does not support.");
+        throw new UnsupportedOperationException("Virtual ngroup does not support.");
     }
 
     /**
@@ -533,7 +533,7 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public List<SwarmNode> getNodes(GetNodesArg cmd) {
-        throw new UnsupportedOperationException("Virtual cluster does not support.");
+        throw new UnsupportedOperationException("Virtual ngroup does not support.");
     }
 
     /**
@@ -562,7 +562,7 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public List<Service> getServices(GetServicesArg arg) {
-        throw new UnsupportedOperationException("Virtual cluster does not support.");
+        throw new UnsupportedOperationException("Virtual ngroup does not support.");
     }
 
     /**
@@ -571,7 +571,7 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public ServiceCreateResult createService(CreateServiceArg arg) {
-        throw new UnsupportedOperationException("Virtual cluster does not support.");
+        throw new UnsupportedOperationException("Virtual ngroup does not support.");
     }
 
     /**
@@ -600,7 +600,7 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public Service getService(String service) {
-        throw new UnsupportedOperationException("Virtual cluster does not support.");
+        throw new UnsupportedOperationException("Virtual ngroup does not support.");
     }
 
     /**
@@ -609,7 +609,7 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public List<Task> getTasks(GetTasksArg arg) {
-        throw new UnsupportedOperationException("Virtual cluster does not support.");
+        throw new UnsupportedOperationException("Virtual ngroup does not support.");
     }
 
     /**
@@ -618,7 +618,7 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public Task getTask(String taskId) {
-        throw new UnsupportedOperationException("Virtual cluster does not support.");
+        throw new UnsupportedOperationException("Virtual ngroup does not support.");
     }
 
     /**
@@ -627,7 +627,7 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public List<Volume> getVolumes(GetVolumesArg arg) {
-        throw new UnsupportedOperationException("Virtual cluster does not support.");
+        throw new UnsupportedOperationException("Virtual ngroup does not support.");
     }
 
     /**
@@ -636,7 +636,7 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public Volume getVolume(String name) {
-        throw new UnsupportedOperationException("Virtual cluster does not support.");
+        throw new UnsupportedOperationException("Virtual ngroup does not support.");
     }
 
     /**
@@ -645,7 +645,7 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public Volume createVolume(CreateVolumeCmd cmd) {
-        throw new UnsupportedOperationException("Virtual cluster does not support.");
+        throw new UnsupportedOperationException("Virtual ngroup does not support.");
     }
 
     /**
@@ -654,7 +654,7 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public ServiceCallResult removeVolume(RemoveVolumeArg arg) {
-        throw new UnsupportedOperationException("Virtual cluster does not support.");
+        throw new UnsupportedOperationException("Virtual ngroup does not support.");
     }
 
     /**
@@ -667,12 +667,12 @@ public class VirtualDockerService implements DockerService {
         return notSupport();
     }
 
-    private final DefaultNodesGroupImpl cluster;
+    private final DefaultCluster cluster;
     // we need empty config for prevent NPE
     // just a virtual config because the actual docker service according to the specified node or specified container
     private final DockerConfig config = DockerConfig.builder().host("<virtual host>").build();
 
-    public VirtualDockerService(DefaultNodesGroupImpl cluster) {
+    public VirtualDockerService(DefaultCluster cluster) {
         this.cluster = cluster;
     }
 
@@ -682,7 +682,7 @@ public class VirtualDockerService implements DockerService {
     }
 
     private <T extends ServiceCallResult> T notSupported(T res) {
-        res.code(ResultCode.ERROR).message("Virtual cluster '" + getCluster() + "' does not support this.");
+        res.code(ResultCode.ERROR).message("Virtual ngroup '" + getCluster() + "' does not support this.");
         return res;
     }
 

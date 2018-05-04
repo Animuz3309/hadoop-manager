@@ -47,7 +47,7 @@ public class DockerServiceSecurityWrapper implements DockerService {
         if(cluster != null) {
             boolean granted = context.isGranted(SecuredType.CLUSTER.id(cluster), action);
             if(!granted) {
-                throw new AccessDeniedException("Access to cluster docker service '" + cluster + "' with " + action + " is denied.");
+                throw new AccessDeniedException("Access to ngroup docker service '" + cluster + "' with " + action + " is denied.");
             }
         }
     }

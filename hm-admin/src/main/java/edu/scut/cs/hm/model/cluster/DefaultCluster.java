@@ -1,7 +1,9 @@
 package edu.scut.cs.hm.model.cluster;
 
 import com.google.common.collect.ImmutableSet;
+import edu.scut.cs.hm.admin.component.ContainerCreator;
 import edu.scut.cs.hm.admin.component.FilterFactory;
+import edu.scut.cs.hm.admin.service.DiscoveryStorageImpl;
 import edu.scut.cs.hm.admin.service.NodeStorage;
 import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.docker.VirtualDockerService;
@@ -9,13 +11,13 @@ import edu.scut.cs.hm.docker.arg.GetContainersArg;
 import edu.scut.cs.hm.docker.arg.NodeUpdateArg;
 import edu.scut.cs.hm.docker.model.container.DockerContainer;
 import edu.scut.cs.hm.docker.res.ServiceCallResult;
-import edu.scut.cs.hm.admin.component.ContainerCreator;
-import edu.scut.cs.hm.model.container.ContainersManager;
 import edu.scut.cs.hm.model.container.ContainerRegistration;
 import edu.scut.cs.hm.model.container.ContainerStorage;
+import edu.scut.cs.hm.model.container.ContainersManager;
 import edu.scut.cs.hm.model.container.SwarmClusterContainers;
-import edu.scut.cs.hm.model.ds.DiscoveryStorage;
 import edu.scut.cs.hm.model.filter.Filter;
+import edu.scut.cs.hm.model.ngroup.AbstractNodesGroup;
+import edu.scut.cs.hm.model.ngroup.DefaultNodesGroupConfig;
 import edu.scut.cs.hm.model.node.Node;
 import edu.scut.cs.hm.model.node.NodeInfo;
 import lombok.Builder;
@@ -27,13 +29,13 @@ import org.springframework.security.access.AccessDeniedException;
 import java.util.*;
 
 /**
- * Node group managed 'manually', not like cluster united by docker in swarm mode or swarm.
+ * Node group managed 'manually', not like ngroup united by docker in swarm mode or swarm.
  * It allow to view multiple nodes as single entity.
  *
  * with DockerService {@link VirtualDockerService} and ContainersManager {@link SwarmClusterContainers}
  */
 @ToString(callSuper = true)
-public class DefaultNodesGroupImpl extends AbstractNodesGroup<DefaultNodesGroupConfig> {
+public class DefaultCluster extends AbstractNodesGroup<DefaultNodesGroupConfig> {
 
     /**
      * @param id name of node, when we add a node use the name
@@ -65,7 +67,7 @@ public class DefaultNodesGroupImpl extends AbstractNodesGroup<DefaultNodesGroupC
     }
 
     /**
-     * Get the collection of nodes's cluster name which satisfied filter {@link #predicate}
+     * Get the collection of nodes's ngroup name which satisfied filter {@link #predicate}
      *
      * @return
      */
@@ -87,7 +89,7 @@ public class DefaultNodesGroupImpl extends AbstractNodesGroup<DefaultNodesGroupC
     }
 
     /**
-     * Tool for managing cluster containers, it replace for direct access to docker service
+     * Tool for managing ngroup containers, it replace for direct access to docker service
      *
      * @return non null value
      */
@@ -97,13 +99,13 @@ public class DefaultNodesGroupImpl extends AbstractNodesGroup<DefaultNodesGroupC
     }
 
     public interface ContainersProvider {
-        List<DockerContainer> getContainers(DefaultNodesGroupImpl ng, GetContainersArg arg);
+        List<DockerContainer> getContainers(DefaultCluster ng, GetContainersArg arg);
     }
 
     private static class DefaultContainersProvider implements ContainersProvider {
 
         @Override
-        public List<DockerContainer> getContainers(DefaultNodesGroupImpl ng, GetContainersArg arg) {
+        public List<DockerContainer> getContainers(DefaultCluster ng, GetContainersArg arg) {
             List<DockerContainer> list = new ArrayList<>();
             NodeStorage nodeStorage = ng.getNodeStorage();
             for (Node node: ng.getNodes()) {
@@ -127,7 +129,7 @@ public class DefaultNodesGroupImpl extends AbstractNodesGroup<DefaultNodesGroupC
 
     public static class AllContainersProvider implements ContainersProvider {
         @Override
-        public List<DockerContainer> getContainers(DefaultNodesGroupImpl ng, GetContainersArg arg) {
+        public List<DockerContainer> getContainers(DefaultCluster ng, GetContainersArg arg) {
             List<ContainerRegistration> containers = ng.containerStorage.getContainers();
             ArrayList<DockerContainer> list = new ArrayList<>(containers.size());
             containers.forEach(cr -> list.add(cr.getContainer()));
@@ -147,11 +149,11 @@ public class DefaultNodesGroupImpl extends AbstractNodesGroup<DefaultNodesGroupC
 
 
     @Builder
-    public DefaultNodesGroupImpl(DiscoveryStorage discoveryStorage,
-                                 Filter predicate,
-                                 DefaultNodesGroupConfig config,
-                                 @Singular Set<Feature> features) {
-        super(config, discoveryStorage, ImmutableSet.<Feature>builder()
+    DefaultCluster(DiscoveryStorageImpl storage,
+                   Filter predicate,
+                   DefaultNodesGroupConfig config,
+                   @Singular Set<Feature> features) {
+        super(config, storage, ImmutableSet.<Feature>builder()
                 .addAll(features == null ? Collections.emptySet() : features)
                 .build());
         this.containersProvider = DEFAULT_CONTAINERS_PROVIDER;
@@ -172,19 +174,19 @@ public class DefaultNodesGroupImpl extends AbstractNodesGroup<DefaultNodesGroupC
 
     // beanFactory动态注入，而不是一开始就由框架产生
     @Autowired
-    public void setContainerStorage(ContainerStorage containerStorage) {
+    void setContainerStorage(ContainerStorage containerStorage) {
         this.containerStorage = containerStorage;
     }
 
     // beanFactory动态注入，而不是一开始就由框架产生
     @Autowired
-    public void setContainerCreator(ContainerCreator containerCreator) {
+    void setContainerCreator(ContainerCreator containerCreator) {
         this.containerCreator = containerCreator;
     }
 
     // beanFactory动态注入，而不是一开始就由框架产生
     @Autowired
-    public void setFilterFactory(FilterFactory filterFactory) {
+    void setFilterFactory(FilterFactory filterFactory) {
         this.filterFactory = filterFactory;
     }
 

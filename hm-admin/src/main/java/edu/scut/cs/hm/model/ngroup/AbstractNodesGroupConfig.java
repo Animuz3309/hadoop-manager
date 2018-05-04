@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.model.cluster;
+package edu.scut.cs.hm.model.ngroup;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -12,7 +12,9 @@ import lombok.Data;
         include = JsonTypeInfo.As.EXTERNAL_PROPERTY
 )
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = DefaultNodesGroupConfig.class, name = NodesGroupConfig.TYPE_DEFAULT)
+    @JsonSubTypes.Type(value = DefaultNodesGroupConfig.class, name = NodesGroupConfig.TYPE_DEFAULT),
+    @JsonSubTypes.Type(value = SwarmNodesGroupConfig.class, name = NodesGroupConfig.TYPE_SWARM),
+    @JsonSubTypes.Type(value = DockerClusterConfig.class, name = NodesGroupConfig.TYPE_DOCKER),
 })
 @Data
 public abstract class AbstractNodesGroupConfig<T extends AbstractNodesGroupConfig<T>> implements Cloneable, NodesGroupConfig {

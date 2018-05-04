@@ -20,7 +20,7 @@ public class DockerServiceEvent implements WithCluster, EventWithTime, WithSever
         private final DockerServiceInfo info;
 
         @JsonCreator
-        @ConstructorProperties({"service", "node", "cluster", "info"})
+        @ConstructorProperties({"service", "node", "ngroup", "info"})
         public DockerServiceInfoEvent(String service,
                                       String node,
                                       String cluster,
@@ -58,7 +58,7 @@ public class DockerServiceEvent implements WithCluster, EventWithTime, WithSever
      * @param action
      */
     @JsonCreator
-    @ConstructorProperties({"service", "node", "cluster", "action"})
+    @ConstructorProperties({"service", "node", "ngroup", "action"})
     public DockerServiceEvent(String service,
                               String node,
                               String cluster,

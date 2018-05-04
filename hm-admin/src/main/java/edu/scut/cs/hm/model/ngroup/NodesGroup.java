@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.model.cluster;
+package edu.scut.cs.hm.model.ngroup;
 
 import edu.scut.cs.hm.model.container.ContainersManager;
 import edu.scut.cs.hm.docker.DockerService;
@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 
 /**
  * Interface represent node group
- * node group means real cluster like swarm or docker in swarm mode cluster,
+ * node group means real ngroup like swarm or docker in swarm mode ngroup,
  * or combination of node satisfy {@link java.util.function.Predicate}
  */
 public interface NodesGroup extends Named, WithAcl {
@@ -30,7 +30,7 @@ public interface NodesGroup extends Named, WithAcl {
         /**
          * nodes in group is united by docker in 'swarm mode'
          */
-        SWARM_MOD,
+        SWARM_MODE,
 
         /**
          * disallow node addition
@@ -41,12 +41,12 @@ public interface NodesGroup extends Named, WithAcl {
     }
 
     /**
-     * Try to init cluster if it not init yet
+     * Try to init ngroup if it not init yet
      */
     void init();
 
     /**
-     * Clean resources of node group (for example destroy cluster)
+     * Clean resources of node group (for example destroy ngroup)
      */
     void clean();
 
@@ -60,20 +60,20 @@ public interface NodesGroup extends Named, WithAcl {
     void updateConfig(Consumer<AbstractNodesGroupConfig<?>> consumer);
 
     /**
-     * State of cluster.
+     * State of ngroup.
      * @see #init()
      * @return state, can not be null.
      */
     NodeGroupState getState();
 
     /**
-     * Identifier of cluster
+     * Identifier of ngroup
      * @return
      */
     String getName();
 
     /**
-     * Human friendly cluster name
+     * Human friendly ngroup name
      * @return
      */
     String getTitle();
@@ -108,7 +108,7 @@ public interface NodesGroup extends Named, WithAcl {
     List<NodeInfo> getNodes();
 
     /**
-     * Update node but not only attributes of physical node, some 'node in docker swarm cluster' attr
+     * Update node but not only attributes of physical node, some 'node in docker swarm ngroup' attr
      * @param arg
      * @return
      */
@@ -117,7 +117,7 @@ public interface NodesGroup extends Named, WithAcl {
     /**
      * Collections with names of other intersected NodesGroups. Note that it
      * not mean 'enclosed' relationship. <p/>
-     * The 'Real Cluster' means 'swarm cluster' or 'docker in swarm mode cluster'
+     * The 'Real Cluster' means 'swarm ngroup' or 'docker in swarm mode ngroup'
      * Any RealCluster always return empty collection.
      * For example 'all' - return all real clusters
      * @return
@@ -137,7 +137,7 @@ public interface NodesGroup extends Named, WithAcl {
     Set<Feature> getFeatures();
 
     /**
-     * Tool for managing cluster containers, it replace for direct access to docker service
+     * Tool for managing ngroup containers, it replace for direct access to docker service
      * @return non null value
      */
     ContainersManager getContainers();

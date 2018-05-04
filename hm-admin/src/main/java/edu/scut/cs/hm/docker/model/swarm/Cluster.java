@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Base class for cluster info in 'GET /swarm' (this use subclass with tokens) and 'GET /info' requests. <p/>
+ * Base class for ngroup info in 'GET /swarm' (this use subclass with tokens) and 'GET /info' requests. <p/>
  * <pre>
  {
  "ID":"6r...lt",

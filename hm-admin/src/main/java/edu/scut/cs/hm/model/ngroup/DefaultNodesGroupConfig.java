@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.model.cluster;
+package edu.scut.cs.hm.model.ngroup;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import edu.scut.cs.hm.common.kv.mapping.KvMapping;

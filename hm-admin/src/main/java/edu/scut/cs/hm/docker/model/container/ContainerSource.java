@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Data which uses in creation of new container.
  */
-@JsonPropertyOrder({"name", "hostname", "image", "cluster", "application", "node", "labels", "ports"})
+@JsonPropertyOrder({"name", "hostname", "image", "ngroup", "application", "node", "labels", "ports"})
 @EqualsAndHashCode(callSuper = true)
 @Data
 @ToString(callSuper = true)

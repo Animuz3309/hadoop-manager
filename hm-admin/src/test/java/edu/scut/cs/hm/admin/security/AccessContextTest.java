@@ -48,7 +48,7 @@ public class AccessContextTest {
         void checkAccess(AccessContext context,ObjectIdentityData id, Action action) {
             boolean granted = context.isGranted(id, action);
             if (!granted) {
-                throw new AccessDeniedException("Access to cluster '" + cluster1 + "' with action " + action + " is denied");
+                throw new AccessDeniedException("Access to ngroup '" + cluster1 + "' with action " + action + " is denied");
             }
         }
 

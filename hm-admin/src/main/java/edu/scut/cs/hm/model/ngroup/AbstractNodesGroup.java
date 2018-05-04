@@ -1,9 +1,10 @@
-package edu.scut.cs.hm.model.cluster;
+package edu.scut.cs.hm.model.ngroup;
 
 import com.google.common.collect.ImmutableSet;
 import edu.scut.cs.hm.admin.security.SecuredType;
 import edu.scut.cs.hm.admin.security.TempAuth;
 import edu.scut.cs.hm.admin.security.acl.AclModifier;
+import edu.scut.cs.hm.admin.service.DiscoveryStorageImpl;
 import edu.scut.cs.hm.admin.service.NodeStorage;
 import edu.scut.cs.hm.common.security.SecurityUtils;
 import edu.scut.cs.hm.common.security.acl.TenantPrincipalSid;
@@ -12,7 +13,6 @@ import edu.scut.cs.hm.common.security.acl.dto.ObjectIdentityData;
 import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.docker.model.network.Network;
 import edu.scut.cs.hm.docker.model.swarm.NetworkManager;
-import edu.scut.cs.hm.model.ds.DiscoveryStorage;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,16 +47,16 @@ public abstract class AbstractNodesGroup<C extends AbstractNodesGroupConfig<C>> 
     private final CreateNetworkTask createNetworkTask = new CreateNetworkTask();
     private final AtomicInteger state = new AtomicInteger(S_BEGIN);     // state of nodes group
     private volatile String stateMessage;                               // state msg
-    private DiscoveryStorage storage;                                   // storage to do with nodes group
+    private DiscoveryStorageImpl storage;                                   // storage to do with nodes group
     private Class<C> configClass;                                       // class type of NodesGroupConfig
     private String name;                                                // name of nodes group
     private ObjectIdentityData oid;                                     // oid of nodes group
     private Set<Feature> features;                                      // feature of nodes group
 
     @SuppressWarnings("unchecked")
-    public AbstractNodesGroup(C config, DiscoveryStorage storage, Collection<Feature> features) {
+    public AbstractNodesGroup(C config, DiscoveryStorageImpl storage, Collection<Feature> features) {
         this.storage = storage;
-        Assert.notNull(this.storage, "cluster storage is null");
+        Assert.notNull(this.storage, "ngroup storage is null");
         this.configClass = (Class<C>) config.getClass();
         this.name = config.getName();
         Assert.notNull(this.name, "name is null");
@@ -67,7 +67,7 @@ public abstract class AbstractNodesGroup<C extends AbstractNodesGroupConfig<C>> 
     }
 
     /**
-     * Try to init cluster if it not inited already
+     * Try to init ngroup if it not inited already
      * @see #getState()
      */
     @Override
@@ -76,18 +76,18 @@ public abstract class AbstractNodesGroup<C extends AbstractNodesGroupConfig<C>> 
             return;
         }
         try {
-            log.info("Begin init of cluster '{}'", getName());
+            log.info("Begin init of ngroup '{}'", getName());
             initImpl();
             if (changeState(S_INITING, S_CLENED)) {
-                log.info("Success init of cluster '{}'", getName());
+                log.info("Success init of ngroup '{}'", getName());
             }
         } finally {
             if (changeState(S_INITING, S_FAILED)) {
-                // NOTE: if cluster may be re-inited then initImpl() MUST:
+                // NOTE: if ngroup may be re-inited then initImpl() MUST:
                 // - properly handle any errors
                 // - set status to S_BEGIN after errors which prevent correct initialisation (like node is offline)
-                // otherwise cluster will gone to failed state, which is unrecoverable
-                log.error("Fail to init of cluster '{}'", getName());
+                // otherwise ngroup will gone to failed state, which is unrecoverable
+                log.error("Fail to init of ngroup '{}'", getName());
             }
         }
     }
@@ -97,7 +97,7 @@ public abstract class AbstractNodesGroup<C extends AbstractNodesGroupConfig<C>> 
     }
 
     protected final void cancelInit(String msg) {
-        log.warn("Init of {} cluster cancelled due to: {}", getName(), msg);
+        log.warn("Init of {} ngroup cancelled due to: {}", getName(), msg);
         changeState(S_INITING, S_BEGIN, msg);
     }
 
@@ -292,7 +292,7 @@ public abstract class AbstractNodesGroup<C extends AbstractNodesGroupConfig<C>> 
     protected void createDefaultNetwork() {
         NodeGroupState state = getState();
         if (!state.isOk()) {
-            log.warn("Can not create network due cluster '{}' in '{}' state.", getName(), state.getMessage());
+            log.warn("Can not create network due ngroup '{}' in '{}' state.", getName(), state.getMessage());
             return;
         }
         getDiscoveryStorage().getExecutor().execute(createNetworkTask);
@@ -340,12 +340,12 @@ public abstract class AbstractNodesGroup<C extends AbstractNodesGroupConfig<C>> 
         flush();
     }
 
-    public DiscoveryStorage getDiscoveryStorage() {
+    public DiscoveryStorageImpl getDiscoveryStorage() {
         return storage;
     }
 
     public NodeStorage getNodeStorage() {
-        return storage.getNodeService();
+        return storage.getNodeStorage();
     }
 
     private class CreateNetworkTask implements Runnable {
@@ -360,7 +360,7 @@ public abstract class AbstractNodesGroup<C extends AbstractNodesGroupConfig<C>> 
             try (TempAuth ta = TempAuth.asSystem()) {
                 DockerService docker = getDocker();
                 if(docker == null || !docker.isOnline()) {
-                    log.warn("Can not create networks in '{}' cluster due to null or offline docker", getName());
+                    log.warn("Can not create networks in '{}' ngroup due to null or offline docker", getName());
                     return;
                 }
 

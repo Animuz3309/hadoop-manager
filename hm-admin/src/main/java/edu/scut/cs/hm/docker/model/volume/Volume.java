@@ -50,7 +50,7 @@ public class Volume {
     private final Map<String, String> options;
 
     /**
-     * The level at which the volume exists. Either `global` for cluster-wide, or `local` for machine level.
+     * The level at which the volume exists. Either `global` for ngroup-wide, or `local` for machine level.
      * Required: true
      */
     @JsonProperty("Scope")
@@ -97,7 +97,7 @@ public class Volume {
      */
     public enum Scope {
         /**
-         * `global` for cluster-wide
+         * `global` for ngroup-wide
          */
         GLOBAL,
         /**

@@ -9,8 +9,8 @@ import edu.scut.cs.hm.docker.res.ServiceCallResult;
 import java.util.Collection;
 
 /**
- * Tool for manage cluster containers <p/>
- * Old standalone swarm can show cluster containers, but swarm-mode, use tasks & service concept.
+ * Tool for manage ngroup containers <p/>
+ * Old standalone swarm can show ngroup containers, but swarm-mode, use tasks & service concept.
  * TODO need to finish
  */
 public interface ContainersManager {
@@ -50,7 +50,7 @@ public interface ContainersManager {
 
     ContainerService getService(String id);
     /**
-     * Create service, when cluster does not supported services underline code emulate them.
+     * Create service, when ngroup does not supported services underline code emulate them.
      * @param arg argument
      * @return service creation result
      */

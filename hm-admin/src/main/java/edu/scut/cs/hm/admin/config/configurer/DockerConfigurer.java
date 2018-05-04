@@ -23,6 +23,11 @@ public class DockerConfigurer {
      */
     private AgentConfig agent = new AgentConfig();
 
+    /**
+     * Docker services config {@link edu.scut.cs.hm.admin.service.DockerServices}
+     */
+    private DockerServicesConfig services = new DockerServicesConfig();
+
     @Data
     public static class AgentConfig {
         private boolean checkSsl = true;
@@ -38,5 +43,11 @@ public class DockerConfigurer {
          * password to 'hm-agent' on the other physical docker node
          */
         private String password = "password";
+    }
+
+    @Data
+    public static class DockerServicesConfig {
+        private final long cacheTimeout = 60_000;
+        private final long refreshInfoSeconds = 10;
     }
 }

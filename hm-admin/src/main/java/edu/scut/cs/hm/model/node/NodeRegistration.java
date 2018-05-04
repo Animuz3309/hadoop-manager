@@ -16,7 +16,7 @@ public interface NodeRegistration {
     NodeInfo getNodeInfo();
 
     /**
-     * Name of cluster, can be null.
+     * Name of ngroup, can be null.
      * @return name or null
      */
     String getCluster();

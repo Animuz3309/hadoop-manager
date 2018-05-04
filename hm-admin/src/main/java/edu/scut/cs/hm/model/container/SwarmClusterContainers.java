@@ -9,6 +9,7 @@ import edu.scut.cs.hm.docker.model.container.DockerContainer;
 import edu.scut.cs.hm.docker.model.container.EditableContainerSource;
 import edu.scut.cs.hm.docker.res.CreateAndStartContainerResult;
 import edu.scut.cs.hm.docker.res.ServiceCallResult;
+import edu.scut.cs.hm.model.cluster.DefaultCluster;
 import org.springframework.util.Assert;
 
 import java.util.Collection;
@@ -17,7 +18,7 @@ import java.util.function.Supplier;
 
 /**
  * A virtual swarm container manager tool
- * @see edu.scut.cs.hm.model.cluster.DefaultNodesGroupImpl
+ * @see DefaultCluster
  */
 public class SwarmClusterContainers extends AbstractContainersManager {
 

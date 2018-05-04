@@ -8,7 +8,7 @@ import lombok.Data;
 public class SwarmLeaveArg {
 
     /**
-     * 'Force leave swarm, even if this is the last manager or that it will break the cluster.' <p/>
+     * 'Force leave swarm, even if this is the last manager or that it will break the ngroup.' <p/>
      * Default 'false'.
      */
     private Boolean force;

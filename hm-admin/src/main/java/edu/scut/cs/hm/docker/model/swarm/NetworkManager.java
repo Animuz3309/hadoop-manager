@@ -1,6 +1,6 @@
 package edu.scut.cs.hm.docker.model.swarm;
 
-import edu.scut.cs.hm.model.cluster.AbstractNodesGroup;
+import edu.scut.cs.hm.model.ngroup.AbstractNodesGroup;
 import lombok.extern.slf4j.Slf4j;
 
 /**

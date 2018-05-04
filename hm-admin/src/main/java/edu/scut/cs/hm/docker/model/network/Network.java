@@ -34,7 +34,7 @@ public class Network {
 
     /**
      * Scope describes the level at which the network exists
-     * (e.g. `global` for cluster-wide or `local` for machine level)
+     * (e.g. `global` for ngroup-wide or `local` for machine level)
      */
     @JsonProperty("Scope")
     private final Scope scope;

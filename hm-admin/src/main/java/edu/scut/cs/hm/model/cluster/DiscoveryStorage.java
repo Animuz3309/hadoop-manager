@@ -1,19 +1,16 @@
-package edu.scut.cs.hm.model.ds;
+package edu.scut.cs.hm.model.cluster;
 
-import edu.scut.cs.hm.admin.service.NodeStorage;
 import edu.scut.cs.hm.docker.DockerService;
-import edu.scut.cs.hm.model.cluster.AbstractNodesGroupConfig;
-import edu.scut.cs.hm.model.cluster.ClusterConfigFactory;
-import edu.scut.cs.hm.model.cluster.NodesGroup;
+import edu.scut.cs.hm.model.ngroup.AbstractNodesGroupConfig;
+import edu.scut.cs.hm.model.ngroup.NodesGroup;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
 
 /**
- * Service of nodes group (include nodes group or real cluster)
+ * Service of nodes group (include nodes group or real ngroup)
  * @see package-info.java
  */
 public interface DiscoveryStorage {
@@ -23,22 +20,22 @@ public interface DiscoveryStorage {
     Collection<String> SYSTEM_GROUPS = Arrays.asList(GROUP_ID_ALL, GROUP_ID_ORPHANS);
 
     /**
-     * Return exists cluster of concrete node.
+     * Return exists ngroup of concrete node.
      * @param node
-     * @return cluster or null
+     * @return ngroup or null
      */
     NodesGroup getClusterForNode(String node);
 
     /**
-     * Return exists cluster or null
+     * Return exists ngroup or null
      * @param clusterId
-     * @return exists cluster or null
+     * @return exists ngroup or null
      */
     NodesGroup getCluster(String clusterId);
 
     /**
-     * Return existed cluster or create new.
-     * @param clusterId name of cluster
+     * Return existed ngroup or create new.
+     * @param clusterId name of ngroup
      * @param factory factory or null
      * @return NodesGroup, never null
      */
@@ -53,19 +50,19 @@ public interface DiscoveryStorage {
     NodesGroup getOrCreateGroup(AbstractNodesGroupConfig<?> config);
 
     /**
-     * Delete cluster by cluster name (real cluster)
-     * @param clusterId cluster name {@link NodesGroup#getName()}
+     * Delete ngroup by ngroup name (real ngroup)
+     * @param clusterId ngroup name {@link NodesGroup#getName()}
      */
     void deleteCluster(String clusterId);
 
     /**
-     * Delete cluster by nodes group name (just in logic nodes group not real cluster)
+     * Delete ngroup by nodes group name (just in logic nodes group not real ngroup)
      * @param clusterId nodes group name {@link NodesGroup#getName()}
      */
     void deleteNodeGroup(String clusterId);
 
     /**
-     * Get all cluster (include nodes group and real cluster)
+     * Get all ngroup (include nodes group and real ngroup)
      * @return
      */
     List<NodesGroup> getClusters();
@@ -82,19 +79,4 @@ public interface DiscoveryStorage {
      * @return
      */
     Set<String> getServices();
-
-
-    /**
-     * Get executor
-     * TODO refactor
-     * @return
-     */
-    ExecutorService getExecutor();
-
-    /**
-     * Get NodeService
-     * TODO refactor
-     * @return
-     */
-    NodeStorage getNodeService();
 }

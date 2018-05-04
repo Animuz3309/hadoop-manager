@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.model.cluster;
+package edu.scut.cs.hm.model.ngroup;
 
 /**
  * Configuration for nodes group

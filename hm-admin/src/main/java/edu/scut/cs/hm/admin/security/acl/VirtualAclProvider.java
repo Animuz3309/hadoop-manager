@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.function.Consumer;
 
 /**
- * AclProvider that provide AclSource(Acl) from object that has support with cluster
+ * AclProvider that provide AclSource(Acl) from object that has support with ngroup
  */
 public abstract class VirtualAclProvider implements AclProvider {
     private static final TenantPrincipalSid PRINCIPAL_SYS = TenantPrincipalSid.from(SecurityUtils.USER_SYSTEM);
@@ -32,7 +32,7 @@ public abstract class VirtualAclProvider implements AclProvider {
     public AclSource provide(Serializable id) {
         String cluster = getCluster(id);
         if (cluster == null) {
-            // when node is unbound to any cluster we grant all to any user
+            // when node is unbound to any ngroup we grant all to any user
             return makeAcl(id);
         }
         AclSource clusterAcl = clusterAclProvider.provide(cluster);
@@ -53,7 +53,7 @@ public abstract class VirtualAclProvider implements AclProvider {
                 pdb.add(Action.READ);
             }
             if (alterInside) {
-                // cluster 'alter' mean that user can do anything with underline objects
+                // ngroup 'alter' mean that user can do anything with underline objects
                 pdb.add(PermissionData.ALL);
                 if (!read && !granting) {
                     // if read is not specified before and it is 'revoke' entry(granting = false), then we must remove READ

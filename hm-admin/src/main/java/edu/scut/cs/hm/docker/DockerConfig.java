@@ -3,6 +3,7 @@ package edu.scut.cs.hm.docker;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.google.common.collect.ImmutableList;
 import edu.scut.cs.hm.common.utils.Smelter;
+import edu.scut.cs.hm.docker.model.swarm.Strategies;
 import lombok.Data;
 import org.springframework.util.Assert;
 
@@ -11,7 +12,6 @@ import java.util.List;
 
 /**
  * Configuration for docker service api config.
- * TODO docker strategies "random binpack spread"
  */
 @Data
 public class DockerConfig {
@@ -24,9 +24,9 @@ public class DockerConfig {
          * docker/swarm 'http[s]://host:port'
          */
         private String host;
+        private String cluster;
         private int maxCountOfInstances = 1;
         private String dockerRestart;
-        private String cluster;
         /**
          * Time in seconds, which data was cached after last write.
          */
@@ -37,6 +37,7 @@ public class DockerConfig {
          * @return
          */
         private final List <String> registries = new ArrayList<>();
+        private Strategies strategy = Strategies.DEFAULT;
 
         public Builder from(DockerConfig orig) {
             if(orig == null) {
@@ -69,6 +70,11 @@ public class DockerConfig {
 
         public Builder host(String host) {
             setHost(host);
+            return this;
+        }
+
+        public Builder cluster(String cluster) {
+            setCluster(cluster);
             return this;
         }
 
@@ -109,6 +115,11 @@ public class DockerConfig {
             }
         }
 
+        public Builder strategy(Strategies strategy) {
+            this.strategy = strategy;
+            return this;
+        }
+
         public DockerConfig build() {
             return new DockerConfig(this);
         }
@@ -118,9 +129,9 @@ public class DockerConfig {
      * docker/swarm 'host:port'
      */
     private final String host;
+    private final String cluster;
     private final int maxCountOfInstances;
     private final String dockerRestart;
-    private final String cluster;
     /**
      * Time in seconds, which data was cached after last write.
      */
@@ -131,6 +142,7 @@ public class DockerConfig {
      * @return
      */
     private final List<String> registries;
+    private final Strategies strategy;
 
     public static Builder builder(DockerConfig cc) {
         return builder().from(cc);
@@ -143,12 +155,13 @@ public class DockerConfig {
     @JsonCreator
     public DockerConfig(Builder builder) {
         this.host = builder.host;
+        this.cluster = builder.cluster;
         this.maxCountOfInstances = builder.maxCountOfInstances;
         this.dockerRestart = builder.dockerRestart;
-        this.cluster = builder.cluster;
         this.cacheTimeAfterWrite = builder.cacheTimeAfterWrite;
         this.dockerTimeout = builder.dockerTimeout;
         this.registries = ImmutableList.copyOf(builder.registries);
+        this.strategy = builder.strategy;
     }
 
     public DockerConfig validate() {

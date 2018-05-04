@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 public class DockerServiceImpl implements DockerService {
 
     /**
-     * Name of cluster
+     * Name of ngroup
      * Note: only one of {@link #getCluster()} or {@link #getNode()} can has non null value
      *
      * @return
@@ -686,12 +686,12 @@ public class DockerServiceImpl implements DockerService {
         return new Builder();
     }
 
-    public DockerServiceImpl(Builder b) {
+    DockerServiceImpl(Builder b) {
         //========================= from builder =================================
         this.node = b.node;
         this.cluster = b.cluster;
         Assert.isTrue((this.node == null || this.cluster == null) && this.node != this.cluster,
-                "Invalid config of service: cluster=" + this.cluster + " node=" + node + " service must has only one non null value.");
+                "Invalid config of service: ngroup=" + this.cluster + " node=" + node + " service must has only one non null value.");
         this.config = b.config.validate();
         this.restTemplate = b.restTemplate;
         Assert.notNull(this.restTemplate, "restTemplate is null");

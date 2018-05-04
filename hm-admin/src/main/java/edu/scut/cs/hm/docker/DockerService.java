@@ -32,9 +32,9 @@ public interface DockerService {
     String DS_PREFIX = "ds:";
 
     /**
-     * Name of cluster
+     * Name of ngroup
      * Note: only one of {@link #getCluster()} or {@link #getNode()} can has non null value
-     * Because the docker service may represent docker in one node or in a cluster
+     * Because the docker service may represent docker in one node or in a ngroup
      * @return
      */
     String getCluster();
@@ -42,7 +42,7 @@ public interface DockerService {
     /**
      * Name of node
      * Note: only one of {@link #getCluster()} or {@link #getNode()} can has non null value
-     * Because the docker service may represent docker in one node or in a cluster
+     * Because the docker service may represent docker in one node or in a ngroup
      * @return
      */
     String getNode();
@@ -55,7 +55,7 @@ public interface DockerService {
         StringBuilder sb = new StringBuilder(DS_PREFIX);
         String cluster = getCluster();
         if (cluster != null) {
-            sb.append("cluster:").append(cluster);
+            sb.append("ngroup:").append(cluster);
         } else {
             sb.append("node:").append(getNode());
         }

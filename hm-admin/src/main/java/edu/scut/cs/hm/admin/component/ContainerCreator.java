@@ -35,7 +35,7 @@ public class ContainerCreator {
      * Create container by image information (image name, tag) also can be specified optional params <p/>
      * <b>Must not throw any exception after start creation of container.</b>
      * @param arg argument
-     * @param docker cluster or node service
+     * @param docker ngroup or node service
      * @return id of new container
      */
     public CreateAndStartContainerResult createContainer(CreateContainerArg arg, DockerService docker) {
@@ -63,7 +63,7 @@ public class ContainerCreator {
         final CreateContainerArg arg;
         final Consumer<ProcessEvent> watcher;
         /**
-         * Service instance of concrete node or cluster on which do creation .
+         * Service instance of concrete node or ngroup on which do creation .
          */
         final DockerService dockerService;
         private String name;

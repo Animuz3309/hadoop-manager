@@ -14,7 +14,7 @@ import java.util.Map;
 
 /**
  * Mapping a {@link edu.scut.cs.hm.common.kv.KvNode} with string path to a object
- * e.g. /cluster mapping to a Cluster object
+ * e.g. /ngroup mapping to a Cluster object
  * @param <T>
  */
 @Slf4j

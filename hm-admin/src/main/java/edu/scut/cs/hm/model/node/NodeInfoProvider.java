@@ -13,7 +13,7 @@ public interface NodeInfoProvider {
     NodeInfo getNodeInfo(String node);
 
     /**
-     * Get node's cluster
+     * Get node's ngroup
      * @param node
      * @return
      */

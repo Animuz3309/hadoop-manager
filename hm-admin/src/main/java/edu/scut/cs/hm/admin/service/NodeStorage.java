@@ -13,6 +13,7 @@ import edu.scut.cs.hm.common.kv.mapping.KvMapEvent;
 import edu.scut.cs.hm.common.kv.mapping.KvMapLocalEvent;
 import edu.scut.cs.hm.common.kv.mapping.KvMapperFactory;
 import edu.scut.cs.hm.common.mb.MessageBus;
+import edu.scut.cs.hm.common.mb.Subscriptions;
 import edu.scut.cs.hm.common.security.acl.dto.Action;
 import edu.scut.cs.hm.common.utils.ExecutorUtils;
 import edu.scut.cs.hm.common.utils.ExtendedAssert;
@@ -215,7 +216,7 @@ public class NodeStorage implements NodeInfoProvider, NodeRegistry {
     }
 
     /**
-     * Set node's cluster
+     * Set node's ngroup
      * @param nodeName
      * @param cluster
      * @return
@@ -237,7 +238,7 @@ public class NodeStorage implements NodeInfoProvider, NodeRegistry {
     }
 
     /**
-     * Get node's cluster
+     * Get node's ngroup
      * @param node
      * @return
      */
@@ -412,12 +413,20 @@ public class NodeStorage implements NodeInfoProvider, NodeRegistry {
     }
 
     /**
+     * Return node event subscriptions, u can subscribe listener for {@link NodeEvent}
+     * @return
+     */
+    public Subscriptions<NodeEvent> getNodeEventSubscriptions() {
+        return nodeEventBus.asSubscriptions();
+    }
+
+    /**
      * create docker service of node
      * @param nr
      * @return
      */
     public DockerService createNodeDockerService(NodeRegistrationImpl nr) {
-        // we intentionally register node without specifying cluster
+        // we intentionally register node without specifying ngroup
         DockerConfig config = DockerConfig.builder().host(nr.getAddress()).build();
         return dockerServiceFactory.createDockerService(config, this, (b) -> b.setNode(nr.getName()));
     }

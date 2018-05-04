@@ -14,7 +14,7 @@ public interface NodeInfo extends Node, Labels, WithCluster {
     long getVersion();
 
     /**
-     * Note that this id generated at join node to cluster, and can be changed any time,
+     * Note that this id generated at join node to ngroup, and can be changed any time,
      * therefore you can not identity node by this.
      * @return id or null
      */
@@ -27,8 +27,8 @@ public interface NodeInfo extends Node, Labels, WithCluster {
     boolean isOn();
 
     /**
-     * Real cluster who own this node
-     * @return name of real cluster or null.
+     * Real ngroup who own this node
+     * @return name of real ngroup or null.
      */
     @Override
     String getCluster();
