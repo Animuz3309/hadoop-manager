@@ -5,8 +5,8 @@ import edu.scut.cs.hm.model.node.NodeStorageConfig;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties("hm.docker")
 @Data
+@ConfigurationProperties("hm.docker")
 public class DockerConfigurer {
     /**
      * DockerEvent config how to accept docker event to MessageBus
@@ -14,7 +14,7 @@ public class DockerConfigurer {
     private DockerEventConfig event = new DockerEventConfig();
 
     /**
-     * NodeService config how to save/update/remove node
+     * NodeStorage config how to save/update/remove node
      */
     private NodeStorageConfig node = new NodeStorageConfig();
 

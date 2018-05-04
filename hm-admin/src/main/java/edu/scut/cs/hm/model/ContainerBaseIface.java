@@ -1,8 +1,6 @@
 package edu.scut.cs.hm.model;
 
-import edu.scut.cs.hm.docker.model.swarm.SwarmUtils;
-import edu.scut.cs.hm.model.Labels;
-import edu.scut.cs.hm.model.Named;
+import edu.scut.cs.hm.model.cluster.SwarmUtils;
 
 /**
  * Basic iface for container

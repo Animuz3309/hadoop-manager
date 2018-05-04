@@ -17,7 +17,7 @@ public class DockerClusterConfig extends AbstractNodesGroupConfig<DockerClusterC
     private DockerConfig config;
 
     @KvMapping
-    private int swarmPort = 4375;
+    private int swarmPort = 2377;   // TCP port 2377 for cluster management communications
 
     /**
      * List of managers nodes.

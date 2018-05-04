@@ -184,11 +184,23 @@ public class SwarmCluster extends AbstractNodesGroup<SwarmNodesGroupConfig> {
         dib.setNodeCount(dib.getNodeList().size() - offNodes);
     }
 
+    /**
+     * @see ClusterFactory#build(String)
+     *
+     * @param kvmf
+     */
+    // beanFactory动态注入，而不是一开始就由框架产生
     @Autowired
     void setKvmf(KvMapperFactory kvmf) {
         this.kvmf = kvmf;
     }
 
+    /**
+     * @see ClusterFactory#build(String)
+     *
+     * @param containerCreator
+     */
+    // beanFactory动态注入，而不是一开始就由框架产生
     @Autowired
     void setContainerCreator(ContainerCreator containerCreator) {
         this.containerCreator = containerCreator;

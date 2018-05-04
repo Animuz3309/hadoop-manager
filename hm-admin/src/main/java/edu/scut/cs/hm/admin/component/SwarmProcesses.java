@@ -2,7 +2,7 @@ package edu.scut.cs.hm.admin.component;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import edu.scut.cs.hm.admin.config.configurer.SwarmProcessesConfig;
+import edu.scut.cs.hm.admin.config.configurer.SwarmProcessesConfigurer;
 import edu.scut.cs.hm.common.utils.ProcessUtils;
 import edu.scut.cs.hm.common.utils.Throwables;
 import edu.scut.cs.hm.docker.DockerConfig;
@@ -182,7 +182,7 @@ public class SwarmProcesses {
 
     }
 
-    private final SwarmProcessesConfig config;
+    private final SwarmProcessesConfigurer config;
     private final ConcurrentMap<String, Proc> procs = new ConcurrentHashMap<>();
     private final ExecutorService executor;
     private final ScheduledExecutorService watcher;
@@ -190,7 +190,8 @@ public class SwarmProcesses {
     private final SwarmDiscoveryUrlFunction discoveryUrlFunc;
 
     @Autowired
-    public SwarmProcesses(SwarmProcessesConfig config, SwarmDiscoveryUrlFunction discoveryUrlFunc) {
+    public SwarmProcesses(SwarmProcessesConfigurer config,
+                          SwarmDiscoveryUrlFunction discoveryUrlFunc) {
         this.config = config.clone();
 
         this.discoveryUrlFunc = discoveryUrlFunc;

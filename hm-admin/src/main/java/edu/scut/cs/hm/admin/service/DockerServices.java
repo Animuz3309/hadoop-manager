@@ -43,7 +43,7 @@ public class DockerServices {
     private final DockerServiceFactory dockerFactory;
 
     @Autowired
-    public DockerServices(DockerConfigurer configuration,
+    public DockerServices(DockerConfigurer.DockerServicesConfig config,
                           SwarmProcesses swarmProcesses,
                           NodeStorage nodeStorage,
                           DockerServiceFactory dockerFactory,
@@ -61,8 +61,8 @@ public class DockerServices {
                 .setUncaughtExceptionHandler(Throwables.uncaughtHandler(log))
                 .build());
         scheduledExecutor.scheduleWithFixedDelay(this::updateInfo,
-                configuration.getServices().getRefreshInfoSeconds(),
-                configuration.getServices().getRefreshInfoSeconds(),
+                config.getRefreshInfoSeconds(),
+                config.getRefreshInfoSeconds(),
                 TimeUnit.SECONDS);
 
     }

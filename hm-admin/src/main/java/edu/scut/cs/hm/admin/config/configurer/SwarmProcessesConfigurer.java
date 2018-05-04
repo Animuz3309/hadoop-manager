@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @Data
 @ConfigurationProperties("hm.swarm-exec")
-public class SwarmProcessesConfig implements Cloneable {
+public class SwarmProcessesConfigurer implements Cloneable {
 
     /**
      * Path to swarm executable. Optional.
@@ -43,9 +43,9 @@ public class SwarmProcessesConfig implements Cloneable {
     private Strategies strategy = Strategies.DEFAULT;
 
     @Override
-    public SwarmProcessesConfig clone() {
+    public SwarmProcessesConfigurer clone() {
         try {
-            return (SwarmProcessesConfig) super.clone();
+            return (SwarmProcessesConfigurer) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }

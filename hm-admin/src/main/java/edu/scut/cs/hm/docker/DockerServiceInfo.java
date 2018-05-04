@@ -2,6 +2,7 @@ package edu.scut.cs.hm.docker;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import edu.scut.cs.hm.docker.model.swarm.SwarmInfo;
 import edu.scut.cs.hm.model.node.NodeInfo;
 import lombok.Data;
 
@@ -25,6 +26,7 @@ public class DockerServiceInfo {
         private Integer offNodeCount;
         private final List<NodeInfo> nodeList = new ArrayList<>();
         private final Map<String, String> labels = new HashMap<>();
+        private SwarmInfo swarm;
 
         private Builder() {
         }
@@ -44,6 +46,7 @@ public class DockerServiceInfo {
             setNodeCount(o.getNodeCount());
             setOffNodeCount(o.getOffNodeCount());
             setLabels(o.getLabels());
+            setSwarm(o.getSwarm());
             return this;
         }
 
@@ -105,6 +108,11 @@ public class DockerServiceInfo {
                 this.labels.putAll(labels);
             }
         }
+
+        public Builder swarm(SwarmInfo swarm) {
+            setSwarm(swarm);
+            return this;
+        }
     }
 
     private final String id;
@@ -117,6 +125,7 @@ public class DockerServiceInfo {
     private final Integer offNodeCount;     // node is not on or docker is offline
     private final List<NodeInfo> nodeList;
     private final Map<String, String> labels;
+    private SwarmInfo swarm;
 
     public static Builder builder() {
         return new Builder();
@@ -133,5 +142,6 @@ public class DockerServiceInfo {
         this.offNodeCount = builder.offNodeCount;
         this.nodeList = ImmutableList.copyOf(builder.nodeList);
         this.labels = ImmutableMap.copyOf(builder.labels);
+        this.swarm = builder.swarm;
     }
 }

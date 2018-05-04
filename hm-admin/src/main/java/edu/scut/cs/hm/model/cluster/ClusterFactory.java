@@ -1,5 +1,6 @@
 package edu.scut.cs.hm.model.cluster;
 
+import edu.scut.cs.hm.admin.security.TempAuth;
 import edu.scut.cs.hm.admin.service.DiscoveryStorageImpl;
 import edu.scut.cs.hm.common.kv.mapping.KvMapperFactory;
 import edu.scut.cs.hm.docker.DockerConfig;
@@ -11,6 +12,7 @@ import org.springframework.util.Assert;
 
 /**
  * Create ngroup which means {@link edu.scut.cs.hm.model.ngroup.NodesGroup}
+ * by use specified AbstractNodesGroupConfig {@link #config}
  */
 @Data
 @Slf4j
@@ -22,18 +24,37 @@ public class ClusterFactory {
     private KvMapperFactory kvmf;
     private final AutowireCapableBeanFactory beanFactory;
 
+    /**
+     * Set {@link AbstractNodesGroupConfig}
+     * @param config
+     * @return
+     */
     public ClusterFactory config(AbstractNodesGroupConfig<?> config) {
         setConfig(config);
         return this;
     }
 
+    /**
+     * Set {@link ClusterConfigFactory}
+     * @param consumer
+     * @return
+     */
     public ClusterFactory configFactory(ClusterConfigFactory consumer) {
         setConfigFactory(consumer);
         return this;
     }
 
-    public NodesGroup build(String clusterId) {
+    /**
+     * Build Nodes group -> cluster
+     * @param clusterId cluster name
+     * @return
+     * {@link DefaultCluster} -> #config = DefaultNodesGroupConfig
+     * {@link SwarmCluster} -> #config = SwarmNodesGroupConfig
+     * {@link DockerCluster} -> #config = DockerClusterConfig
+     */
+    NodesGroup build(String clusterId) {
         ClusterCreationContext ccc = new ClusterCreationContext(this, clusterId);
+        // ensure config not null
         processConfig(ccc);
         AbstractNodesGroup<?> cluster;
         if (config instanceof DefaultNodesGroupConfig) {
@@ -50,8 +71,17 @@ public class ClusterFactory {
         } else {
             throw new IllegalArgumentException("Unsupported type of cluster config: " + config.getClass());
         }
+        beanFactory.autowireBean(cluster);
+        ccc.beforeClusterInit(cluster);
+        storage.getExecutor().execute(() -> {
+            try(TempAuth ta = TempAuth.asSystem()) {
+                cluster.init();
+            }
+        });
+        return cluster;
     }
 
+    // this.config is not null after process
     private void processConfig(ClusterCreationContext ccc) {
         Assert.isTrue(type != null || config != null || configFactory != null,
                 "Both 'type' and 'config' is null, we can not resolve type of created cluster.");
@@ -64,10 +94,12 @@ public class ClusterFactory {
             }
         }
         if(config instanceof DockerBasedClusterConfig) {
+            // if config is null set default DockerBasedClusterConfig
             fixConfig((DockerBasedClusterConfig)config);
         }
     }
 
+    // if config is null set default DockerBasedClusterConfig
     private void fixConfig(DockerBasedClusterConfig localConfig) {
         if(localConfig.getConfig() != null) {
             return;

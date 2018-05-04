@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.scut.cs.hm.common.utils.StringUtils;
+import edu.scut.cs.hm.docker.model.discovery.Node;
 import edu.scut.cs.hm.docker.model.mount.Mount;
 import edu.scut.cs.hm.docker.model.network.NetworkSettings;
-import edu.scut.cs.hm.docker.model.SwarmNode;
 import edu.scut.cs.hm.model.ContainerBaseIface;
 import lombok.Data;
 
@@ -84,7 +84,7 @@ public class ContainerDetails implements ContainerBaseIface {
     private List<MountPoint> mounts;
 
     @JsonProperty("Node")
-    private SwarmNode node;
+    private Node node;
 
     @Override
     public String getImage() {

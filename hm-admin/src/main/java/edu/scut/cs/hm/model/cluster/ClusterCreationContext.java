@@ -6,23 +6,39 @@ import org.springframework.util.Assert;
 
 import java.util.function.Consumer;
 
+/**
+ * Create {@link AbstractNodesGroupConfig} of different type
+ * {@link NodesGroupConfig#TYPE_DEFAULT}
+ * {@link NodesGroupConfig#TYPE_SWARM}
+ * {@link NodesGroupConfig#TYPE_DOCKER}
+ *
+ * And do something before cluster init {@link AbstractNodesGroup#init()}
+ */
 @Data
-public class ClusterCreationContext {
+class ClusterCreationContext {
     private final ClusterFactory factory;
     private final String cluster;
     private Consumer<AbstractNodesGroup<?>> beforeClusterInit;
 
-    public ClusterCreationContext(ClusterFactory factory, String cluster) {
+    ClusterCreationContext(ClusterFactory factory, String cluster) {
         this.factory = factory;
         this.cluster = cluster;
     }
 
-    public void beforeClusterInit(AbstractNodesGroup<?> cluster) {
+    void beforeClusterInit(AbstractNodesGroup<?> cluster) {
         if (beforeClusterInit != null) {
             beforeClusterInit.accept(cluster);
         }
     }
 
+    /**
+     * Create config from config type
+     * {@link NodesGroupConfig#TYPE_DEFAULT}
+     * {@link NodesGroupConfig#TYPE_SWARM}
+     * {@link NodesGroupConfig#TYPE_DOCKER}
+     * @param type "DEFAULT" "SWARM" "DOCKER"
+     * @return
+     */
     public AbstractNodesGroupConfig<?> createConfig(String type) {
         Assert.notNull(type, "type is null");
         AbstractNodesGroupConfig<?> config;

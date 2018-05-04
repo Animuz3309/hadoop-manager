@@ -172,18 +172,30 @@ public class DefaultCluster extends AbstractNodesGroup<DefaultNodesGroupConfig> 
         this.containers = new SwarmClusterContainers(this::getDocker, this.containerCreator);
     }
 
+    /**
+     * @see ClusterFactory#build(String)
+     * @param containerStorage
+     */
     // beanFactory动态注入，而不是一开始就由框架产生
     @Autowired
     void setContainerStorage(ContainerStorage containerStorage) {
         this.containerStorage = containerStorage;
     }
 
+    /**
+     * @see ClusterFactory#build(String)
+     * @param containerCreator
+     */
     // beanFactory动态注入，而不是一开始就由框架产生
     @Autowired
     void setContainerCreator(ContainerCreator containerCreator) {
         this.containerCreator = containerCreator;
     }
 
+    /**
+     * @see ClusterFactory#build(String)
+     * @param filterFactory
+     */
     // beanFactory动态注入，而不是一开始就由框架产生
     @Autowired
     void setFilterFactory(FilterFactory filterFactory) {
