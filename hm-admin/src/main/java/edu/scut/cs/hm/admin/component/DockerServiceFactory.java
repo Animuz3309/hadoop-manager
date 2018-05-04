@@ -5,7 +5,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import edu.scut.cs.hm.admin.config.configurer.DockerConfigurer;
 import edu.scut.cs.hm.admin.security.AccessContextFactory;
 import edu.scut.cs.hm.admin.security.TempAuth;
-import edu.scut.cs.hm.admin.service.NodeService;
+import edu.scut.cs.hm.admin.service.NodeStorage;
 import edu.scut.cs.hm.common.http.async.NettyRequestFactory;
 import edu.scut.cs.hm.common.http.interceptor.BasicAuthAsyncInterceptor;
 import edu.scut.cs.hm.common.mb.MessageBus;
@@ -96,7 +96,7 @@ public class DockerServiceFactory {
      * @return
      */
     public DockerService createDockerService(DockerConfig dockerConfig,
-                                             NodeService nodeService,
+                                             NodeStorage nodeStorage,
                                              Consumer<DockerServiceImpl.Builder> dockerConsumer) {
         DockerServiceImpl.Builder b = DockerServiceImpl.builder();
         b.config(dockerConfig);
@@ -108,7 +108,7 @@ public class DockerServiceFactory {
 
         String address = dockerConfig.getHost();
         b.restTemplate(createRestTemplate(address));
-        b.nodeInfoProvider(nodeService);
+        b.nodeInfoProvider(nodeStorage);
         b.eventConsumer(this::dockerEventConsumer);
 
         if (dockerConsumer != null) {

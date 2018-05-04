@@ -113,8 +113,8 @@ public class DockerServiceInfo {
     private final Integer images;
     private final Integer ncpu;
     private final long memory;
-    private final Integer nodeCount;
-    private final Integer offNodeCount;
+    private final Integer nodeCount;        // node that is on and docker service is online
+    private final Integer offNodeCount;     // node is not on or docker is offline
     private final List<NodeInfo> nodeList;
     private final Map<String, String> labels;
 

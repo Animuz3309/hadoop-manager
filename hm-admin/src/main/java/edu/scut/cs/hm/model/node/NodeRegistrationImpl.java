@@ -5,7 +5,7 @@ import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.admin.security.AccessContextFactory;
 import edu.scut.cs.hm.admin.security.SecuredType;
 import edu.scut.cs.hm.admin.security.TempAuth;
-import edu.scut.cs.hm.admin.service.NodeService;
+import edu.scut.cs.hm.admin.service.NodeStorage;
 import edu.scut.cs.hm.common.mb.MessageBus;
 import edu.scut.cs.hm.common.mb.MessageBuses;
 import edu.scut.cs.hm.common.mb.Subscriptions;
@@ -39,7 +39,7 @@ import java.util.function.Supplier;
 public class NodeRegistrationImpl implements NodeRegistration, AutoCloseable {
 
     private final String name;
-    private final NodeService nodeService;
+    private final NodeStorage nodeStorage;
     private final ObjectIdentity oid;
     private final MessageBus<NodeHealthEvent> healthBus;
     private final NodeInfoImpl.Builder builder;             // NodeInfo
@@ -51,11 +51,11 @@ public class NodeRegistrationImpl implements NodeRegistration, AutoCloseable {
     private volatile DockerService docker;
     private volatile ScheduledFuture<?> logFuture;  // get log from docker
 
-    public NodeRegistrationImpl(NodeService nodeService, NodeInfo nodeInfo) {
+    public NodeRegistrationImpl(NodeStorage nodeStorage, NodeInfo nodeInfo) {
         String name = nodeInfo.getName();
         NodeUtils.checkName(name);
         this.name = name;
-        this.nodeService = nodeService;
+        this.nodeStorage = nodeStorage;
         this.oid = SecuredType.NODE.id(name);
         this.healthBus = MessageBuses.create("node[" + name + "].metrics", NodeHealthEvent.class);
         synchronized (lock) {
@@ -77,7 +77,7 @@ public class NodeRegistrationImpl implements NodeRegistration, AutoCloseable {
      * @param ttl time in seconds
      */
     public void setTtl(int ttl) {
-        final int min = nodeService.getNodeServiceConfig().getMinTtl();
+        final int min = nodeStorage.getNodeStorageConfig().getMinTtl();
         if(ttl < min) {
             ttl = min;
         }
@@ -96,13 +96,13 @@ public class NodeRegistrationImpl implements NodeRegistration, AutoCloseable {
         unsubscribe();
         docker = null;
         if (builder.getAddress() != null) {
-            docker = nodeService.createNodeDockerService(this);
+            docker = nodeStorage.createNodeDockerService(this);
             subscribe();
         }
     }
 
     private void subscribe() {
-        DockerEventConfig cfg = nodeService.getDockerEventConfig();
+        DockerEventConfig cfg = nodeStorage.getDockerEventConfig();
         final int periodInSeconds = cfg.getPeriodInSeconds();
         log.info("Register log fetcher from {} node, repeat every {} seconds", name, periodInSeconds);
         Assert.isNull(this.logFuture, "Future of docker logging is not null");
@@ -132,7 +132,7 @@ public class NodeRegistrationImpl implements NodeRegistration, AutoCloseable {
         try {
             log.debug("Node '{}' send log event: {}", name, e);
             DockerLogEvent logEvent = convertToLogEvent(e);
-            nodeService.acceptDockerLogEvent(logEvent);
+            nodeStorage.acceptDockerLogEvent(logEvent);
         } catch (Exception ex) {
             log.error("can not convert {}", e, ex);
         }
@@ -143,7 +143,7 @@ public class NodeRegistrationImpl implements NodeRegistration, AutoCloseable {
         final String action = e.getAction();
         logEvent.action(action);
         // be careful
-        String localNodeName = (e.getSwarmNode() != null) ? e.getSwarmNode().getName() : this.name;
+        String localNodeName = (e.getNode() != null) ? e.getNode().getName() : this.name;
         final DockerEventType type = e.getType();
         if (type == DockerEventType.CONTAINER) {
             // TODO DockerLogEvent's Container support
@@ -151,7 +151,7 @@ public class NodeRegistrationImpl implements NodeRegistration, AutoCloseable {
 
         logEvent.setDate(new Date(e.getTime() * 1000L));
         logEvent.setNode(localNodeName);
-        String eventCluster = nodeService.getNodeCluster(localNodeName);
+        String eventCluster = nodeStorage.getNodeCluster(localNodeName);
         String thisCluster = getCluster();
         if (!Objects.equals(thisCluster, eventCluster)) {
             log.warn("Current node cluster '{}' differ from event cluster '{}'", thisCluster, eventCluster);
@@ -208,7 +208,7 @@ public class NodeRegistrationImpl implements NodeRegistration, AutoCloseable {
     }
 
     private void fireNodeChanged(NodeEvent.Action action, NodeInfoImpl old, NodeInfoImpl ni) {
-        this.nodeService.fireNodeModification(this, action, old, ni);
+        this.nodeStorage.fireNodeModification(this, action, old, ni);
     }
 
     public void updateHealth(NodeMetrics metrics) {
@@ -237,7 +237,7 @@ public class NodeRegistrationImpl implements NodeRegistration, AutoCloseable {
             NodeInfoImpl.Builder copy = NodeInfoImpl.builder(builder);
             modifier.accept(copy);
             validate(copy);
-            boolean cancel = nodeService.fireNodePreModification(oldni, copy.build());
+            boolean cancel = nodeStorage.fireNodePreModification(oldni, copy.build());
             if(cancel) {
                 return;
             }
@@ -288,7 +288,7 @@ public class NodeRegistrationImpl implements NodeRegistration, AutoCloseable {
                 ni = getNodeInfo();
                 boolean cancel = true;
                 try {
-                    cancel = nodeService.fireNodePreModification(oldInfo, ni);
+                    cancel = nodeStorage.fireNodePreModification(oldInfo, ni);
                 } finally {
                     if(cancel) {
                         // it not good practice, and require that setter must be 'safe'

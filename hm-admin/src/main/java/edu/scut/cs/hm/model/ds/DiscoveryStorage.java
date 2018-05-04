@@ -1,7 +1,10 @@
-package edu.scut.cs.hm.model.cluster;
+package edu.scut.cs.hm.model.ds;
 
-import edu.scut.cs.hm.admin.service.NodeService;
+import edu.scut.cs.hm.admin.service.NodeStorage;
 import edu.scut.cs.hm.docker.DockerService;
+import edu.scut.cs.hm.model.cluster.AbstractNodesGroupConfig;
+import edu.scut.cs.hm.model.cluster.ClusterConfigFactory;
+import edu.scut.cs.hm.model.cluster.NodesGroup;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,7 +16,7 @@ import java.util.concurrent.ExecutorService;
  * Service of nodes group (include nodes group or real cluster)
  * @see package-info.java
  */
-public interface ClusterService {
+public interface DiscoveryStorage {
     String GROUP_ID_ALL = "all";
     String GROUP_ID_ORPHANS = "orphans";
 
@@ -93,5 +96,5 @@ public interface ClusterService {
      * TODO refactor
      * @return
      */
-    NodeService getNodeService();
+    NodeStorage getNodeService();
 }

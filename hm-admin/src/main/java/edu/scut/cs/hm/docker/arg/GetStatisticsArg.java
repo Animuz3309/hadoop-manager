@@ -8,9 +8,16 @@ import lombok.Data;
 
 import java.util.function.Consumer;
 
+/**
+ * Get statistics from docker service
+ * @see edu.scut.cs.hm.docker.DockerService#getStatistics(GetStatisticsArg)
+ */
 @Builder(builderClassName = "Builder")
 @Data
 public class GetStatisticsArg implements WithInterrupter {
+    /**
+     * Container id
+     */
     private final String id;
     private final boolean stream;
     private final SettableFuture<Boolean> interrupter = SettableFuture.create();

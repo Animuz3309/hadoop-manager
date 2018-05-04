@@ -3,7 +3,7 @@ package edu.scut.cs.hm.model.node;
 import lombok.Data;
 
 @Data
-public class NodeServiceConfig {
+public class NodeStorageConfig {
     /**
      * Maximal value of expected node count. <p/>
      * It not limit, it used for allocate some resources, so you can

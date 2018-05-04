@@ -45,8 +45,8 @@ import java.util.function.Predicate;
 @Slf4j
 @Data
 @Service
-public class NodeService implements NodeInfoProvider, NodeRegistry {
-    @Getter private final NodeServiceConfig nodeServiceConfig;
+public class NodeStorage implements NodeInfoProvider, NodeRegistry {
+    @Getter private final NodeStorageConfig nodeStorageConfig;
     @Getter private final DockerEventConfig dockerEventConfig;
     private final MessageBus<NodeEvent> nodeEventBus;
     private final MessageBus<DockerLogEvent> dockerLogBus;
@@ -56,13 +56,13 @@ public class NodeService implements NodeInfoProvider, NodeRegistry {
     private DockerServiceFactory dockerServiceFactory;
 
     @Autowired
-    public NodeService(NodeServiceConfig nodeServiceConfig,
+    public NodeStorage(NodeStorageConfig nodeStorageConfig,
                        DockerEventConfig dockerEventConfig,
                        KvMapperFactory kvmf,
                        @Qualifier(NodeEvent.BUS) MessageBus<NodeEvent> nodeEventBus,
                        @Qualifier(DockerLogEvent.BUS) MessageBus<DockerLogEvent> dockerLogBus,
                        DockerServiceFactory dockerServiceFactory) {
-        this.nodeServiceConfig = nodeServiceConfig;                // get NodeServiceConfig
+        this.nodeStorageConfig = nodeStorageConfig;                // get NodeStorageConfig
         this.dockerEventConfig = dockerEventConfig;                // get DockerEventConfig
         this.nodeEventBus = nodeEventBus;
         this.dockerLogBus = dockerLogBus;
@@ -84,18 +84,18 @@ public class NodeService implements NodeInfoProvider, NodeRegistry {
 
         this.dockerServiceFactory = dockerServiceFactory;
 
-        log.info("{} initialized with nodeServiceConfig: {}", getClass().getSimpleName(), this.nodeServiceConfig);
+        log.info("{} initialized with nodeStorageConfig: {}", getClass().getSimpleName(), this.nodeStorageConfig);
 
         this.executor = ExecutorUtils.executorBuilder()
                 .name(getClass().getSimpleName())
-                .maxSize(this.nodeServiceConfig.getMaxNodes())
+                .maxSize(this.nodeStorageConfig.getMaxNodes())
                 .rejectedHandler((runnable, executor) -> {
                     String hint = "";
                     try {
                         int nodes = this.nodes.list().size();
-                        int maxNodes = this.nodeServiceConfig.getMaxNodes();
+                        int maxNodes = this.nodeStorageConfig.getMaxNodes();
                         if(nodes > maxNodes) {
-                            hint = "\nNote that 'nodeServiceConfig.maxNodes'=" + maxNodes + " but volume has 'node'=" + nodes;
+                            hint = "\nNote that 'nodeStorageConfig.maxNodes'=" + maxNodes + " but volume has 'node'=" + nodes;
                         }
                     } catch (Exception e) {
                         //supress
@@ -180,7 +180,7 @@ public class NodeService implements NodeInfoProvider, NodeRegistry {
      */
     public NodeRegistrationImpl newRegistration(NodeInfo nodeInfo) {
         NodeRegistrationImpl nr = new NodeRegistrationImpl(this, nodeInfo);
-        nr.setTtl(this.nodeServiceConfig.getUpdateSeconds() * 2);
+        nr.setTtl(this.nodeStorageConfig.getUpdateSeconds() * 2);
         nr.init();
         return nr;
     }
@@ -403,7 +403,7 @@ public class NodeService implements NodeInfoProvider, NodeRegistry {
     }
 
     @Override
-    public DockerService getNodeDockerService(String nodeName) {
+    public DockerService getDockerService(String nodeName) {
         NodeRegistrationImpl nr = nodes.get(nodeName);
         if(nr == null) {
             return null;

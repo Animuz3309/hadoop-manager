@@ -3,7 +3,7 @@ package edu.scut.cs.hm.docker.model.events;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import edu.scut.cs.hm.docker.model.SwarmNode;
+import edu.scut.cs.hm.docker.model.discovery.Node;
 import lombok.Data;
 
 /**
@@ -35,7 +35,7 @@ public class DockerEvent {
     /**
      * Returns the node when working against docker swarm
      */
-    private SwarmNode swarmNode;
+    private Node node;
 
     /**
      * Event type. List of statuses is available in Docker api#Monitor Docker's event

@@ -1,7 +1,7 @@
 package edu.scut.cs.hm.model.cluster;
 
 import com.google.common.collect.ImmutableSet;
-import edu.scut.cs.hm.admin.service.NodeService;
+import edu.scut.cs.hm.admin.service.NodeStorage;
 import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.docker.VirtualDockerService;
 import edu.scut.cs.hm.docker.arg.GetContainersArg;
@@ -10,7 +10,8 @@ import edu.scut.cs.hm.docker.model.container.DockerContainer;
 import edu.scut.cs.hm.docker.res.ServiceCallResult;
 import edu.scut.cs.hm.model.container.ContainersManager;
 import edu.scut.cs.hm.model.container.ContainerRegistration;
-import edu.scut.cs.hm.model.container.ContainerService;
+import edu.scut.cs.hm.model.container.ContainerStorage;
+import edu.scut.cs.hm.model.ds.DiscoveryStorage;
 import edu.scut.cs.hm.model.node.Node;
 import edu.scut.cs.hm.model.node.NodeInfo;
 import lombok.Builder;
@@ -100,10 +101,10 @@ public class DefaultNodesGroupImpl extends AbstractNodesGroup<DefaultNodesGroupC
         @Override
         public List<DockerContainer> getContainers(DefaultNodesGroupImpl ng, GetContainersArg arg) {
             List<DockerContainer> list = new ArrayList<>();
-            NodeService nodeService = ng.getNodeService();
+            NodeStorage nodeStorage = ng.getNodeStorage();
             for (Node node: ng.getNodes()) {
                 // get docker service from node
-                DockerService service = nodeService.getNodeDockerService(node.getName());
+                DockerService service = nodeStorage.getDockerService(node.getName());
                 if (VirtualDockerService.isOffline(service)) {
                     // due to different causes service can be null
                     continue;
@@ -123,7 +124,7 @@ public class DefaultNodesGroupImpl extends AbstractNodesGroup<DefaultNodesGroupC
     public static class AllContainersProvider implements ContainersProvider {
         @Override
         public List<DockerContainer> getContainers(DefaultNodesGroupImpl ng, GetContainersArg arg) {
-            List<ContainerRegistration> containers = ng.containerService.getContainers();
+            List<ContainerRegistration> containers = ng.containerStorage.getContainers();
             ArrayList<DockerContainer> list = new ArrayList<>(containers.size());
             containers.forEach(cr -> list.add(cr.getContainer()));
             return list;
@@ -133,22 +134,22 @@ public class DefaultNodesGroupImpl extends AbstractNodesGroup<DefaultNodesGroupC
     private final ContainersProvider DEFAULT_CONTAINERS_PROVIDER = new DefaultContainersProvider();
     private final VirtualDockerService service;
     private ContainersManager containers;
-    private ContainerService containerService;
+    private ContainerStorage containerStorage;
     private ContainersProvider containersProvider;
 
     @Builder
-    public DefaultNodesGroupImpl(ClusterService clusterService,
+    public DefaultNodesGroupImpl(DiscoveryStorage discoveryStorage,
                                  DefaultNodesGroupConfig config,
                                  @Singular Set<Feature> features) {
-        super(config, clusterService, ImmutableSet.<Feature>builder()
+        super(config, discoveryStorage, ImmutableSet.<Feature>builder()
                 .addAll(features == null ? Collections.emptySet() : features)
                 .build());
         this.containersProvider = DEFAULT_CONTAINERS_PROVIDER;
         this.service = new VirtualDockerService(this);
     }
 
-    public ContainerService getContainerService() {
-        return containerService;
+    public ContainerStorage getContainerStorage() {
+        return containerStorage;
     }
 
     public List<DockerContainer> getContainersImpl(GetContainersArg arg) {

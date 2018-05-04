@@ -6,7 +6,7 @@ import java.util.List;
  * Container service, a tool to get container from k-v storage
  * TODO need to finish
  */
-public interface ContainerService {
+public interface ContainerStorage {
     List<ContainerRegistration> getContainers();
     ContainerRegistration getContainer(String id);
 }

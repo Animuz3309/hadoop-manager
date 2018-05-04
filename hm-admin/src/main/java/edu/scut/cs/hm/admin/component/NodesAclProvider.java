@@ -3,7 +3,7 @@ package edu.scut.cs.hm.admin.component;
 import edu.scut.cs.hm.admin.security.SecuredType;
 import edu.scut.cs.hm.admin.security.TempAuth;
 import edu.scut.cs.hm.admin.security.acl.VirtualAclProvider;
-import edu.scut.cs.hm.admin.service.NodeService;
+import edu.scut.cs.hm.admin.service.NodeStorage;
 import edu.scut.cs.hm.common.security.acl.dto.ObjectIdentityData;
 import edu.scut.cs.hm.model.NotFoundException;
 import edu.scut.cs.hm.model.node.NodeRegistration;
@@ -18,12 +18,12 @@ import java.io.Serializable;
  */
 @Component("NODE" /* see SecuredType */)
 public class NodesAclProvider extends VirtualAclProvider {
-    private NodeService nodeService;
+    private NodeStorage nodeStorage;
 
     @Autowired
-    public NodesAclProvider(ClusterAclProvider clusterAclProvider, NodeService nodeService) {
+    public NodesAclProvider(ClusterAclProvider clusterAclProvider, NodeStorage nodeStorage) {
         super(clusterAclProvider);
-        this.nodeService = nodeService;
+        this.nodeStorage = nodeStorage;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class NodesAclProvider extends VirtualAclProvider {
         String nodeId = String.valueOf(id);
         NodeRegistration nr;
         try (TempAuth auth = TempAuth.asSystem()) {
-            nr = nodeService.getNodeRegistration(nodeId);
+            nr = nodeStorage.getNodeRegistration(nodeId);
         }
         if (nr == null) {
             throw new NotFoundException("Node '" + id +"' is not registered");

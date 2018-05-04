@@ -12,5 +12,5 @@ public interface NodeRegistry {
      * @param name
      * @return
      */
-    DockerService getNodeDockerService(String name);
+    DockerService getDockerService(String name);
 }

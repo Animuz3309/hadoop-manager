@@ -1,6 +1,6 @@
 package edu.scut.cs.hm.docker;
 
-import edu.scut.cs.hm.admin.service.NodeService;
+import edu.scut.cs.hm.admin.service.NodeStorage;
 import edu.scut.cs.hm.docker.arg.*;
 import edu.scut.cs.hm.docker.cmd.*;
 import edu.scut.cs.hm.docker.model.container.ContainerDetails;
@@ -14,13 +14,20 @@ import edu.scut.cs.hm.docker.model.swarm.Task;
 import edu.scut.cs.hm.docker.model.volume.Volume;
 import edu.scut.cs.hm.docker.res.*;
 import edu.scut.cs.hm.model.cluster.DefaultNodesGroupImpl;
+import edu.scut.cs.hm.model.node.Node;
+import edu.scut.cs.hm.model.node.NodeInfo;
 import edu.scut.cs.hm.model.node.NodeUtils;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 /**
  * Docker service for virtual nodes group (not united by docker in swarm mode or swarm)
+ * This service will get actual docker service from the node where the container in by {@link #getServiceByContainer(String)},
+ * and then delegate operations to the actual docker service
  */
 public class VirtualDockerService implements DockerService {
 
@@ -72,15 +79,15 @@ public class VirtualDockerService implements DockerService {
      * Retrieve details info about one container.
      *
      * @param id
-     * @return container details or null if not found
+     * @return container details or null if not found (docker service the container with 'id' in is null or offline)
      */
     @Override
     public ContainerDetails getContainer(String id) {
-        return null;
-    }
-
-    private DockerService getServiceByContainer(String id) {
-        return NodeUtils.getDockerByContainer(cluster.getContainerService(), getNodeService(), id);
+        DockerService service = getServiceByContainer(id);
+        if (isOffline(service)) {
+            return null;
+        }
+        return service.getContainer(id);
     }
 
     /**
@@ -91,7 +98,7 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public List<DockerContainer> getContainers(GetContainersArg arg) {
-        return null;
+        return this.cluster.getContainersImpl(arg);
     }
 
     /**
@@ -102,17 +109,45 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public ServiceCallResult getStatistics(GetStatisticsArg arg) {
-        return null;
+        String id = arg.getId();
+        DockerService service = getServiceByContainer(id);
+        if (isOffline(service)) {
+            return whenNotFoundService(id);
+        }
+        return service.getStatistics(arg);
     }
 
     /**
      * Display system-wide information
      *
-     * @return info
+     * @return info just has information of nodes and number of offline nodes(node is not on or docker service is offline)
      */
     @Override
     public DockerServiceInfo getInfo() {
-        return null;
+        List<NodeInfo> nodeList = new ArrayList<>();
+        int offNodes = 0;
+        for (NodeInfo nodeInfo: cluster.getNodes()) {
+            if(nodeInfo != null) {
+                nodeList.add(nodeInfo);
+            }
+            // if nodeInfo is null we can find the exception here
+            DockerService service = getServiceByNode(nodeInfo);
+            if(isOffline(service)) {
+                offNodes++;
+                // due to different causes service can be null
+                continue;
+            }
+            // nodeInfo == null above will throw exception
+            if(nodeInfo == null || !nodeInfo.isOn()) {
+                offNodes++;
+            }
+        }
+        return DockerServiceInfo.builder()
+                .name(getCluster())
+                .nodeList(nodeList)
+                .nodeCount(nodeList.size() - offNodes)
+                .offNodeCount(offNodes)
+                .build();
     }
 
     /**
@@ -123,7 +158,11 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public ServiceCallResult startContainer(String id) {
-        return null;
+        DockerService service = getServiceByContainer(id);
+        if (isOffline(service)) {
+            return whenNotFoundService(id);
+        }
+        return service.startContainer(id);
     }
 
     /**
@@ -134,7 +173,11 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public ServiceCallResult pauseContainer(String id) {
-        return null;
+        DockerService service = getServiceByContainer(id);
+        if(isOffline(service)) {
+            return whenNotFoundService(id);
+        }
+        return service.pauseContainer(id);
     }
 
     /**
@@ -145,7 +188,11 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public ServiceCallResult unpauseContainer(String id) {
-        return null;
+        DockerService service = getServiceByContainer(id);
+        if(isOffline(service)) {
+            return whenNotFoundService(id);
+        }
+        return service.unpauseContainer(id);
     }
 
     /**
@@ -156,7 +203,11 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public ServiceCallResult stopContainer(StopContainerArg arg) {
-        return null;
+        DockerService service = getServiceByContainer(arg.getId());
+        if(isOffline(service)) {
+            return whenNotFoundService(arg.getId());
+        }
+        return service.stopContainer(arg);
     }
 
     /**
@@ -167,7 +218,11 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public ServiceCallResult restartContainer(StopContainerArg arg) {
-        return null;
+        DockerService service = getServiceByContainer(arg.getId());
+        if(isOffline(service)) {
+            return whenNotFoundService(arg.getId());
+        }
+        return service.restartContainer(arg);
     }
 
     /**
@@ -178,7 +233,11 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public ServiceCallResult getContainerLog(GetLogContainerArg arg) {
-        return null;
+        DockerService service = getServiceByContainer(arg.getId());
+        if(isOffline(service)) {
+            return whenNotFoundService(arg.getId());
+        }
+        return service.getContainerLog(arg);
     }
 
     /**
@@ -189,7 +248,11 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public ServiceCallResult killContainer(KillContainerArg arg) {
-        return null;
+        DockerService service = getServiceByContainer(arg.getId());
+        if(isOffline(service)) {
+            return whenNotFoundService(arg.getId());
+        }
+        return service.killContainer(arg);
     }
 
     /**
@@ -200,18 +263,22 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public ServiceCallResult deleteContainer(DeleteContainerArg arg) {
-        return null;
+        DockerService service = getServiceByContainer(arg.getId());
+        if(isOffline(service)) {
+            return whenNotFoundService(arg.getId());
+        }
+        return service.deleteContainer(arg);
     }
 
     /**
-     * Create container
-     *
-     * @param cmd
-     * @return
+     * Not supported, because we don't know which node in the group(cluster) should create the container
+     * and don't like nodes group united by swarm or docker in swarm mode can judge this by balance strategy
+     * TODO in the feature we need to define our own strategy to create container in nodes group
+     * @return not support
      */
     @Override
     public CreateContainerResponse createContainer(CreateContainerCmd cmd) {
-        return null;
+        return notSupported(new CreateContainerResponse());
     }
 
     /**
@@ -222,7 +289,11 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public ServiceCallResult updateContainer(UpdateContainerCmd cmd) {
-        return null;
+        DockerService service = getServiceByContainer(cmd.getId());
+        if (isOffline(service)) {
+            return whenNotFoundService(cmd.getId());
+        }
+        return service.updateContainer(cmd);
     }
 
     /**
@@ -234,94 +305,84 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public ServiceCallResult renameContainer(String id, String newName) {
-        return null;
+        DockerService service = getServiceByContainer(id);
+        if (isOffline(service)) {
+            return whenNotFoundService(id);
+        }
+        return service.renameContainer(id, newName);
     }
 
     /**
-     * Subscribe a watcher in GetEventsArg to Docker event api
-     *
-     * @param arg
-     * @return
+     * Not support, because we don't know which node in the group(cluster) should subscribe the event
+     * @@return  not support
      */
     @Override
     public ServiceCallResult subscribeToEvents(GetEventsArg arg) {
-        return null;
+        return notSupport();
     }
 
     /**
-     * Create network
-     *
-     * @param cmd
-     * @return
+     * Not support
+     * @return not support result
      */
     @Override
     public CreateNetworkResponse createNetwork(CreateNetworkCmd cmd) {
-        return null;
+        return notSupported(new CreateNetworkResponse());
     }
 
     /**
-     * Get network by id
-     *
-     * @param id
-     * @return
+     * Not support yet
+     * @throws UnsupportedOperationException
      */
     @Override
     public Network getNetwork(String id) {
-        return null;
+        throw new UnsupportedOperationException("Virtual cluster does not support.");
     }
 
     /**
-     * Retrieve networks
-     *
-     * @return
+     * Not support yet
+     * @throws UnsupportedOperationException
      */
     @Override
     public List<Network> getNetworks() {
-        return null;
+        throw new UnsupportedOperationException("Virtual cluster does not support.");
     }
 
     /**
-     * Delete network by id
-     *
-     * @param id
-     * @return
+     * Not support
+     * @return not support result
      */
     @Override
     public ServiceCallResult deleteNetwork(String id) {
-        return null;
+        return notSupport();
     }
 
     /**
-     * Delete unused networks
-     *
-     * @param arg arg with filter for networks
-     * @return result with list of deleted networks
+     * Not support
+     * @return not support result
      */
     @Override
     public PruneNetworksResponse pruneNetworks(PruneNetworksArg arg) {
-        return null;
+        PruneNetworksResponse res = new PruneNetworksResponse();
+        return notSupported(res);
     }
 
     /**
-     * Connect specified container to network
-     *
-     * @param cmd command
-     * @return result
+     * Not support
+     * @return not support result
      */
     @Override
     public ServiceCallResult connectNetwork(ConnectNetworkCmd cmd) {
-        return null;
+        return notSupport();
     }
 
     /**
-     * Disconnect specified container from network.
-     *
-     * @param cmd command
-     * @return result
+     * Not support
+     * @return not support result
      */
     @Override
     public ServiceCallResult disconnectNetwork(DisconnectNetworkCmd cmd) {
-        return null;
+        return notSupport();
     }
 
     /**
@@ -332,41 +393,68 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public List<ImageItem> getImages(GetImagesArg arg) {
-        return null;
+        List<ImageItem> virt = new ArrayList<>();
+        for(Node node: cluster.getNodes()) {
+            // if node is null will throw exception here
+            DockerService service = getServiceByNode(node);
+            if(isOffline(service)) {
+                // due to different causes service can be null
+                continue;
+            }
+            try {
+                List<ImageItem> images = service.getImages(arg);
+                virt.addAll(images);
+            } catch (AccessDeniedException e) {
+                //nothing
+            }
+        }
+        return virt;
     }
 
     /**
-     * Pull image and return low-level information on the image name
-     *
-     * @param name    name with tag (otherwise retrieved the last image)
-     * @param watcher consume events in method execution, allow null
-     * @return image
+     * Not support
+     * @throws UnsupportedOperationException
      */
     @Override
     public ImageDescriptor pullImage(String name, Consumer<ProcessEvent> watcher) {
-        return null;
+        throw new UnsupportedOperationException("Virtual cluster does not support.");
     }
 
     /**
      * return low-level information on the image name, not pull image.
-     *
+     * Get the first image we found (more than one node has the image of same name in the cluster)
      * @param name name with tag (otherwise retrieved the last image)
      * @return image of null when it not found
      */
     @Override
     public ImageDescriptor getImage(String name) {
-        return null;
+        ImageDescriptor image = null;
+        for(Node node: cluster.getNodes()) {
+            DockerService service = getServiceByNode(node);
+            if(isOffline(service)) {
+                // due to different causes service can be null
+                continue;
+            }
+            try {
+                image = service.getImage(name);
+                if (image != null) {
+                    break;
+                }
+            } catch (AccessDeniedException e) {
+                //nothing
+            }
+        }
+        return image;
     }
 
     /**
-     * Create image tag
+     * Not support
      *
-     * @param cmd
-     * @return
+     * @return not support result
      */
     @Override
     public ServiceCallResult createTag(TagImageArg cmd) {
-        return null;
+        return notSupport();
     }
 
     /**
@@ -377,232 +465,212 @@ public class VirtualDockerService implements DockerService {
      */
     @Override
     public RemoveImageResult removeImage(RemoveImageArg arg) {
-        return null;
+        RemoveImageResult removeImageResult = new RemoveImageResult();
+        removeImageResult.code(ResultCode.OK);
+        for(Node node: cluster.getNodes()) {
+            DockerService service = getServiceByNode(node);
+            if (isOffline(service)) {
+                continue;
+            }
+            try {
+                service.removeImage(arg);
+            } catch (AccessDeniedException e) {
+                //nothing
+            }
+        }
+        return removeImageResult;
     }
 
     /**
-     * May return null when is not support
+     * Just a virtual config, no sense
      *
      * @return
      */
     @Override
     public DockerConfig getDockerConfig() {
-        return null;
+        return config;
     }
 
     /**
-     * Inspect swarm.
-     * <code>GET /swarm</code>
-     *
-     * @return swarm config or null when not supported
+     * Not support
+     * @throws UnsupportedOperationException
      */
     @Override
     public InspectResponse getSwarm() {
-        return null;
+        throw new UnsupportedOperationException("Virtual cluster does not support.");
     }
 
     /**
-     * Initialize a new swarm. The body of the HTTP response includes the node ID.
-     * <code>POST /swarm/init</code>
-     *
-     * @param cmd command to init swarm
-     * @return result with node id or null when not supported
+     * Not support
+     * @throws UnsupportedOperationException
      */
     @Override
     public SwarmInitResult initSwarm(SwarmInitCmd cmd) {
-        return null;
+        throw new UnsupportedOperationException("Virtual cluster does not support.");
     }
 
     /**
-     * Join into existing swarm. <p/>
-     * <code>POST /swarm/join</code>
-     *
-     * @param cmd command args
-     * @return result code
+     * Not support
+     * @throws UnsupportedOperationException
      */
     @Override
     public ServiceCallResult joinSwarm(SwarmJoinCmd cmd) {
-        return null;
+        throw new UnsupportedOperationException("Virtual cluster does not support.");
     }
 
     /**
-     * Leave existing swarm
-     *
-     * @param arg
-     * @return
+     * Not support
+     * @throws UnsupportedOperationException
      */
     @Override
     public ServiceCallResult leaveSwarm(SwarmLeaveArg arg) {
-        return null;
+        throw new UnsupportedOperationException("Virtual cluster does not support.");
     }
 
     /**
-     * Get list of nodes. Work only for docker in swarm-mode.
-     *
-     * @param cmd pass arg with filters or null
-     * @return list or null when not supported
+     * Not support
+     * @throws UnsupportedOperationException
      */
     @Override
     public List<SwarmNode> getNodes(GetNodesArg cmd) {
-        return null;
+        throw new UnsupportedOperationException("Virtual cluster does not support.");
     }
 
     /**
-     * Remove node. Work only for docker in swarm-mode.
+     * Not support
      *
-     * @param arg
-     * @return
+     * @return not support result
      */
     @Override
     public ServiceCallResult removeNode(RemoveNodeArg arg) {
-        return null;
+        return notSupport();
     }
 
     /**
-     * update node. Work only for docker in swarm-mode.
+     * Not support
      *
-     * @param cmd
-     * @return
+     * @return not support result
      */
     @Override
     public ServiceCallResult updateNode(UpdateNodeCmd cmd) {
-        return null;
+        return notSupport();
     }
 
     /**
-     * Get service (concept in docker swarm mode)
-     *
-     * @param arg
-     * @return
+     * Not support
+     * @throws UnsupportedOperationException
      */
     @Override
     public List<Service> getServices(GetServicesArg arg) {
-        return null;
+        throw new UnsupportedOperationException("Virtual cluster does not support.");
     }
 
     /**
-     * Create service
-     *
-     * @param arg
-     * @return
+     * Not support
+     * @throws UnsupportedOperationException
      */
     @Override
     public ServiceCreateResult createService(CreateServiceArg arg) {
-        return null;
+        throw new UnsupportedOperationException("Virtual cluster does not support.");
     }
 
     /**
-     * Update a service
-     * POST /services/(id or name)/update
+     * Not support
      *
-     * @param arg argument
-     * @return result of scale ops
+     * @return not support result
      */
     @Override
     public ServiceUpdateResult updateService(UpdateServiceArg arg) {
-        return null;
+        return notSupported(new ServiceUpdateResult());
     }
 
     /**
-     * DELETE /services/(id or name)
+     * Not support
      *
-     * @param service id or name
-     * @return result
+     * @return not support result
      */
     @Override
     public ServiceCallResult deleteService(String service) {
-        return null;
+        return notSupport();
     }
 
     /**
-     * GET /services/(id or name)
-     * Return information on the service id.
-     *
-     * @param service id or name
-     * @return service or null
+     * Not support
+     * @throws UnsupportedOperationException
      */
     @Override
     public Service getService(String service) {
-        return null;
+        throw new UnsupportedOperationException("Virtual cluster does not support.");
     }
 
     /**
-     * List Task (concept in docker swarm mode)
-     *
-     * @param arg
-     * @return
+     * Not support
+     * @throws UnsupportedOperationException
      */
     @Override
     public List<Task> getTasks(GetTasksArg arg) {
-        return null;
+        throw new UnsupportedOperationException("Virtual cluster does not support.");
     }
 
     /**
-     * Get Task (concept in docker swarm mode)
-     *
-     * @param taskId
-     * @return
+     * Not support
+     * @throws UnsupportedOperationException
      */
     @Override
     public Task getTask(String taskId) {
-        return null;
+        throw new UnsupportedOperationException("Virtual cluster does not support.");
     }
 
     /**
-     * List volumes
-     *
-     * @param arg
-     * @return
+     * Not support
+     * @throws UnsupportedOperationException
      */
     @Override
     public List<Volume> getVolumes(GetVolumesArg arg) {
-        return null;
+        throw new UnsupportedOperationException("Virtual cluster does not support.");
     }
 
     /**
-     * @param name Volume name or ID
-     * @return volume or null
+     * Not support
+     * @throws UnsupportedOperationException
      */
     @Override
     public Volume getVolume(String name) {
-        return null;
+        throw new UnsupportedOperationException("Virtual cluster does not support.");
     }
 
     /**
-     * Create volume
-     *
-     * @param cmd
-     * @return
+     * Not support
+     * @throws UnsupportedOperationException
      */
     @Override
     public Volume createVolume(CreateVolumeCmd cmd) {
-        return null;
+        throw new UnsupportedOperationException("Virtual cluster does not support.");
     }
 
     /**
-     * Remove volume
-     *
-     * @param arg
-     * @return
+     * Not support
+     * @throws UnsupportedOperationException
      */
     @Override
     public ServiceCallResult removeVolume(RemoveVolumeArg arg) {
-        return null;
+        throw new UnsupportedOperationException("Virtual cluster does not support.");
     }
 
     /**
-     * Remove unused volumes
+     * Not support
      *
-     * @param arg
-     * @return
+     * @return not support result
      */
     @Override
     public ServiceCallResult deleteUnusedVolumes(DeleteUnusedVolumesArg arg) {
-        return null;
+        return notSupport();
     }
 
     private final DefaultNodesGroupImpl cluster;
-    private final DockerConfig config = DockerConfig.builder().host("<virtual host>").build();  // we need empty config for prevent NPE
+    // we need empty config for prevent NPE
+    // just a virtual config because the actual docker service according to the specified node or specified container
+    private final DockerConfig config = DockerConfig.builder().host("<virtual host>").build();
 
     public VirtualDockerService(DefaultNodesGroupImpl cluster) {
         this.cluster = cluster;
@@ -618,7 +686,21 @@ public class VirtualDockerService implements DockerService {
         return res;
     }
 
-    private NodeService getNodeService() {
-        return this.cluster.getNodeService();
+    private ServiceCallResult whenNotFoundService(String id) {
+        return new ServiceCallResult().code(ResultCode.ERROR).message("Can not find service for container: " + id);
+    }
+
+    // get docker by container
+    private DockerService getServiceByContainer(String id) {
+        return NodeUtils.getDockerByContainer(cluster.getContainerStorage(), getNodeStorage(), id);
+    }
+
+    private DockerService getServiceByNode(Node node) {
+        Assert.notNull(node, "Node is null");
+        return getNodeStorage().getDockerService(node.getName());
+    }
+
+    private NodeStorage getNodeStorage() {
+        return this.cluster.getNodeStorage();
     }
 }

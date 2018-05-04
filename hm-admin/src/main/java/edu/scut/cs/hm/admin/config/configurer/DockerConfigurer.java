@@ -1,7 +1,7 @@
 package edu.scut.cs.hm.admin.config.configurer;
 
 import edu.scut.cs.hm.docker.model.events.DockerEventConfig;
-import edu.scut.cs.hm.model.node.NodeServiceConfig;
+import edu.scut.cs.hm.model.node.NodeStorageConfig;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -16,7 +16,7 @@ public class DockerConfigurer {
     /**
      * NodeService config how to save/update/remove node
      */
-    private NodeServiceConfig node = new NodeServiceConfig();
+    private NodeStorageConfig node = new NodeStorageConfig();
 
     /**
      * Docker agent config which installed in other docker physical node

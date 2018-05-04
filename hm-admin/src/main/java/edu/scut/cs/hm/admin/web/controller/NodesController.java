@@ -1,6 +1,6 @@
 package edu.scut.cs.hm.admin.web.controller;
 
-import edu.scut.cs.hm.admin.service.NodeService;
+import edu.scut.cs.hm.admin.service.NodeStorage;
 import edu.scut.cs.hm.model.node.NodeInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +20,11 @@ public class NodesController {
     static final String VIEW_NODE_LIST = "node/list";
     static final String MODEL_ATTR_NODES = "node";
 
-    private final NodeService nodeService;
+    private final NodeStorage nodeStorage;
 
     @RequestMapping(value = "/", method = GET)
     public String listNodes(ModelMap modelMap) {
-        List<NodeInfo> nodes = new ArrayList<>(nodeService.getNodes(ni -> true));
+        List<NodeInfo> nodes = new ArrayList<>(nodeStorage.getNodes(ni -> true));
         modelMap.addAttribute(MODEL_ATTR_NODES, nodes);
         return VIEW_NODE_LIST;
     }

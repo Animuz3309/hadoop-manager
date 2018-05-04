@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import edu.scut.cs.hm.admin.security.SecuredType;
 import edu.scut.cs.hm.admin.security.TempAuth;
 import edu.scut.cs.hm.admin.security.acl.AclModifier;
-import edu.scut.cs.hm.admin.service.NodeService;
+import edu.scut.cs.hm.admin.service.NodeStorage;
 import edu.scut.cs.hm.common.security.SecurityUtils;
 import edu.scut.cs.hm.common.security.acl.TenantPrincipalSid;
 import edu.scut.cs.hm.common.security.acl.dto.AclSource;
@@ -12,6 +12,7 @@ import edu.scut.cs.hm.common.security.acl.dto.ObjectIdentityData;
 import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.docker.model.network.Network;
 import edu.scut.cs.hm.docker.model.swarm.NetworkManager;
+import edu.scut.cs.hm.model.ds.DiscoveryStorage;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,16 +47,16 @@ public abstract class AbstractNodesGroup<C extends AbstractNodesGroupConfig<C>> 
     private final CreateNetworkTask createNetworkTask = new CreateNetworkTask();
     private final AtomicInteger state = new AtomicInteger(S_BEGIN);     // state of nodes group
     private volatile String stateMessage;                               // state msg
-    private ClusterService service;                                     // service to do with nodes group
+    private DiscoveryStorage storage;                                   // storage to do with nodes group
     private Class<C> configClass;                                       // class type of NodesGroupConfig
     private String name;                                                // name of nodes group
     private ObjectIdentityData oid;                                     // oid of nodes group
     private Set<Feature> features;                                      // feature of nodes group
 
     @SuppressWarnings("unchecked")
-    public AbstractNodesGroup(C config, ClusterService service, Collection<Feature> features) {
-        this.service = service;
-        Assert.notNull(this.service, "cluster service is null");
+    public AbstractNodesGroup(C config, DiscoveryStorage storage, Collection<Feature> features) {
+        this.storage = storage;
+        Assert.notNull(this.storage, "cluster storage is null");
         this.configClass = (Class<C>) config.getClass();
         this.name = config.getName();
         Assert.notNull(this.name, "name is null");
@@ -142,7 +143,7 @@ public abstract class AbstractNodesGroup<C extends AbstractNodesGroupConfig<C>> 
 
     @Override
     public void flush() {
-        // todo with ClusterService
+        // todo with DiscoveryStorage
     }
 
     /**
@@ -294,7 +295,7 @@ public abstract class AbstractNodesGroup<C extends AbstractNodesGroupConfig<C>> 
             log.warn("Can not create network due cluster '{}' in '{}' state.", getName(), state.getMessage());
             return;
         }
-        getClusterService().getExecutor().execute(createNetworkTask);
+        getDiscoveryStorage().getExecutor().execute(createNetworkTask);
     }
 
     @Override
@@ -339,12 +340,12 @@ public abstract class AbstractNodesGroup<C extends AbstractNodesGroupConfig<C>> 
         flush();
     }
 
-    public ClusterService getClusterService() {
-        return service;
+    public DiscoveryStorage getDiscoveryStorage() {
+        return storage;
     }
 
-    public NodeService getNodeService() {
-        return service.getNodeService();
+    public NodeStorage getNodeStorage() {
+        return storage.getNodeService();
     }
 
     private class CreateNetworkTask implements Runnable {
