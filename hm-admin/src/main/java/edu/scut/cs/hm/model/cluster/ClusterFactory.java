@@ -52,7 +52,7 @@ public class ClusterFactory {
      * {@link SwarmCluster} -> #config = SwarmNodesGroupConfig
      * {@link DockerCluster} -> #config = DockerClusterConfig
      */
-    NodesGroup build(String clusterId) {
+    public NodesGroup build(String clusterId) {
         ClusterCreationContext ccc = new ClusterCreationContext(this, clusterId);
         // ensure config not null
         processConfig(ccc);

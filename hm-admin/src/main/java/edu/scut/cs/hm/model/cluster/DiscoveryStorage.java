@@ -69,10 +69,10 @@ public interface DiscoveryStorage {
 
     /**
      * Docker service
-     * @param name
+     * @param clusterId
      * @return
      */
-    DockerService getService(String name);
+    DockerService getService(String clusterId);
 
     /**
      * In docker swarm mode service means a combination of containers(maybe in different nodes)
