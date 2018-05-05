@@ -32,12 +32,12 @@ import java.util.function.Consumer;
 @ToString
 public abstract class AbstractNodesGroup<C extends AbstractNodesGroupConfig<C>> implements NodesGroup, AutoCloseable {
 
-    private static final int S_BEGIN = 0;
-    private static final int S_INITING = 1;
-    private static final int S_INITED = 2;
-    private static final int S_CLENING = 3;
-    private static final int S_CLENED = 4;
-    private static final int S_FAILED = 99;
+    protected static final int S_BEGIN = 0;
+    protected static final int S_INITING = 1;
+    protected static final int S_INITED = 2;
+    protected static final int S_CLENING = 3;
+    protected static final int S_CLENED = 4;
+    protected static final int S_FAILED = 99;
 
     protected final Object lock = new Object();
     protected final NetworkManager networkManager;

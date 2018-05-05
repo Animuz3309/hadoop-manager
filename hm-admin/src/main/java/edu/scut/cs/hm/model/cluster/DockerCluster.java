@@ -1,5 +1,7 @@
 package edu.scut.cs.hm.model.cluster;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableList;
 import com.google.common.net.InetAddresses;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import edu.scut.cs.hm.admin.component.ContainerCreator;
@@ -7,43 +9,154 @@ import edu.scut.cs.hm.admin.security.TempAuth;
 import edu.scut.cs.hm.admin.service.DiscoveryStorageImpl;
 import edu.scut.cs.hm.admin.service.NodeStorage;
 import edu.scut.cs.hm.common.utils.AddressUtils;
+import edu.scut.cs.hm.common.utils.Closeables;
 import edu.scut.cs.hm.common.utils.RescheduledTask;
 import edu.scut.cs.hm.common.utils.SingleValueCache;
 import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.docker.DockerServiceInfo;
+import edu.scut.cs.hm.docker.arg.NodeUpdateArg;
 import edu.scut.cs.hm.docker.arg.RemoveNodeArg;
 import edu.scut.cs.hm.docker.arg.SwarmLeaveArg;
+import edu.scut.cs.hm.docker.cmd.SwarmInitCmd;
 import edu.scut.cs.hm.docker.cmd.SwarmJoinCmd;
 import edu.scut.cs.hm.docker.cmd.UpdateNodeCmd;
+import edu.scut.cs.hm.docker.model.swarm.JoinTokens;
 import edu.scut.cs.hm.docker.model.swarm.SwarmInfo;
+import edu.scut.cs.hm.docker.model.swarm.SwarmSpec;
+import edu.scut.cs.hm.docker.res.SwarmInitResult;
+import edu.scut.cs.hm.docker.res.SwarmInspectResponse;
 import edu.scut.cs.hm.docker.model.swarm.SwarmNode;
 import edu.scut.cs.hm.docker.res.ResultCode;
 import edu.scut.cs.hm.docker.res.ServiceCallResult;
 import edu.scut.cs.hm.model.container.ContainerStorage;
 import edu.scut.cs.hm.model.container.ContainersManager;
+import edu.scut.cs.hm.model.container.DockerClusterContainers;
 import edu.scut.cs.hm.model.ngroup.AbstractNodesGroup;
 import edu.scut.cs.hm.model.ngroup.DockerClusterConfig;
 import edu.scut.cs.hm.model.ngroup.NodesGroup;
-import edu.scut.cs.hm.model.node.NodeInfo;
-import edu.scut.cs.hm.model.node.NodeRegistration;
+import edu.scut.cs.hm.model.node.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * A kind of nodegroup which is managed by 'docker' in 'swarm mode'.
  */
 @Slf4j
 public class DockerCluster extends AbstractNodesGroup<DockerClusterConfig> {
+
+    /**
+     * @param id name of node, when we add a node use the name
+     * @return
+     */
+    @Override
+    public boolean hasNode(String id) {
+        NodeRegistration nr = getNodeStorage().getNodeRegistration(id);
+        return isFromSameCluster(nr);
+    }
+
+    /**
+     * Return copy of all current nodes collection
+     *
+     * @return copy of current nodes
+     */
+    @Override
+    public List<NodeInfo> getNodes() {
+        Map<String, SwarmNode> map = getState().isOk()?  nodesMap.get() : Collections.emptyMap();
+        ImmutableList.Builder<NodeInfo> b = ImmutableList.builder();
+        getNodeStorage().forEach(nr -> {
+            NodeInfo ni = nr.getNodeInfo();
+            SwarmNode sn = map.get(ni.getName());
+            if(!isFromSameCluster(ni) && sn == null) {
+                return;
+            }
+            NodeMetrics.State state =(sn != null)? getState(sn) : NodeMetrics.State.ALONE;
+            NodeMetrics metrics = ni.getHealth();
+            if(metrics.getState() != state) {
+                NodeMetrics.Builder nmb = NodeMetrics.builder().from(metrics);
+                setNodeState(nmb, state);
+                ni = NodeInfoImpl.builder(ni)
+                        .health(nmb.build())
+                        .build();
+            }
+            b.add(ni);
+        });
+        return b.build();
+    }
+
+    /**
+     * Update node but not only attributes of physical node, some 'node in docker swarm ngroup' attr
+     *
+     * @param arg
+     * @return
+     */
+    @Override
+    public ServiceCallResult updateNode(NodeUpdateArg arg) {
+        final String node = arg.getNode();
+        Assert.hasText(node, "arg.node is null or empty");
+        Assert.notNull(node, "Can not find node with name:" + node);
+
+        NodeRegistration nr = getNodeStorage().getNodeRegistration(node);
+        NodeInfo nodeInfo = nr.getNodeInfo();
+
+        UpdateNodeCmd cmd = new UpdateNodeCmd();
+        cmd.setNodeId(nodeInfo.getIdInCluster());
+        cmd.setVersion(arg.getVersion());
+        cmd.setLabels(arg.getLabels());
+        // availability is required, so we set default value
+        cmd.setAvailability(MoreObjects.firstNonNull(arg.getAvailability(), UpdateNodeCmd.Availability.ACTIVE));
+        cmd.setRole(arg.getRole());
+        DockerService docker = getDocker();
+
+        ServiceCallResult res = docker.updateNode(cmd);
+        if(res.getCode() == ResultCode.OK) {
+            scheduleRereadNodes();
+        }
+
+        return res;
+    }
+
+    /**
+     * Empty Set
+     *
+     * @return
+     */
+    @Override
+    public Collection<String> getGroups() {
+        return Collections.emptySet();
+    }
+
+    /**
+     * When we use swarm or 'docker in swarm mode' we return manager node's docker service
+     *
+     * @return
+     */
+    @Override
+    public DockerService getDocker() {
+        DockerService ds = getDockerOrNull();
+        if(ds == null) {
+            throw new IllegalStateException("Cluster " + getName() + " has not any alive manager node.");
+        }
+        return ds;
+    }
+
+    /**
+     * Tool for managing ngroup containers, it replace for direct access to docker service
+     *
+     * @return non null value
+     */
+    @Override
+    public ContainersManager getContainers() {
+        return containers;
+    }
 
     /**
      * List of cluster manager nodes.
@@ -69,6 +182,7 @@ public class DockerCluster extends AbstractNodesGroup<DockerClusterConfig> {
     private ContainerCreator containerCreator;
     private ContainersManager containers;
     private int rereadNodesTimeout;
+
     private volatile List<AutoCloseable> closeables;
 
     DockerCluster(DiscoveryStorageImpl storage, DockerClusterConfig config) {
@@ -90,6 +204,195 @@ public class DockerCluster extends AbstractNodesGroup<DockerClusterConfig> {
                 .service(this.scheduledExecutor)
                 .maxDelay(10L, TimeUnit.SECONDS)
                 .build();
+    }
+
+    @Override
+    protected void initImpl() {
+        List<String> hosts = this.config.getManagers();
+        if (CollectionUtils.isEmpty(hosts)) {
+            cancelInit("config must contains at least one manager host.");
+            return;
+        }
+        hosts.forEach(host -> managers.putIfAbsent(host, new Manager(host)));
+        initCluster(hosts.get(0));
+
+        if (getStateCode() == S_INITING) {
+            ArrayList<AutoCloseable> closeables = new ArrayList<>();
+            this.closeables = closeables;
+            // we do this only if initialization process is success
+            this.containers = new DockerClusterContainers(this, this.containerStorage, this.containerCreator);
+
+            // so docker does not send any events about new coming nodes, and we must refresh list of them
+            ScheduledFuture<?> sf = this.scheduledExecutor.scheduleWithFixedDelay(rereadNodesTask::schedule,
+                    rereadNodesTimeout, rereadNodesTimeout, TimeUnit.SECONDS);
+            closeables.add(() -> sf.cancel(true));
+            closeables.add(getNodeStorage().getNodeEventSubscriptions().openSubscription(this::onNodeEvent));
+            closeables.add(this.rereadNodesTask);
+        }
+    }
+
+    @Override
+    protected void closeImpl() {
+        Closeables.closeAll(this.closeables);
+        this.scheduledExecutor.shutdownNow();
+    }
+
+    @Override
+    protected void cleanImpl() {
+        Map<String, SwarmNode> nodes = nodesMap.getOldValue();
+        if(nodes == null) {
+            nodes = nodesMap.get();
+        }
+        List<String> managers = new ArrayList<>();
+        {
+            DockerService manager = getDocker();
+            nodes.forEach((s, swarmNode) -> {
+                // first we remove all non manager nodes
+                if(isManager(swarmNode)) {
+                    managers.add(s);
+                    return;
+                }
+                leave(manager, s, swarmNode);
+            });
+        }
+        if(managers.isEmpty()) {
+            // it mean wrong cluster state
+            return;
+        }
+        // then remove all
+        // here we must use only last manager
+        int last = managers.size() - 1;
+        String lastManagerName = managers.get(last);
+        DockerService lastManager = getNodeStorage().getDockerService(lastManagerName);
+        for(int i = 0; i < last; ++i) {
+            String managerName = managers.get(i);
+            SwarmNode swarmNode = nodes.get(managerName);
+            leave(lastManager, managerName, swarmNode);
+        }
+        // the last manager, which is can not be removed safely
+        SwarmLeaveArg arg = new SwarmLeaveArg();
+        arg.setForce(true);
+        lastManager.leaveSwarm(arg);
+    }
+
+    private void onNodeEvent(NodeEvent e) {
+        final NodeEvent.Action action = e.getAction();
+        NodeInfo old = e.getOld();
+        NodeInfo curr = e.getCurrent();
+        final String thisCluster = getName();
+        boolean nowOur = curr != null && thisCluster.equals(curr.getCluster());
+        boolean wasOur = old != null && thisCluster.equals(old.getCluster());
+        final String nodeName = e.getNode().getName();
+        if(action.isPre()) {
+            // we cancel some events only for for master nodes
+            if(!managers.containsKey(nodeName)) {
+                return;
+            }
+            if(action == NodeEvent.Action.PRE_DELETE ||
+                    action == NodeEvent.Action.PRE_UPDATE && wasOur && !nowOur) {
+                e.cancel();
+                log.warn("Cancel node '{}' deletion due to it is a manager.", nodeName);
+            }
+            return;
+        }
+        if(!wasOur && !nowOur || getStateCode() != S_INITED) {
+            //if node not our we skip event, not that 'pre' event processed only when it affect 'manager' nodes
+            return;
+        }
+        Map<String, SwarmNode> map = this.nodesMap.getOrNull();
+        if(map == null) {
+            map = this.nodesMap.getOldValue();
+        }
+        //note that map always will be null when cluster is invalid
+        if (wasOur != nowOur || map == null || !map.containsKey(nodeName)) {
+            scheduleRereadNodes();
+        }
+        this.createDefaultNetwork();
+    }
+
+    private void initCluster(String leaderName) {
+        //first we must find if one of nodes has exists cluster
+        Map<String, List<String>> clusters = new HashMap<>();
+        Manager selectedManager = null;
+        int onlineManagers = 0;
+        for(Manager node: managers.values()) {
+            DockerService service = node.getService();
+            if(service == null) {
+                continue;
+            }
+            SwarmInfo swarm;
+            try {
+                DockerServiceInfo info = service.getInfo();
+                swarm = info.getSwarm();
+            } catch (RuntimeException e) {
+                log.error("Can not get swarm info from manager '{}' due to error:", node.name, e);
+                // this case must not increment onlineManagers counter!
+                continue;
+            }
+            onlineManagers++;
+            if(swarm != null) {
+                String clusterId = swarm.getClusterId();
+                if(clusterId == null) {
+                    continue;
+                }
+                clusters.computeIfAbsent(clusterId, (k) -> new ArrayList<>()).add(node.name);
+                if(swarm.isManager()) {
+                    selectedManager = node;
+                }
+            }
+        }
+        if(onlineManagers == 0) {
+            cancelInit("because no online masters");
+            return;
+        }
+        if(clusters.size() > 1) {
+            throw new IllegalStateException("Managers nodes already united into different cluster: " + clusters);
+        }
+        if(clusters.isEmpty()) {
+            //we must create cluster if no one found
+            selectedManager = createCluster(leaderName);
+        } else if(selectedManager == null) {
+            throw new IllegalStateException("We has cluster: " + clusters + " but no one managers.");
+        }
+
+        // this.data.get() does not work while cluster is not inited
+        ClusterData clusterData = loadClusterData(selectedManager.getService());
+        if(clusterData == null) {
+            // add managers later, because select manager is not ready yet
+            return;
+        }
+
+        //and then we must join all managers to created cluster
+        for(Manager node: managers.values()) {
+            if(node == selectedManager) {
+                continue;
+            }
+            try {
+                joinAsManager(node, clusterData);
+            } catch (Exception e) {
+                log.error("Can not join additional manager '{}' to cluster {}, error:", node.name, getName(), e);
+            }
+        }
+    }
+
+    private Manager createCluster(String leader) {
+        Manager manager = managers.get(leader);
+        log.info("Begin initializing swarm-mode cluster on '{}'", manager.name);
+        SwarmInitCmd cmd = new SwarmInitCmd();
+        cmd.setSpec(getSwarmConfig());
+        DockerService service = manager.getService();
+        String address = getSwarmAddress(service);
+        cmd.setListenAddr(address);
+        SwarmInitResult res = service.initSwarm(cmd);
+        if(res.getCode() != ResultCode.OK) {
+            throw new IllegalStateException("Can not initialize swarm-mode cluster on '" + manager.name + "' due to error: " + res.getMessage());
+        }
+        log.info("Initialized swarm-mode cluster on '{}' at address {}", manager.name, address);
+        return manager;
+    }
+
+    private SwarmSpec getSwarmConfig() {
+        return new SwarmSpec();
     }
 
     /**
@@ -120,6 +423,10 @@ public class DockerCluster extends AbstractNodesGroup<DockerClusterConfig> {
     @Autowired
     void setContainerCreator(ContainerCreator containerCreator) {
         this.containerCreator = containerCreator;
+    }
+
+    private void scheduleRereadNodes() {
+        rereadNodesTask.schedule();
     }
 
     private void rereadNodes() {
@@ -260,7 +567,7 @@ public class DockerCluster extends AbstractNodesGroup<DockerClusterConfig> {
             return;
         }
         try {
-            if (InetAddresses.forString(sn.getStatus().getAddress()).isLoopbackAddress()) {
+            if (InetAddresses.forString(address).isLoopbackAddress()) {
                 // local node address it a wrong config, or user simply use single-node cluster - we can not detect
                 // this, and just report it
                 log.warn("Node {} report local address '{}', it may be wrong configuration.", nodeName, address);
@@ -411,8 +718,70 @@ public class DockerCluster extends AbstractNodesGroup<DockerClusterConfig> {
      * @return non null registration
      */
     private NodeRegistration updateNodeRegistration(String nodeName, String address, SwarmNode sn) {
-        // todo
-        return null;
+        NodeStorage ns = getNodeStorage();
+        return ns.updateNode(nodeName, Integer.MAX_VALUE, b -> {
+           String nodeCluster = b.getCluster();
+           final String cluster = getName();
+           final String id = sn == null ? null : sn.getId();
+           if (!cluster.equals(nodeCluster)) {
+               // node remove
+               if (Objects.equals(b.getIdInCluster(), id)) {
+                   b.setVersion(0);
+                   b.setIdInCluster(null);
+                   b.setHealth(NodeMetrics.builder().from(b.getHealth()).manager(null).build());
+               }
+               return;
+           }
+           b.idInCluster(id);
+           // we must update address, because cluster node may report wrong value
+           // see getNodeAddress(SwarmNode)
+            b.addressIfNeed(address);
+            NodeMetrics.Builder nmb = NodeMetrics.builder();
+            NodeMetrics.State state;
+            if (sn != null) {
+                state = getState(sn);
+                b.version(sn.getVersion().getIndex());
+                nmb.manager(isManager(sn));
+                Map<String, String> labels = sn.getDescription().getEngine().getLabels();
+                if(labels != null) {
+                    b.labels(labels);
+                }
+            } else {
+                state = NodeMetrics.State.ALONE;
+            }
+            setNodeState(nmb, state);
+            b.mergeHealth(nmb.build());
+        });
+    }
+
+    private void setNodeState(NodeMetrics.Builder nmb, NodeMetrics.State state) {
+        nmb.state(state);
+        nmb.healthy(state == NodeMetrics.State.HEALTHY);
+    }
+
+    private NodeMetrics.State getState(SwarmNode sn) {
+        SwarmNode.NodeAvailability availability = sn.getSpec().getAvailability();
+        SwarmNode.NodeState state = sn.getStatus().getState();
+        if (state == SwarmNode.NodeState.READY && availability == SwarmNode.NodeAvailability.ACTIVE) {
+            return NodeMetrics.State.HEALTHY;
+        }
+        if (state == SwarmNode.NodeState.DOWN ||
+                availability == SwarmNode.NodeAvailability.DRAIN ||
+                availability == SwarmNode.NodeAvailability.PAUSE) {
+            return NodeMetrics.State.MAINTENANCE;
+        }
+        if (state == SwarmNode.NodeState.DISCONNECTED) {
+            return NodeMetrics.State.DISCONNECTED;
+        }
+        return NodeMetrics.State.UNHEALTHY;
+
+    }
+
+    private boolean isFromSameCluster(NodeRegistration nr) {
+        if (nr == null) {
+            return false;
+        }
+        return isFromSameCluster(nr.getNodeInfo());
     }
 
     private boolean isFromSameCluster(NodeInfo ni) {
@@ -421,18 +790,85 @@ public class DockerCluster extends AbstractNodesGroup<DockerClusterConfig> {
     }
 
     private DockerService getDockerOrNull() {
-        //todo
-        return null;
+        // sometime offline service is online, but it need test request
+        // therefore we hold one of them for cases when no choice
+        DockerService candidate = null;
+        // we can not force load, because it may cause recursion when predefined managers is offline
+        Map<String, SwarmNode> nodesMap = this.nodesMap.getOldValue();
+        if(nodesMap != null) {
+            for(Map.Entry<String, SwarmNode> e: nodesMap.entrySet()) {
+                if(!isManager(e.getValue())) {
+                    continue;
+                }
+                String node = e.getKey();
+                NodeRegistration nr = getNodeStorage().getNodeRegistration(node);
+                if(nr == null) {
+                    continue;
+                }
+                DockerService service = nr.getDocker();
+                if(service != null) {
+                    if(service.isOnline()) {
+                        return service;
+                    } else {
+                        candidate = service;
+                    }
+                }
+            }
+        }
+        // when no other managers we try to use one of predefined
+        for (Manager node : managers.values()) {
+            DockerService service = node.getService();
+            if (service != null) {
+                if(service.isOnline()) {
+                    return service;
+                }
+                candidate = service;
+            }
+        }
+        return candidate;
     }
 
     private ClusterData loadClusterData(DockerService manager) {
-        //todo
-        return null;
+        SwarmInspectResponse swarm = manager.getSwarm();
+        DockerServiceInfo info = manager.getInfo();
+        JoinTokens tokens = swarm.getJoinTokens();
+        // at first cluster creation it may be null, due to creation may consume time
+        SwarmInfo swarmInfo = info.getSwarm();
+        if(swarmInfo == null) {
+            return null;
+        }
+        return ClusterData.builder()
+                .managerToken(tokens.getManager())
+                .workerToken(tokens.getWorker())
+                .managers(swarmInfo.getManagers())
+                .build();
     }
 
+    /**
+     * Load SwarmNode managed by {@link #getDockerOrNull()} docker
+     * @return
+     */
     private Map<String, SwarmNode> loadNodesMap() {
-        //todo
-        return null;
+        DockerService docker = getDockerOrNull();
+        if(docker == null) {
+            return null;
+        }
+        List<SwarmNode> nodes = docker.getNodes(null);
+        // docker may produce node duplicated
+        // see https://github.com/docker/docker/issues/24088
+        // therefore we must fina one actual node in duplicates
+        Map<String, SwarmNode> map = new HashMap<>();
+        nodes.forEach(sn -> {
+            String nodeName = getNodeName(sn);
+            map.compute(nodeName, (key, old) -> {
+                // use new node if old null or down
+                if(old == null || old.getStatus().getState() == SwarmNode.NodeState.DOWN) {
+                    old = sn;
+                }
+                return old;
+            });
+        });
+        return map;
     }
 
     private boolean ownedByAnotherCluster(String nodeName) {

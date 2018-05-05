@@ -180,7 +180,7 @@ public class NodeMetrics {
 
     private final ZonedDateTime time;
     private final Boolean healthy;
-    private final Boolean manager;
+    private final Boolean manager;  // is this node is a manager node in cluster
     private final State state;
     private final Long swarmMemReserved;
     private final Long swarmMemTotal;
@@ -216,9 +216,11 @@ public class NodeMetrics {
     }
 
     public enum State {
-        PENDING,    // if node is on but not inside cluster yet -> set status pending
+        PENDING,        // if node is on but not inside cluster(SWARM) yet -> set status pending
+        MAINTENANCE,    // if node in cluster(SWARM) is DOWN, DRAIN, PAUSE -> set status MAINTENANCE
         UNHEALTHY,
         HEALTHY,
         DISCONNECTED,
+        ALONE           // node not in a cluster(actual cluster - swarm, not the nodes group)
     }
 }

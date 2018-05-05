@@ -1,8 +1,8 @@
 package edu.scut.cs.hm.docker.res;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import edu.scut.cs.hm.docker.model.swarm.JoinTokens;
 import edu.scut.cs.hm.docker.model.swarm.Cluster;
+import edu.scut.cs.hm.docker.model.swarm.JoinTokens;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class InspectResponse extends Cluster {
+public class SwarmInspectResponse extends Cluster {
 
     @JsonProperty("JoinTokens")
     private JoinTokens joinTokens;

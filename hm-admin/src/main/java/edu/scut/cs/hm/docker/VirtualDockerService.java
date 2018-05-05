@@ -9,6 +9,7 @@ import edu.scut.cs.hm.docker.model.image.ImageDescriptor;
 import edu.scut.cs.hm.docker.model.image.ImageItem;
 import edu.scut.cs.hm.docker.model.network.Network;
 import edu.scut.cs.hm.docker.model.swarm.Service;
+import edu.scut.cs.hm.docker.res.SwarmInspectResponse;
 import edu.scut.cs.hm.docker.model.swarm.SwarmNode;
 import edu.scut.cs.hm.docker.model.swarm.Task;
 import edu.scut.cs.hm.docker.model.volume.Volume;
@@ -496,7 +497,7 @@ public class VirtualDockerService implements DockerService {
      * @throws UnsupportedOperationException
      */
     @Override
-    public InspectResponse getSwarm() {
+    public SwarmInspectResponse getSwarm() {
         throw new UnsupportedOperationException("Virtual ngroup does not support.");
     }
 
