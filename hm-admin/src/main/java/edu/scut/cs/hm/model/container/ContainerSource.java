@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.docker.model.container;
+package edu.scut.cs.hm.model.container;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import edu.scut.cs.hm.common.utils.Cloneables;

@@ -9,7 +9,6 @@ import edu.scut.cs.hm.docker.arg.*;
 import edu.scut.cs.hm.docker.cmd.UpdateContainerCmd;
 import edu.scut.cs.hm.docker.model.container.ContainerDetails;
 import edu.scut.cs.hm.docker.model.container.DockerContainer;
-import edu.scut.cs.hm.docker.model.container.EditableContainerSource;
 import edu.scut.cs.hm.docker.model.swarm.Service;
 import edu.scut.cs.hm.docker.model.swarm.Task;
 import edu.scut.cs.hm.docker.res.CreateAndStartContainerResult;

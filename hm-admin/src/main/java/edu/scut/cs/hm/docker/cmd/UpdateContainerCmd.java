@@ -3,7 +3,7 @@ package edu.scut.cs.hm.docker.cmd;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
-import edu.scut.cs.hm.docker.model.container.EditableContainerSource;
+import edu.scut.cs.hm.model.container.EditableContainerSource;
 import lombok.Data;
 
 @Data

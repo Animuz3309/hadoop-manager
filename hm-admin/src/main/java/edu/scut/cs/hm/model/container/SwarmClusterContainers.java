@@ -6,7 +6,6 @@ import edu.scut.cs.hm.docker.arg.*;
 import edu.scut.cs.hm.docker.cmd.UpdateContainerCmd;
 import edu.scut.cs.hm.docker.model.container.ContainerDetails;
 import edu.scut.cs.hm.docker.model.container.DockerContainer;
-import edu.scut.cs.hm.docker.model.container.EditableContainerSource;
 import edu.scut.cs.hm.docker.res.CreateAndStartContainerResult;
 import edu.scut.cs.hm.docker.res.ServiceCallResult;
 import edu.scut.cs.hm.model.cluster.DefaultCluster;

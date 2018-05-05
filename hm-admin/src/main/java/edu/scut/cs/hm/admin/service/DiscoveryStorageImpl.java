@@ -41,7 +41,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 
 /**
- * Cluster discovery storage implementation
+ * Storage service for clusters (nodes group - actual docker cluster or just logic combination of physical nodes)
  */
 @Slf4j
 @Primary

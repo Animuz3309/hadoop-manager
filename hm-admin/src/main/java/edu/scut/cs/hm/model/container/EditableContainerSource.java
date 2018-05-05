@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.docker.model.container;
+package edu.scut.cs.hm.model.container;
 
 import lombok.Data;
 
