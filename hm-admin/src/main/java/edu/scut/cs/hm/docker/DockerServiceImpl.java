@@ -74,7 +74,6 @@ import static sun.plugin2.util.PojoUtil.toJson;
 
 /**
  * Docker Service implementation
- * TODO Test docker service api
  */
 @Slf4j
 public class DockerServiceImpl implements DockerService {

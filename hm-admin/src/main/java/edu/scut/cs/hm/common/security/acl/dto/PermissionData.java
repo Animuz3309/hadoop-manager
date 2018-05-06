@@ -3,6 +3,7 @@ package edu.scut.cs.hm.common.security.acl.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.security.acls.domain.AclFormattingUtils;
@@ -128,6 +129,11 @@ public class PermissionData implements Permission {
     @Override
     public String getPattern() {
         return pattern;
+    }
+
+    @JsonValue
+    public String getExpression() {
+        return expression;
     }
 
     @Override

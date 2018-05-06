@@ -11,7 +11,6 @@ import java.util.Collection;
 /**
  * Tool for manage ngroup containers <p/>
  * Old standalone swarm can show ngroup containers, but swarm-mode, use tasks & service concept.
- * TODO need to finish
  */
 public interface ContainersManager {
     /**

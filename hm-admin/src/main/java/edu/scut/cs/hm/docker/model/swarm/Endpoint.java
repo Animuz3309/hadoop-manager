@@ -11,7 +11,6 @@ import java.util.List;
 
 /**
  * https://github.com/moby/moby/blob/51a9119f6b817bbae21805ec05787d462c9492cd/api/types/swarm/network.go
- * TODO need finish
  */
 @Data
 public class Endpoint {

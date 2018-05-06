@@ -32,7 +32,7 @@ public class AclSource {
 
         public Builder from(AclSource acl) {
             if (acl == null) {
-                return null;
+                return this;
             }
             setEntries(acl.getEntries());
             setObjectIdentity(acl.getObjectIdentity());

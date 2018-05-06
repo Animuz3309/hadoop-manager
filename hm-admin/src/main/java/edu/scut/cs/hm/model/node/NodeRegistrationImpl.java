@@ -1,5 +1,6 @@
 package edu.scut.cs.hm.model.node;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.admin.security.AccessContextFactory;
@@ -11,17 +12,18 @@ import edu.scut.cs.hm.common.mb.MessageBuses;
 import edu.scut.cs.hm.common.mb.Subscriptions;
 import edu.scut.cs.hm.common.security.acl.dto.Action;
 import edu.scut.cs.hm.docker.arg.GetEventsArg;
-import edu.scut.cs.hm.docker.model.events.DockerEventConfig;
-import edu.scut.cs.hm.docker.model.events.DockerEvent;
-import edu.scut.cs.hm.docker.model.events.DockerLogEvent;
-import edu.scut.cs.hm.docker.model.events.DockerEventType;
+import edu.scut.cs.hm.docker.model.container.ContainerBase;
+import edu.scut.cs.hm.docker.model.container.DockerContainer;
+import edu.scut.cs.hm.docker.model.events.*;
 import edu.scut.cs.hm.model.Severity;
+import edu.scut.cs.hm.model.StandardAction;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.acls.model.ObjectIdentity;
 import org.springframework.util.Assert;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -146,7 +148,47 @@ public class NodeRegistrationImpl implements NodeRegistration, AutoCloseable {
         String localNodeName = (e.getNode() != null) ? e.getNode().getName() : this.name;
         final DockerEventType type = e.getType();
         if (type == DockerEventType.CONTAINER) {
-            // TODO DockerLogEvent's Container support
+            ContainerBase.Builder builder = ContainerBase.builder();
+            builder.setId(e.getId());
+            builder.setNode(localNodeName);
+            Actor actor = e.getActor();
+            Map<String, String> attributes = actor.getAttributes();
+            builder.setLabels(attributes);
+            //remove attributes which is not a labels.
+            builder.getLabels().keySet().removeAll(ImmutableSet.of("name", "image"));
+            builder.setName(attributes.get("name"));
+            builder.setImage(e.getFrom());
+            DockerContainer.State state = null;
+            // Containers report these events: attach, commit, copy, create, destroy, detach, die, exec_create,
+            // exec_detach, exec_start, export, kill, oom, pause, rename, resize, restart, start,
+            // stop, top, unpause, update
+            switch (action) {
+                //we do not support 'kill' action
+                case "kill":
+                    logEvent.setAction(StandardAction.STOP.value());
+                    state = DockerContainer.State.EXITED;
+                    break;
+                case "destroy":
+                    logEvent.setAction(StandardAction.DELETE.value());
+                    state = DockerContainer.State.REMOVING;
+                    break;
+                case "die":
+                case "stop":
+                    state = DockerContainer.State.DEAD;
+                    break;
+                case "unpause":
+                case "start":
+                    state = DockerContainer.State.RUNNING;
+                    break;
+                case "pause":
+                    state = DockerContainer.State.PAUSED;
+                    break;
+                case "restart":
+                    state = DockerContainer.State.RESTARTING;
+                    break;
+            }
+            builder.setState(state);
+            logEvent.setContainer(builder.build());
         }
 
         logEvent.setDate(new Date(e.getTime() * 1000L));

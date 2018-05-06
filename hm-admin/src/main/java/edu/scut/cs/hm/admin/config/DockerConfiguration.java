@@ -23,7 +23,7 @@ public class DockerConfiguration {
     }
 
     @Bean
-    public NodeStorageConfig nodeServiceConfig(DockerConfigurer configurer) {
+    public NodeStorageConfig nodeStorageConfig(DockerConfigurer configurer) {
         return configurer.getNode();
     }
 

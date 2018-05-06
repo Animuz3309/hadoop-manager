@@ -15,17 +15,17 @@ import java.util.function.Consumer;
  * And do something before cluster init {@link AbstractNodesGroup#init()}
  */
 @Data
-class ClusterCreationContext {
+public class ClusterCreationContext {
     private final ClusterFactory factory;
     private final String cluster;
     private Consumer<AbstractNodesGroup<?>> beforeClusterInit;
 
-    ClusterCreationContext(ClusterFactory factory, String cluster) {
+    public ClusterCreationContext(ClusterFactory factory, String cluster) {
         this.factory = factory;
         this.cluster = cluster;
     }
 
-    void beforeClusterInit(AbstractNodesGroup<?> cluster) {
+    public void beforeClusterInit(AbstractNodesGroup<?> cluster) {
         if (beforeClusterInit != null) {
             beforeClusterInit.accept(cluster);
         }

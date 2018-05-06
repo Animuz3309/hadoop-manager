@@ -14,9 +14,6 @@ public final class SwarmUtils {
 
     public static final String LABEL_SERVICE_ID = "com.docker.swarm.service.id";
 
-    private static final String PROP_NODES_UPDATE = "hm.docker.node.updateSeconds";
-    public static final String EXPR_NODES_UPDATE = "${" + SwarmUtils.PROP_NODES_UPDATE + "}"; // @see DockerConfigurer#getNode() ${hm.docker.node.updateSeconds}
-
     public static final String NODE_EQ = "node==";
     private SwarmUtils() {}
 

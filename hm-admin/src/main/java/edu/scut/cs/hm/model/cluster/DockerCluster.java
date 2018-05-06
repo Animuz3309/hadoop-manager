@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.net.InetAddresses;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import edu.scut.cs.hm.admin.component.ContainerCreator;
+import edu.scut.cs.hm.admin.config.configurer.DockerConfigurer;
 import edu.scut.cs.hm.admin.security.TempAuth;
 import edu.scut.cs.hm.admin.service.DiscoveryStorageImpl;
 import edu.scut.cs.hm.admin.service.NodeStorage;
@@ -38,7 +39,6 @@ import edu.scut.cs.hm.model.node.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -205,6 +205,38 @@ public class DockerCluster extends AbstractNodesGroup<DockerClusterConfig> {
                 .maxDelay(10L, TimeUnit.SECONDS)
                 .build();
     }
+
+
+    /**
+     * @see ClusterFactory#build(String)
+     * @param nodeStorageConfig {@link edu.scut.cs.hm.admin.config.DockerConfiguration#nodeStorageConfig(DockerConfigurer)}
+     */
+    // 注意此处动态注入
+    @Autowired
+    void setRereadNodesTimeout(NodeStorageConfig nodeStorageConfig) {
+        this.rereadNodesTimeout = nodeStorageConfig.getUpdateSeconds();
+    }
+
+    /**
+     * @see ClusterFactory#build(String)
+     * @param containerStorage
+     */
+    // 注意此处动态注入
+    @Autowired
+    void setContainerStorage(ContainerStorage containerStorage) {
+        this.containerStorage = containerStorage;
+    }
+
+    /**
+     * @see ClusterFactory#build(String)
+     * @param containerCreator
+     */
+    // 注意此处动态注入
+    @Autowired
+    void setContainerCreator(ContainerCreator containerCreator) {
+        this.containerCreator = containerCreator;
+    }
+
 
     @Override
     protected void initImpl() {
@@ -393,36 +425,6 @@ public class DockerCluster extends AbstractNodesGroup<DockerClusterConfig> {
 
     private SwarmSpec getSwarmConfig() {
         return new SwarmSpec();
-    }
-
-    /**
-     * @see ClusterFactory#build(String)
-     * @param rereadNodesTimeout
-     */
-    // 注意此处动态注入
-    @Autowired
-    void setRereadNodesTimeout(@Value(SwarmUtils.EXPR_NODES_UPDATE)int rereadNodesTimeout) {
-        this.rereadNodesTimeout = rereadNodesTimeout;
-    }
-
-    /**
-     * @see ClusterFactory#build(String)
-     * @param containerStorage
-     */
-    // 注意此处动态注入
-    @Autowired
-    void setContainerStorage(ContainerStorage containerStorage) {
-        this.containerStorage = containerStorage;
-    }
-
-    /**
-     * @see ClusterFactory#build(String)
-     * @param containerCreator
-     */
-    // 注意此处动态注入
-    @Autowired
-    void setContainerCreator(ContainerCreator containerCreator) {
-        this.containerCreator = containerCreator;
     }
 
     private void scheduleRereadNodes() {

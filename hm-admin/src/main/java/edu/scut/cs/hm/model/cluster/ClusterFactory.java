@@ -84,7 +84,7 @@ public class ClusterFactory {
     // this.config is not null after process
     private void processConfig(ClusterCreationContext ccc) {
         Assert.isTrue(type != null || config != null || configFactory != null,
-                "Both 'type' and 'config' is null, we can not resolve type of created cluster.");
+                "Both 'type' and 'config' and 'configFactory' is null, we can not resolve type of created cluster.");
         if (config == null) {
             if(configFactory != null) {
                 config = configFactory.create(ccc);

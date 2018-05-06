@@ -143,7 +143,7 @@ public abstract class AbstractNodesGroup<C extends AbstractNodesGroupConfig<C>> 
 
     @Override
     public void flush() {
-        // todo with DiscoveryStorage
+        storage.getKvMap().flush(name);
     }
 
     /**
@@ -274,6 +274,7 @@ public abstract class AbstractNodesGroup<C extends AbstractNodesGroupConfig<C>> 
 
     @Override
     public NetworkManager getNetworks() {
+        // todo NetworkManager need to finish
         return networkManager;
     }
 

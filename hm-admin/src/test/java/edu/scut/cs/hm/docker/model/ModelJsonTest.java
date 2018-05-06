@@ -2,21 +2,17 @@ package edu.scut.cs.hm.docker.model;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.scut.cs.hm.common.utils.JacksonUtil;
+import edu.scut.cs.hm.common.utils.JacksonUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Accessors;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 public class ModelJsonTest {
 
-    private ObjectMapper objectMapper = JacksonUtil.objectMapperBuilder();
+    private ObjectMapper objectMapper = JacksonUtils.objectMapperBuilder();
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(JsonInclude.Include.NON_NULL)
