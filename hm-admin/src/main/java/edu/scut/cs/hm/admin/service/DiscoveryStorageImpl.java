@@ -7,12 +7,17 @@ import edu.scut.cs.hm.admin.security.AccessContext;
 import edu.scut.cs.hm.admin.security.AccessContextFactory;
 import edu.scut.cs.hm.admin.security.SecuredType;
 import edu.scut.cs.hm.admin.security.TempAuth;
+import edu.scut.cs.hm.admin.security.acl.AclModifier;
 import edu.scut.cs.hm.common.kv.KeyValueStorage;
 import edu.scut.cs.hm.common.kv.mapping.KvMap;
 import edu.scut.cs.hm.common.kv.mapping.KvMapAdapter;
 import edu.scut.cs.hm.common.kv.mapping.KvMapLocalEvent;
 import edu.scut.cs.hm.common.kv.mapping.KvMapperFactory;
 import edu.scut.cs.hm.common.mb.MessageBus;
+import edu.scut.cs.hm.common.security.Authorities;
+import edu.scut.cs.hm.common.security.acl.TenantGrantedAuthoritySid;
+import edu.scut.cs.hm.common.security.acl.dto.AceSource;
+import edu.scut.cs.hm.common.security.acl.dto.AclSource;
 import edu.scut.cs.hm.common.security.acl.dto.Action;
 import edu.scut.cs.hm.common.utils.Closeables;
 import edu.scut.cs.hm.common.utils.ExecutorUtils;
@@ -21,12 +26,16 @@ import edu.scut.cs.hm.common.utils.Throwables;
 import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.model.StandardAction;
 import edu.scut.cs.hm.model.cluster.ClusterFactory;
+import edu.scut.cs.hm.model.cluster.DefaultCluster;
 import edu.scut.cs.hm.model.ngroup.AbstractNodesGroupConfig;
 import edu.scut.cs.hm.model.cluster.ClusterConfigFactory;
+import edu.scut.cs.hm.model.ngroup.DefaultNodesGroupConfig;
 import edu.scut.cs.hm.model.ngroup.NodesGroup;
 import edu.scut.cs.hm.model.ngroup.NodesGroupEvent;
 import edu.scut.cs.hm.model.cluster.DiscoveryStorage;
 import edu.scut.cs.hm.model.filter.OrphansNodeFilterFactory;
+import edu.scut.cs.hm.model.node.NodeEvent;
+import edu.scut.cs.hm.model.node.NodeInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,6 +44,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import javax.annotation.PostConstruct;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -89,7 +100,7 @@ public class DiscoveryStorageImpl implements DiscoveryStorage {
      *  get or create cluster. Consumer('factory') will be invoked before cluster process start and allow modification of swarm parameters
      *
      * @param clusterId name of ngroup
-     * @param factory   factory or null
+     * @param factory   factory or null. The factory to create {@link edu.scut.cs.hm.model.ngroup.NodesGroupConfig}
      * @return NodesGroup, never null
      */
     @Override
@@ -112,7 +123,7 @@ public class DiscoveryStorageImpl implements DiscoveryStorage {
      * @return registered node group.
      */
     @Override
-    public NodesGroup getOrCreateGroup(AbstractNodesGroupConfig<?> config) {
+    public NodesGroup getOrCreateCluster(AbstractNodesGroupConfig<?> config) {
         final String clusterId = config.getName();
         ExtendedAssert.matchAz09Hyp(clusterId, "clusterId");
         NodesGroup ng = clusters.computeIfAbsent(clusterId, (cid) -> {
@@ -213,7 +224,7 @@ public class DiscoveryStorageImpl implements DiscoveryStorage {
     /**
      * In docker swarm mode service means a combination of containers(maybe in different nodes)
      * some like {@link #getClusters()}
-     * @return
+     * @return the set of clusters' name
      */
     @Override
     public Set<String> getServices() {
@@ -228,23 +239,11 @@ public class DiscoveryStorageImpl implements DiscoveryStorage {
     }
 
     /**
-     * Get executor
-     * @return
-     */
-    public ExecutorService getExecutor() {
-        return executor;
-    }
-
-    /**
      * Get NodeService
      * @return
      */
     public NodeStorage getNodeStorage() {
         return nodeStorage;
-    }
-
-    public KvMap<NodesGroup> getKvMap() {
-        return clusters;
     }
 
     /**
@@ -270,6 +269,22 @@ public class DiscoveryStorageImpl implements DiscoveryStorage {
      */
     public void getClustersBypass(Consumer<NodesGroup> consumer) {
         this.clusters.forEach((k, v) -> consumer.accept(v));
+    }
+
+    /**
+     * Get NodesGroup KvMap
+     * @return
+     */
+    public KvMap<NodesGroup> getKvMap() {
+        return clusters;
+    }
+
+    /**
+     * Get executor
+     * @return
+     */
+    public ExecutorService getExecutor() {
+        return executor;
     }
 
 
@@ -302,7 +317,7 @@ public class DiscoveryStorageImpl implements DiscoveryStorage {
                 .mapper(kvmf)
                 .passDirty(true)
                 .adapter(new KvMapAdapterImpl())
-                .listener(e -> {
+                .listener(e -> {                                        // this event only from remote k-v storage
                     String key = e.getKey();
                     switch (e.getAction()) {
                         case DELETE:
@@ -315,7 +330,7 @@ public class DiscoveryStorageImpl implements DiscoveryStorage {
                             fireGroupEvent(key, StandardAction.UPDATE);
                     }
                 })
-                .localListener(e -> {
+                .localListener(e -> {                                  // this event from remote k-v storage and local k-v map
                     KvMapLocalEvent.Action action = e.getAction();
                     switch (action) {
                         case CREATE:
@@ -339,6 +354,95 @@ public class DiscoveryStorageImpl implements DiscoveryStorage {
                 .build();
     }
 
+    // load clusters, this will be used when hm-admin application startup
+    public void load() {
+        try (TempAuth au = TempAuth.asSystem()) {
+            log.info("Begin load clusters from k-v storage");
+
+            //load keys, and then init values
+            clusters.load();
+            // load values
+            Collection<NodesGroup> values = clusters.values();
+            StringBuilder sb = new StringBuilder();
+            values.forEach(ng -> {
+                sb.append("\n");
+                sb.append(ng.getName()).append(":\n\ttitle:");
+                sb.append(ng.getTitle()).append("\n\tconfig:");
+                sb.append(ng.getConfig());
+            });
+            log.warn("Loaded clusters from k-v storage: {}", sb);
+        } catch (Exception e) {
+            log.error("Can not load clusters from k-v storage", e);
+        }
+    }
+
+    @PostConstruct
+    public void init() {
+        try (TempAuth au = TempAuth.asSystem()) {
+            // modifier acl source to add default ace 'granting ROLE_USER read'
+            // for two default cluster below
+            AclModifier aclModifier = this::addDefaultAce;
+
+            // virtual cluster for any nodes
+            NodesGroup allGroup = getOrCreateCluster(new DefaultNodesGroupConfig(GROUP_ID_ALL, FilterFactory.ANY));
+            allGroup.updateAcl(aclModifier);
+            ((DefaultCluster)allGroup).setContainersProvider(new DefaultCluster.AllContainersProvider());
+
+            // virtual cluster for nodes without cluster
+            NodesGroup orphansGroup = getOrCreateCluster(new DefaultNodesGroupConfig(GROUP_ID_ORPHANS, OrphansNodeFilterFactory.FILTER));
+            orphansGroup.updateAcl(aclModifier);
+        }
+
+        // subscribe node event listener
+        getNodeStorage().getNodeEventSubscriptions().subscribe(this::onNodeEvent);
+    }
+
+    private void onNodeEvent(NodeEvent nodeEvent) {
+        if (nodeEvent.getAction().isPre()) {
+            return;
+        }
+
+        NodeInfo node = nodeEvent.getCurrent();
+        if (node == null) {
+            return;
+        }
+
+        String clusterName = node.getCluster();
+        if (clusterName == null) {
+            return;
+        }
+
+        NodesGroup cluster = getCluster(clusterName);
+        if (cluster == null) {
+            log.warn("Node {} without cluster", node);
+            return;
+        }
+        executor.execute(() -> {
+            // setup cluster (it need only cases when cluster have no one node, for both types of clusters)
+            try (TempAuth au = TempAuth.asSystem()) {
+                cluster.init();
+            }
+        });
+    }
+
+    private boolean addDefaultAce(AclSource.Builder asb) {
+        // here we add default rights to read groups by all users;
+        TenantGrantedAuthoritySid tgs = TenantGrantedAuthoritySid.from(Authorities.USER);
+        Action read = Action.READ;
+        for (AceSource ace: asb.getEntries().values()) {
+            if (ace.isGranting() && tgs.equals(ace.getSid()) && ace.getPermission().getMask() == read.getMask()) {
+                return false;
+            }
+        }
+        asb.addEntry(AceSource.builder()
+                .permission(read)
+                .granting(true)
+                .sid(tgs)
+                .build());
+        return true;
+    }
+
+    // 发射GroupEvent
     private void fireGroupEvent(String clusterId, StandardAction action) {
         NodesGroupEvent.Builder logEvent = new NodesGroupEvent.Builder();
         logEvent.setAction(action.value());

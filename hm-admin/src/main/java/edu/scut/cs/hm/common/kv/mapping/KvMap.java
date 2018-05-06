@@ -248,7 +248,7 @@ public class KvMap<T> {
     }
 
     /**
-     * Load all data
+     * Load all data, but just the key, lazy load the value
      */
     public void load() {
         this.mapper.list().forEach(this::getOrCreateHolder);

@@ -47,7 +47,7 @@ public interface DiscoveryStorage {
      * @param config
      * @return registered node group.
      */
-    NodesGroup getOrCreateGroup(AbstractNodesGroupConfig<?> config);
+    NodesGroup getOrCreateCluster(AbstractNodesGroupConfig<?> config);
 
     /**
      * Delete ngroup by ngroup name (real ngroup)

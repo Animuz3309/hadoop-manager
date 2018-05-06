@@ -414,6 +414,7 @@ public class NodeStorage implements NodeInfoProvider, NodeRegistry {
 
     /**
      * Return node event subscriptions, u can subscribe listener for {@link NodeEvent}
+     * {@link #fireNodeEventSync(NodeEvent)} to accept event
      * @return
      */
     public Subscriptions<NodeEvent> getNodeEventSubscriptions() {
