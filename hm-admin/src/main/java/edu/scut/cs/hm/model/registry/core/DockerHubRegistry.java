@@ -1,4 +1,6 @@
-package edu.scut.cs.hm.model.registry;
+package edu.scut.cs.hm.model.registry.core;
+
+import edu.scut.cs.hm.model.registry.core.RegistryService;
 
 /**
  * Docker registry read-only API

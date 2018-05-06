@@ -1,5 +1,8 @@
 package edu.scut.cs.hm.model.registry;
 
+import edu.scut.cs.hm.model.registry.core.RegistryAdapter;
+import edu.scut.cs.hm.model.registry.core.RegistryCredentials;
+import edu.scut.cs.hm.model.registry.core.RestTemplateFactory;
 import org.springframework.web.client.RestTemplate;
 
 abstract class DockerRegistryAdapter<T extends DockerRegistryConfig> implements RegistryAdapter {

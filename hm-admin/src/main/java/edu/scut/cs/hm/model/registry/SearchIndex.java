@@ -5,6 +5,7 @@ import edu.scut.cs.hm.docker.model.image.*;
 import edu.scut.cs.hm.model.StandardAction;
 import edu.scut.cs.hm.model.SupportSearch;
 import edu.scut.cs.hm.model.container.ContainerUtils;
+import edu.scut.cs.hm.model.registry.core.RegistryService;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Image index of registry
+ */
 @Slf4j
 public class SearchIndex implements SupportSearch, AutoCloseable {
 

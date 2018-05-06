@@ -15,6 +15,8 @@ import edu.scut.cs.hm.model.Severity;
 import edu.scut.cs.hm.model.StandardAction;
 import edu.scut.cs.hm.model.SupportSearch;
 import edu.scut.cs.hm.model.container.ContainerUtils;
+import edu.scut.cs.hm.model.registry.core.DockerHubRegistry;
+import edu.scut.cs.hm.model.registry.core.RegistryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,6 +31,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+/**
+ * Repo for different docker registries
+ */
 @Slf4j
 public class RegistryRepository implements SupportSearch {
 

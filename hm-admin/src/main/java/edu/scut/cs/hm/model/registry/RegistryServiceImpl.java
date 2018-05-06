@@ -1,6 +1,7 @@
 package edu.scut.cs.hm.model.registry;
 
 import edu.scut.cs.hm.docker.model.image.SearchResult;
+import edu.scut.cs.hm.model.registry.core.RegistryAdapter;
 import lombok.Builder;
 import org.springframework.beans.factory.InitializingBean;
 

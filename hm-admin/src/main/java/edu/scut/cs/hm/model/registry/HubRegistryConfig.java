@@ -1,6 +1,7 @@
 package edu.scut.cs.hm.model.registry;
 
 
+import edu.scut.cs.hm.model.registry.core.RegistryCredentials;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

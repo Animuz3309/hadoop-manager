@@ -1,5 +1,7 @@
 package edu.scut.cs.hm.model.registry;
 
+import edu.scut.cs.hm.model.registry.core.RegistryCredentials;
+import edu.scut.cs.hm.model.registry.core.RegistryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -39,6 +41,20 @@ public class HttpAuthInterceptor implements ClientHttpRequestInterceptor, AsyncC
         }
     }
 
+    @SuppressWarnings("deprecation")
+    @Override
+    public ListenableFuture<ClientHttpResponse> intercept(HttpRequest request,
+                                                          byte[] body,
+                                                          AsyncClientHttpRequestExecution execution) throws IOException {
+        try {
+            final HttpHeaders headers = request.getHeaders();
+            interceptInner(headers, request);
+            return execution.executeAsync(request, body);
+        } finally {
+            registryName.remove();
+        }
+    }
+
     private void interceptInner(HttpHeaders headers, HttpRequest httpRequest) {
         URI uri = httpRequest.getURI();
         String host = uri.getHost();
@@ -70,19 +86,5 @@ public class HttpAuthInterceptor implements ClientHttpRequestInterceptor, AsyncC
      */
     public static void setCurrentName(String name) {
         registryName.set(name);
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public ListenableFuture<ClientHttpResponse> intercept(HttpRequest request,
-                                                          byte[] body,
-                                                          AsyncClientHttpRequestExecution execution) throws IOException {
-        try {
-            final HttpHeaders headers = request.getHeaders();
-            interceptInner(headers, request);
-            return execution.executeAsync(request, body);
-        } finally {
-            registryName.remove();
-        }
     }
 }

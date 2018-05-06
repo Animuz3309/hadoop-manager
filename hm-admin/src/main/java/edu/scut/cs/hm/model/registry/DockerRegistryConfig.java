@@ -2,6 +2,7 @@ package edu.scut.cs.hm.model.registry;
 
 import edu.scut.cs.hm.common.kv.mapping.KvMapping;
 import edu.scut.cs.hm.common.kv.mapping.PropertyCipher;
+import edu.scut.cs.hm.model.registry.core.RegistryCredentials;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

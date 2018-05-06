@@ -1,5 +1,6 @@
 package edu.scut.cs.hm.model.registry;
 
+import edu.scut.cs.hm.model.registry.core.RegistryAuthAdapter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;

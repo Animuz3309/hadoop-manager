@@ -2,6 +2,8 @@ package edu.scut.cs.hm.model.registry;
 
 import edu.scut.cs.hm.docker.model.image.ImageCatalog;
 import edu.scut.cs.hm.docker.model.image.SearchResult;
+import edu.scut.cs.hm.model.registry.core.DockerHubRegistry;
+import edu.scut.cs.hm.model.registry.core.RegistryAdapter;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,5 +1,6 @@
-package edu.scut.cs.hm.model.registry;
+package edu.scut.cs.hm.model.registry.core;
 
+import edu.scut.cs.hm.model.registry.RegistryConfig;
 import org.springframework.web.client.RestTemplate;
 
 public interface RegistryAdapter {

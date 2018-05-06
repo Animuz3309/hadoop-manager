@@ -4,6 +4,8 @@ import edu.scut.cs.hm.docker.model.image.ImageCatalog;
 import edu.scut.cs.hm.docker.model.image.ImageDescriptor;
 import edu.scut.cs.hm.docker.model.image.SearchResult;
 import edu.scut.cs.hm.docker.model.image.Tags;
+import edu.scut.cs.hm.model.registry.core.RegistryCredentials;
+import edu.scut.cs.hm.model.registry.core.RegistryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

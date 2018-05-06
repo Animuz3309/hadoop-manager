@@ -8,6 +8,7 @@ import edu.scut.cs.hm.common.mb.MessageBus;
 import edu.scut.cs.hm.common.mb.MessageBuses;
 import edu.scut.cs.hm.common.utils.SSLUtil;
 import edu.scut.cs.hm.model.registry.*;
+import edu.scut.cs.hm.model.registry.core.DockerHubRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,10 +1,11 @@
-package edu.scut.cs.hm.model.registry;
+package edu.scut.cs.hm.model.registry.core;
 
 import edu.scut.cs.hm.docker.model.image.ImageDescriptor;
 import edu.scut.cs.hm.model.SupportSearch;
 import edu.scut.cs.hm.docker.model.image.ImageCatalog;
 import edu.scut.cs.hm.docker.model.image.SearchResult;
 import edu.scut.cs.hm.docker.model.image.Tags;
+import edu.scut.cs.hm.model.registry.RegistryConfig;
 import org.springframework.cache.annotation.Cacheable;
 
 /**

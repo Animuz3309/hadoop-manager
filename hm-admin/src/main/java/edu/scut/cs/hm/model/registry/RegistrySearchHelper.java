@@ -1,6 +1,7 @@
 package edu.scut.cs.hm.model.registry;
 
 import edu.scut.cs.hm.docker.model.image.SearchResult;
+import edu.scut.cs.hm.model.registry.core.RegistryService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
