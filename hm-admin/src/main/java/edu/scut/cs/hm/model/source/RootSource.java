@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.model;
+package edu.scut.cs.hm.model.source;
 
 import edu.scut.cs.hm.common.utils.Cloneables;
 import lombok.AccessLevel;

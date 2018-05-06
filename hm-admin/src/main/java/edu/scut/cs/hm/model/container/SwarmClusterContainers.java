@@ -9,6 +9,7 @@ import edu.scut.cs.hm.docker.model.container.DockerContainer;
 import edu.scut.cs.hm.docker.res.CreateAndStartContainerResult;
 import edu.scut.cs.hm.docker.res.ServiceCallResult;
 import edu.scut.cs.hm.model.cluster.DefaultCluster;
+import edu.scut.cs.hm.model.source.EditableContainerSource;
 import org.springframework.util.Assert;
 
 import java.util.Collection;

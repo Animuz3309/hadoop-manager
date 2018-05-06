@@ -2,7 +2,7 @@ package edu.scut.cs.hm.model.container;
 
 import edu.scut.cs.hm.common.utils.OSUtils;
 import edu.scut.cs.hm.model.ContainerBaseIface;
-import edu.scut.cs.hm.model.image.ImageName;
+import edu.scut.cs.hm.docker.model.image.ImageName;
 
 public final class ContainerUtils {
 

@@ -1,7 +1,6 @@
-package edu.scut.cs.hm.model;
+package edu.scut.cs.hm.model.source;
 
 import edu.scut.cs.hm.common.utils.Cloneables;
-import edu.scut.cs.hm.model.container.ContainerSource;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;

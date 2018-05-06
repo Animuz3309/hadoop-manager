@@ -17,6 +17,7 @@ import edu.scut.cs.hm.docker.res.ServiceCallResult;
 import edu.scut.cs.hm.model.cluster.DockerCluster;
 import edu.scut.cs.hm.model.cluster.SwarmUtils;
 import edu.scut.cs.hm.model.node.NodeInfo;
+import edu.scut.cs.hm.model.source.EditableContainerSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 

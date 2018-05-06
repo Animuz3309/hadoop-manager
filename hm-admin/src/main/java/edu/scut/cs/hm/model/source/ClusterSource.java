@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.model;
+package edu.scut.cs.hm.model.source;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import edu.scut.cs.hm.docker.DockerConfig;

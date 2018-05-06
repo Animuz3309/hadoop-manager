@@ -23,6 +23,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <jasypt.version>2.0.0</jasypt.version>
+        <!-- 注意 spring-boot-starter-parent默认lombok 1.16.20 与jackson @JsonCreator不适应-->
+        <lombok.version>1.16.16</lombok.version>
         <guava.version>23.0</guava.version>
         <commons-codec.version>1.10</commons-codec.version>
         <etcd.version>2.16.0</etcd.version>

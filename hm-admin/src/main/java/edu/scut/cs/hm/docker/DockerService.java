@@ -80,7 +80,7 @@ public interface DockerService {
      * @param id
      * @return container details or null if not found
      */
-    @Cacheable(CACHE_CONTAINER_DETAILS)
+//    @Cacheable(CACHE_CONTAINER_DETAILS)
     ContainerDetails getContainer(String id);
 
     /**

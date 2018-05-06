@@ -9,7 +9,7 @@ import java.text.MessageFormat;
 import java.util.function.Consumer;
 
 /**
- * Process event entry
+ * Process event entry, for async call watch
  */
 @Data
 @Slf4j

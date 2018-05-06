@@ -19,5 +19,10 @@
       "name": "hm.bcrypt.strength",
       "type": "java.lang.String",
       "description": "(optional) Log rounds in BCrypt which encrypt and match user password."
+    },
+    {
+      "name": "hm.ssl.check",
+      "type": "java.lang.String",
+      "description": "whether use ssl check in restTemplate."
     }
   ] }

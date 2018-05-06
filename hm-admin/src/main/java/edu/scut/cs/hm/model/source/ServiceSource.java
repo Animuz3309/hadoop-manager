@@ -1,11 +1,10 @@
-package edu.scut.cs.hm.model;
+package edu.scut.cs.hm.model.source;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import edu.scut.cs.hm.common.utils.Cloneables;
 import edu.scut.cs.hm.docker.model.network.Port;
-import edu.scut.cs.hm.model.container.ContainerSource;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;

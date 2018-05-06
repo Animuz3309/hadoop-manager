@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public final class SSLUtils {
-    private SSLUtils() {
+public final class SSLUtil {
+    private SSLUtil() {
 
     }
 

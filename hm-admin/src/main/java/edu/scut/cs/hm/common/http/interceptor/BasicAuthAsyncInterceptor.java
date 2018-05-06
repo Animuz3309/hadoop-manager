@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
  * Based on {@link org.springframework.http.client.support.BasicAuthorizationInterceptor } which is not support
  * async client.
  */
+@SuppressWarnings("deprecation")
 public class BasicAuthAsyncInterceptor implements AsyncClientHttpRequestInterceptor {
 
     private final String username;

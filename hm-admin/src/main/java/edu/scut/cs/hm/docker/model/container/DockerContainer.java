@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Simple copy of docker container with additional field
+ * Simple copy of actual docker container({@link ContainerDetails}) with additional field
  */
 @Data
 public class DockerContainer implements ContainerBaseIface, WithNode {

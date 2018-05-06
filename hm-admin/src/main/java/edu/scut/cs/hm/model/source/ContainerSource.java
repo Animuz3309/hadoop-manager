@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.model.container;
+package edu.scut.cs.hm.model.source;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import edu.scut.cs.hm.common.utils.Cloneables;
@@ -52,7 +52,6 @@ public class ContainerSource extends EditableContainerSource implements Cloneabl
      * The comma-delimited `options` are [rw|ro], [z|Z], [[r]shared|[r]slave|[r]private], and [nocopy]. <p/>
      * <a href="https://docs.docker.com/engine/tutorials/dockervolumes/">See docs.docker.com</a>
      */
-    @Deprecated
     @Setter(AccessLevel.NONE)
     private List<String> volumes = new ArrayList<>();
     /**
@@ -62,18 +61,15 @@ public class ContainerSource extends EditableContainerSource implements Cloneabl
      * The 'host-src' is an absolute path or a name value.<p/>
      * <a href="https://docs.docker.com/engine/tutorials/dockervolumes/">See docs.docker.com</a>
      */
-    @Deprecated
     @Setter(AccessLevel.NONE)
     private List<String> volumeBinds = new ArrayList<>();
     /**
      *
      */
-    @Deprecated
     private String volumeDriver;
     /**
      * List of entris like <code>container:['rw'|'ro']</code> which is used as volume source
      */
-    @Deprecated
     @Setter(AccessLevel.NONE)
     private List<String> volumesFrom = new ArrayList<>();
 

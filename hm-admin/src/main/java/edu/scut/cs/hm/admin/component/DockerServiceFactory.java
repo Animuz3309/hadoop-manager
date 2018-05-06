@@ -10,17 +10,20 @@ import edu.scut.cs.hm.common.http.async.NettyRequestFactory;
 import edu.scut.cs.hm.common.http.interceptor.BasicAuthAsyncInterceptor;
 import edu.scut.cs.hm.common.mb.MessageBus;
 import edu.scut.cs.hm.common.utils.AddressUtils;
-import edu.scut.cs.hm.common.utils.SSLUtils;
+import edu.scut.cs.hm.common.utils.SSLUtil;
 import edu.scut.cs.hm.docker.DockerConfig;
 import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.docker.DockerServiceImpl;
 import edu.scut.cs.hm.docker.DockerServiceSecurityWrapper;
 import edu.scut.cs.hm.docker.model.events.DockerServiceEvent;
+import edu.scut.cs.hm.model.registry.HttpAuthInterceptor;
+import edu.scut.cs.hm.model.registry.RegistryRepository;
 import io.netty.handler.ssl.ClientAuth;
 import io.netty.handler.ssl.JdkSslContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.client.AsyncClientHttpRequestInterceptor;
@@ -46,13 +49,15 @@ import java.util.function.Consumer;
 @Slf4j
 @Component
 public class DockerServiceFactory {
-    // TODO no registryRepository
+
+    private final RegistryRepository registryRepository;
     private final ObjectMapper objectMapper;
     private final AccessContextFactory aclContextFactory;
     private final MessageBus<DockerServiceEvent> dockerServiceEventMessageBus;
     private final ResourceLoader resourceLoader;
     private final ExecutorService executor;
 
+    @Value("${hm.ssl.check:true}")
     private boolean checkSsl;
     /**
      * rootCert.keystore to 'hm-agent' on the other physical docker node
@@ -72,21 +77,22 @@ public class DockerServiceFactory {
                                 AccessContextFactory aclContextFactory,
                                 @Qualifier(DockerServiceEvent.BUS) MessageBus<DockerServiceEvent> dockerServiceEventMessageBus,
                                 ResourceLoader resourceLoader,
+                                RegistryRepository registryRepository,
                                 DockerConfigurer.AgentConfig agentConfig) {
         this.objectMapper = objectMapper;
         this.aclContextFactory = aclContextFactory;
         this.dockerServiceEventMessageBus = dockerServiceEventMessageBus;
         this.resourceLoader = resourceLoader;
+        this.registryRepository = registryRepository;
+        this.keystore = agentConfig.getRootCertKeystore();
+        this.storepass = agentConfig.getRootCertStorepass();
+        this.password = agentConfig.getPassword();
+
         this.executor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
                 .setDaemon(true)
                 .setNameFormat(getClass().getSimpleName() + "-executor-%d")
                 .setUncaughtExceptionHandler((thread, ex) -> log.error("Uncaught exception.", ex))
                 .build());
-
-        this.checkSsl = agentConfig.isCheckSsl();
-        this.keystore = agentConfig.getRootCertKeystore();
-        this.storepass = agentConfig.getRootCertStorepass();
-        this.password = agentConfig.getPassword();
     }
 
     /**
@@ -148,7 +154,7 @@ public class DockerServiceFactory {
 
         final AsyncRestTemplate restTemplate = new AsyncRestTemplate(factory);
         List<AsyncClientHttpRequestInterceptor> interceptors = new ArrayList<>();
-        // TODO no registryRepository HttpAuthInterceptor
+        interceptors.add(new HttpAuthInterceptor(registryRepository));
         if(!StringUtils.isEmpty(password)) {
             interceptors.add(new BasicAuthAsyncInterceptor("admin", password));
         }
@@ -160,7 +166,7 @@ public class DockerServiceFactory {
         SSLContext sslc = SSLContext.getInstance("TLS");
         if (!checkSsl) {
             log.debug("disable any SSL check on {} address", addr);
-            sslc.init(null, new TrustManager[]{new SSLUtils.NullX509TrustManager()}, null);
+            sslc.init(null, new TrustManager[]{new SSLUtil.NullX509TrustManager()}, null);
         } else if(StringUtils.hasText(keystore)) {
             log.debug("use SSL trusted store {} on {} address", keystore, addr);
             final String alg = TrustManagerFactory.getDefaultAlgorithm();
@@ -177,7 +183,7 @@ public class DockerServiceFactory {
             }
             TrustManagerFactory local = TrustManagerFactory.getInstance(alg);
             local.init(ks);
-            TrustManager tm = SSLUtils.combineX509TrustManagers(local.getTrustManagers(), def.getTrustManagers());
+            TrustManager tm = SSLUtil.combineX509TrustManagers(local.getTrustManagers(), def.getTrustManagers());
             sslc.init(null, new TrustManager[]{tm}, null);
         }
         factory.setSslContext(new JdkSslContext(sslc, true, ClientAuth.OPTIONAL));

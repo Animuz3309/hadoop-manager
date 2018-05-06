@@ -16,8 +16,8 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
-@Builder
-@AllArgsConstructor(onConstructor = @__(@JsonCreator))
+//@Builder
+//@AllArgsConstructor(onConstructor = @__(@JsonCreator))
 public class ContainerConfig {
 
     @JsonProperty("AttachStderr")

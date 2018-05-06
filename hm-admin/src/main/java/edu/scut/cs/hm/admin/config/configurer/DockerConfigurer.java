@@ -30,7 +30,6 @@ public class DockerConfigurer {
 
     @Data
     public static class AgentConfig {
-        private boolean checkSsl = true;
         /**
          * rootCert.keystore to 'hm-agent' on the other physical docker node
          */

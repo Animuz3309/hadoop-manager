@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.model.image;
+package edu.scut.cs.hm.docker.model.image;
 
 import lombok.Data;
 import org.springframework.util.StringUtils;
