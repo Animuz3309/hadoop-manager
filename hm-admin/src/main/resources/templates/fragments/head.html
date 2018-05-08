@@ -1,4 +1,5 @@
 <head xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       th:with="
         appName=${head.appName},
         viewName=${head.viewName} ? ${head.viewName} : '',
@@ -14,6 +15,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{webjars/bootstrap/css/bootstrap.min.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{webjars/metisMenu/metisMenu.min.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{webjars/font-awesome/css/font-awesome.min.css}"/>
+    <th:block layout:fragment="more-css"/>
 
     <!-- customer style-->
     <link rel="stylesheet" type="text/css" th:href="@{css/style.min.css}">

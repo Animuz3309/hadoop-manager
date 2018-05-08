@@ -214,7 +214,7 @@ public class SecurityConfiguration {
 
         @Bean
         @Primary
-        public AclService compositeAclService(List<AbstractAclService> services) {
+        public AbstractAclService compositeAclService(List<AbstractAclService> services) {
             return new CompositeAclService(services);
         }
     }

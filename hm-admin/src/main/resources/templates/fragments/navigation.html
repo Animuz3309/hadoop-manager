@@ -37,6 +37,9 @@
                 <li>
                     <a href="#" th:class="${tab eq 'node'} ? active"><i class="fa fa-edit fa-fw"></i> Nodes</a>
                 </li>
+                <li>
+                    <a th:href="@{/users}" th:class="${tab eq 'user'} ? active"><i class="fa fa-users fa-fw"></i> Users</a>
+                </li>
             </ul>
         </div>
     </div>

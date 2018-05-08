@@ -13,9 +13,9 @@ import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Controller
 @RequestMapping("/nodes")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class NodesController {
     static final String VIEW_NODE_LIST = "node/list";
     static final String MODEL_ATTR_NODES = "node";
