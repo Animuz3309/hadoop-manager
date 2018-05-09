@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout">
+<th:block layout:fragment="content">
+    <nav th:replace="fragments/navigation :: nav('user')"></nav>
+    <div id="page-wrapper">
+        <th:block th:fragment="form">
+            <form th:action="@{|/users/${user.username}|}" th:object="${user}" th:method="post">
+                <div class="form-group">
+                    <label class="control-label" th:for="username">Username</label>
+                    <input class="form-control" th:field="*{username}" type="text"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" th:for="title">Title</label>
+                    <input class="form-control" th:field="*{title}" type="text"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" th:for="tenant">Tenant</label>
+                    <input class="form-control" th:field="*{tenant}" type="text"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" th:for="email">email</label>
+                    <input class="form-control" th:field="*{email}" type="text"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" th:for="password">Password</label>
+                    <input class="form-control" th:field="*{password}" type="password"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" th:for="accountNonExpired">AccountNonExpired</label>
+                    <input class="form-control" th:field="*{accountNonExpired}" type="text"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" th:for="credentialsNonExpired">CredentialsNonExpired</label>
+                    <input class="form-control" th:field="*{credentialsNonExpired}" type="text"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" th:for="accountNonLocked">AccountNonLocked</label>
+                    <input class="form-control" th:field="*{accountNonLocked}" type="text"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" th:for="enabled">Enabled</label>
+                    <input class="form-control" th:field="*{enabled}" type="text"/>
+                </div>
+                <div class="form-group submit-cancel">
+                    <input class="btn btn-primary" type="submit" value="Save changes"/>
+                    <a class="btn btn-default btn-cancel" th:href="@{/users}">Cancel</a>
+                </div>
+            </form>
+        </th:block>
+    </div>
+</th:block>
+</html>

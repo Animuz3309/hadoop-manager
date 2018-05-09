@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout">
+<th:block layout:fragment="content">
+    <nav th:replace="fragments/navigation :: nav('user')"></nav>
+    <div id="page-wrapper">
+        <th:block th:fragment="details">
+        <div class="row">
+            <div class="col-lg-2">
+                <h3 th:text="${user.username}"></h3>
+            </div>
+            <div class="col-lg-7">
+                <a th:href="@{|/users/${user.username}/form|}" class="btn btn-primary" type="button">Edit</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+            <ul>
+                <li>
+                    <span class="title">Title: </span>
+                    <span class="text" th:text="${user.title}"></span>
+                </li>
+                <li>
+                    <span class="title">Email: </span>
+                    <span class="text" th:text="${user.email}"></span>
+                </li>
+                <li>
+                    <span class="title">Tenant: </span>
+                    <span class="text" th:text="${user.tenant}"></span>
+                </li>
+                <li>
+                    <span class="title">Roles: </span>
+                    <span class="text" th:each="role, state:${user.roles}">
+                    <i th:text="${role.name} + '@' + ${role.tenant}"></i>
+                </span>
+                </li>
+                <li>
+                    <span class="title">Enabled: </span>
+                    <span class="text" th:text="${user.enabled} ? 'Yes' : 'No'"></span>
+                </li>
+                <li>
+                    <span class="title">AccountNonExpired: </span>
+                    <span class="text" th:text="${user.accountNonExpired} ? 'Yes' : 'No'"></span>
+                </li>
+                <li>
+                    <span class="title">CredentialsNonExpired: </span>
+                    <span class="text" th:text="${user.credentialsNonExpired} ? 'Yes' : 'No'"></span>
+                </li>
+                <li>
+                    <span class="title">AccountNonLocked: </span>
+                    <span class="text" th:text="${user.accountNonLocked} ? 'Yes' : 'No'"></span>
+                </li>
+            </ul>
+        </div>
+        </div>
+    </th:block>
+    </div>
+</th:block>
+</html>

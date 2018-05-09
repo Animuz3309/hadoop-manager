@@ -28,6 +28,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -61,8 +62,7 @@ public class NodeStorage implements NodeInfoProvider, NodeRegistry {
                        DockerEventConfig dockerEventConfig,
                        KvMapperFactory kvmf,
                        @Qualifier(NodeEvent.BUS) MessageBus<NodeEvent> nodeEventBus,
-                       @Qualifier(DockerLogEvent.BUS) MessageBus<DockerLogEvent> dockerLogBus,
-                       DockerServiceFactory dockerServiceFactory) {
+                       @Qualifier(DockerLogEvent.BUS) MessageBus<DockerLogEvent> dockerLogBus) {
         this.nodeStorageConfig = nodeStorageConfig;                // get NodeStorageConfig
         this.dockerEventConfig = dockerEventConfig;                // get DockerEventConfig
         this.nodeEventBus = nodeEventBus;
@@ -82,8 +82,6 @@ public class NodeStorage implements NodeInfoProvider, NodeRegistry {
                 .listener(this::onKVEvent)
                 .mapper(kvmf)
                 .build();
-
-        this.dockerServiceFactory = dockerServiceFactory;
 
         log.info("{} initialized with nodeStorageConfig: {}", getClass().getSimpleName(), this.nodeStorageConfig);
 
@@ -105,6 +103,12 @@ public class NodeStorage implements NodeInfoProvider, NodeRegistry {
                 })
                 .build();
 
+    }
+
+    @Autowired
+    @Lazy
+    void setDockerFactory(DockerServiceFactory dockerFactory) {
+        this.dockerServiceFactory = dockerFactory;
     }
 
     private void onKVEvent(KvMapEvent<NodeRegistrationImpl> e) {

@@ -1,22 +1,20 @@
 <head xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       th:with="
-        appName=${head.appName},
-        viewName=${head.viewName} ? ${head.viewName} : '',
-        title=${appName} + ${viewName}">
+        appName=${html_head.appName},
+        viewName=${html_head.viewName} ? ${html_head.viewName} : '',
+        title=${appName} + ' - ' +${viewName}">
     <meta charset="utf-8" >
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" th:content="${head.description}">
-    <meta name="author" th:content="${head.author}">
+    <meta name="description" th:content="${html_head.description}">
+    <meta name="author" th:content="${html_head.author}">
 
     <title th:text="${title}"></title>
 
-    <link rel="stylesheet" type="text/css" th:href="@{webjars/bootstrap/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{webjars/metisMenu/metisMenu.min.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{webjars/font-awesome/css/font-awesome.min.css}"/>
-    <th:block layout:fragment="more-css"/>
-
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap-table/dist/bootstrap-table.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/metisMenu/metisMenu.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/font-awesome/css/font-awesome.min.css}"/>
     <!-- customer style-->
-    <link rel="stylesheet" type="text/css" th:href="@{css/style.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.min.css}">
 </head>

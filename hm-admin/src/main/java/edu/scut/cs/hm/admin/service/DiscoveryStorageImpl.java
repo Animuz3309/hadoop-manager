@@ -354,7 +354,10 @@ public class DiscoveryStorageImpl implements DiscoveryStorage {
                 .build();
     }
 
-    // load clusters, this will be used when hm-admin application startup
+    /**
+     * load clusters, this will be used when hm-admin application startup
+     * @see edu.scut.cs.hm.admin.bootstrap.ApplicationBootstrap
+     */
     public void load() {
         try (TempAuth au = TempAuth.asSystem()) {
             log.info("Begin load clusters from k-v storage");

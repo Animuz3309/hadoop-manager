@@ -24,6 +24,7 @@ import lombok.Builder;
 import lombok.Singular;
 import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.util.*;
@@ -178,6 +179,7 @@ public class DefaultCluster extends AbstractNodesGroup<DefaultNodesGroupConfig> 
      */
     // beanFactory动态注入，而不是一开始就由框架产生
     @Autowired
+    @Lazy
     void setContainerStorage(ContainerStorage containerStorage) {
         this.containerStorage = containerStorage;
     }
@@ -188,6 +190,7 @@ public class DefaultCluster extends AbstractNodesGroup<DefaultNodesGroupConfig> 
      */
     // beanFactory动态注入，而不是一开始就由框架产生
     @Autowired
+    @Lazy
     void setContainerCreator(ContainerCreator containerCreator) {
         this.containerCreator = containerCreator;
     }

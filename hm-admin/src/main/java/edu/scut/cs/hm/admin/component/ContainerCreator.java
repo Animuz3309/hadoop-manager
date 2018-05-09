@@ -13,6 +13,7 @@ import edu.scut.cs.hm.docker.model.container.ContainerDetails;
 import edu.scut.cs.hm.docker.model.container.HostConfig;
 import edu.scut.cs.hm.docker.model.container.RestartPolicy;
 import edu.scut.cs.hm.docker.model.image.ImageDescriptor;
+import edu.scut.cs.hm.docker.model.image.ImageName;
 import edu.scut.cs.hm.docker.model.network.ExposedPort;
 import edu.scut.cs.hm.docker.model.network.ExposedPorts;
 import edu.scut.cs.hm.docker.model.network.Ports;
@@ -20,7 +21,6 @@ import edu.scut.cs.hm.docker.res.*;
 import edu.scut.cs.hm.model.cluster.DiscoveryStorage;
 import edu.scut.cs.hm.model.cluster.SwarmUtils;
 import edu.scut.cs.hm.model.container.*;
-import edu.scut.cs.hm.docker.model.image.ImageName;
 import edu.scut.cs.hm.model.ngroup.NodesGroup;
 import edu.scut.cs.hm.model.node.NodeInfo;
 import edu.scut.cs.hm.model.node.NodeRegistry;
@@ -29,6 +29,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -51,6 +52,7 @@ import static edu.scut.cs.hm.docker.model.container.RestartPolicy.parse;
 @Component
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 @Data
+@Lazy
 public class ContainerCreator {
 
     private static final int CREATE_CONTAINER_TRIES = 3;

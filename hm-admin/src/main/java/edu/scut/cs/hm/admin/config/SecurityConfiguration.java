@@ -32,6 +32,7 @@ import org.springframework.cache.ehcache.EhCacheCache;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -203,7 +204,7 @@ public class SecurityConfiguration {
         }
 
         @Bean
-        @Order(Ordered.HIGHEST_PRECEDENCE)
+        @Lazy
         public ProvidersAclService providersAclService(PermissionGrantingStrategy pgs) {
             ProvidersAclService service = new ProvidersAclService(pgs);
             if(providers != null) {

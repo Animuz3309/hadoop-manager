@@ -8,12 +8,14 @@ import edu.scut.cs.hm.model.container.ContainerRegistration;
 import edu.scut.cs.hm.model.container.ContainerStorage;
 import edu.scut.cs.hm.model.container.ContainerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 
 @Component("CONTAINER" /*see secured type*/)
+@Lazy
 public class ContainersAclProvider extends VirtualAclProvider {
 
     private final ContainerStorage containers;

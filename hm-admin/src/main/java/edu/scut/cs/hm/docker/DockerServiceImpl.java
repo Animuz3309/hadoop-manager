@@ -1,5 +1,6 @@
 package edu.scut.cs.hm.docker;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -70,7 +71,6 @@ import static com.google.common.base.MoreObjects.firstNonNull;
 import static edu.scut.cs.hm.docker.DockerUtils.RESTART;
 import static edu.scut.cs.hm.docker.DockerUtils.setCode;
 import static org.springframework.web.util.UriComponentsBuilder.newInstance;
-import static sun.plugin2.util.PojoUtil.toJson;
 
 /**
  * Docker Service implementation
@@ -941,6 +941,17 @@ public class DockerServiceImpl implements DockerService {
             volumes = Collections.emptyList();
         }
         return volumes;
+    }
+
+    private String toJson(Object obj) {
+        if(obj == null) {
+            return null;
+        }
+        try {
+            return objectMapper.writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Can not serialize to json.", e);
+        }
     }
 
     /**

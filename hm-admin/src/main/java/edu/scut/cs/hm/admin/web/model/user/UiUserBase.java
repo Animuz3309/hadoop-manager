@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.admin.web.model;
+package edu.scut.cs.hm.admin.web.model.user;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;

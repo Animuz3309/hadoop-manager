@@ -7,7 +7,10 @@ import edu.scut.cs.hm.common.kv.mapping.KvMapperFactory;
 import edu.scut.cs.hm.common.mb.MessageBus;
 import edu.scut.cs.hm.common.mb.MessageBuses;
 import edu.scut.cs.hm.common.utils.SSLUtil;
-import edu.scut.cs.hm.model.registry.*;
+import edu.scut.cs.hm.model.registry.HubRegistryConfig;
+import edu.scut.cs.hm.model.registry.RegistryConfig;
+import edu.scut.cs.hm.model.registry.RegistryEvent;
+import edu.scut.cs.hm.model.registry.RegistryRepository;
 import edu.scut.cs.hm.model.registry.core.DockerHubRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,7 +38,6 @@ public class RegistriesConfiguration {
     }
 
     @Bean
-    @Lazy
     RegistryRepository registryService(KvMapperFactory factory,
                                        RegistriesConfigurer configurer,
                                        @Qualifier(RegistryEvent.BUS) MessageBus<RegistryEvent> messageBus) {

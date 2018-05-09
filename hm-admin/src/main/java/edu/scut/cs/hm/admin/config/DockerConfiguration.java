@@ -2,6 +2,7 @@ package edu.scut.cs.hm.admin.config;
 
 import edu.scut.cs.hm.admin.config.configurer.DockerConfigurer;
 import edu.scut.cs.hm.admin.config.configurer.KvConfigurer;
+import edu.scut.cs.hm.admin.config.configurer.SwarmProcessesConfigurer;
 import edu.scut.cs.hm.docker.model.events.DockerEventConfig;
 import edu.scut.cs.hm.model.cluster.SwarmDiscoveryUrlFunction;
 import edu.scut.cs.hm.model.node.NodeStorageConfig;
@@ -14,7 +15,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @Configuration
-@EnableConfigurationProperties({DockerConfigurer.class, KvConfigurer.class})
+@EnableConfigurationProperties({DockerConfigurer.class, KvConfigurer.class, SwarmProcessesConfigurer.class})
 public class DockerConfiguration {
 
     @Bean

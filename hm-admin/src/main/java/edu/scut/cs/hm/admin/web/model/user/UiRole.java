@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.admin.web.model;
+package edu.scut.cs.hm.admin.web.model.user;
 
 import edu.scut.cs.hm.common.security.MultiTenancySupport;
 import lombok.Data;

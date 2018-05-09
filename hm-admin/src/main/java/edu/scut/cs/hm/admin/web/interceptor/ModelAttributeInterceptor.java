@@ -1,7 +1,7 @@
 package edu.scut.cs.hm.admin.web.interceptor;
 
-import edu.scut.cs.hm.admin.web.model.UiHeader;
-import edu.scut.cs.hm.admin.web.model.UiUser;
+import edu.scut.cs.hm.admin.web.model.user.UiHeader;
+import edu.scut.cs.hm.admin.web.model.user.UiUser;
 import edu.scut.cs.hm.common.security.ExtendedUserDetailsImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.Assert;
@@ -45,7 +45,7 @@ public class ModelAttributeInterceptor extends HandlerInterceptorAdapter {
         }
         uiUser = UiUser.fromDetails(userBuilder.build());
 
-        modelAndView.addObject("head", uiHeader);
-        modelAndView.addObject("user", uiUser);
+        modelAndView.addObject("html_head", uiHeader);
+        modelAndView.addObject("current_user", uiUser);
     }
 }
