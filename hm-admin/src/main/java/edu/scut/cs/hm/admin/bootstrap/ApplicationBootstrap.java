@@ -8,6 +8,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
 
+/**
+ * Load Discovery Storage
+ */
 @Configuration
 public class ApplicationBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 

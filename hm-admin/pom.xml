@@ -29,6 +29,7 @@
         <commons-codec.version>1.10</commons-codec.version>
         <etcd.version>2.16.0</etcd.version>
         <netty-all.version>4.1.7.Final</netty-all.version>
+        <swagger.version>2.7.0</swagger.version>
 
         <!-- webjars version -->
         <webjars.bootstrap.version>3.3.7</webjars.bootstrap.version>
@@ -162,6 +163,18 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>${netty-all.version}</version>
+        </dependency>
+
+        <!-- swagger -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${swagger.version}</version>
         </dependency>
 
 

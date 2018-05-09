@@ -1,0 +1,17 @@
+### Get Token
+POST http://{{app}}/api/token/login
+Accept: application/json
+Content-Type: application/json
+
+{ "username": "admin", "password":"password"}
+
+> {%client.global.set("auth_token", response.body.key);%}
+
+### Refresh Token
+PUT http://{{app}}/api/token/refresh
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{auth_token}}
+
+###
+
