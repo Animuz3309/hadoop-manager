@@ -1,0 +1,109 @@
+@import "../../node_modules/toastr/build/toastr.min.css";
+@import "./variables";
+@import "bootstrap/_bootstrap";
+//@import "layout/general";
+//@import "layout/layout";
+//@import "layout/menuLeft";
+
+@import "theme/conf/mixins";
+@import "theme/conf/colorScheme/mint";
+@import "theme/conf/variables";
+
+@import "theme/bootstrap-overrides/_panel";
+@import "theme/bootstrap-overrides/_tabs";
+
+@import "theme/_buttons";
+@import "theme/_icons";
+@import "theme/_layout";
+@import "theme/_preloader";
+@import "theme/_labels";
+@import "theme/_table";
+@import "theme/_tree";
+@import "theme/dashboard/_pieCharts";
+@import "theme/components/_accordion";
+@import "theme/components/_backTop";
+@import "theme/components/_baWizard";
+@import "theme/components/_contentTop";
+@import "theme/components/_msgCenter";
+@import "theme/components/_pageTop";
+@import "theme/components/_sidebar";
+@import "theme/components/_widgets";
+@import "theme/components/login";
+@import "fonts/fonts";
+
+
+.property-grid {
+  border-top: 1px dotted #f1f1f1;
+}
+.pg-leaf {
+}
+.pg-row {
+  border-bottom: 1px dotted #f1f1f1;
+  vertical-align: top;
+}
+.pg-colored-row {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.pg-leaf .pg-type {
+  display: inline-block;
+  width: 15px;
+  min-height: 1px;
+
+  &.pg-level-2 {
+    margin-left: 15px;
+  }
+  &.pg-level-3 {
+    margin-left: 30px;
+  }
+  &.pg-level-4 {
+    margin-left: 45px;
+  }
+  &.pg-level-5 {
+    margin-left: 60px;
+  }
+  &.pg-level-6 {
+    margin-left: 75px;
+  }
+}
+.pg-leaf .pg-label {
+  display: inline-block;
+  width: 40%;
+  padding: 0.5em 0.5em 0.5em 0;
+  vertical-align: top;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.pg-leaf .pg-value {
+  display: inline-block;
+  width: 60%;
+  padding: 0.5em 0.5em;
+  vertical-align: top;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border-left: 1px dotted #f1f1f1;
+  overflow: hidden;
+
+  &:after {
+    display: inline-block;
+    content: ' ';
+  }
+}
+.pg-expandable {
+  cursor: pointer;
+  text-align: center;
+  vertical-align: middle;
+
+  &:before {
+    display: inline-block;
+    content: '+';
+  }
+  &.pg-collapsed {
+    &:before {
+      content: '-';
+    }
+  }
+}
+.margin-top-20 {
+  margin-top: 20px!important;
+}
