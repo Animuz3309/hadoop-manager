@@ -25,10 +25,10 @@ const pretty = new PrettyError();
 const app = new Express();
 const server = new http.Server(app);
 const proxy = httpProxy.createProxyServer({
-	target: {
-		host: config.apiHost,
-	},
-	ws: true
+  target: {
+    host: config.apiHost,
+  },
+  ws: true
 });
 
 app.use(compression());
@@ -36,60 +36,59 @@ app.use(favicon(path.join(__dirname, '..', 'static', 'favicon.ico')));
 app.use(Express.static(path.join(__dirname, '..', 'static')));
 
 app.use('/api', (req, res) => {
-	const protocol = req.headers.referer.match(/^(https|http:)\/\//g);
-	proxy.web(req, res, {target: protocol + config.apiHost, secure: false, toProxy: true})
+  const protocol = req.headers.referer.match(/^(https|http:)\/\//g);
+  proxy.web(req, res, {target: protocol + config.apiHost, secure: false, toProxy: true})
 });
 
 app.use('/ws', (req, res) => {
-	const protocol = req.headers.referer.match(/^(https|http:)\/\//g);
-	proxy.web(req, res, {target:  protocol + config.apiHost + '/ws'});
+  const protocol = req.headers.referer.match(/^(https|http:)\/\//g);
+  proxy.web(req, res, {target: protocol + config.apiHost + '/ws'});
 });
 
 server.on('upgrade', (req, socket, head) => {
-	proxy.ws(req, socket, head);
+  proxy.ws(req, socket, head);
 });
 
 proxy.on('error', (error, req, res) => {
-	let json;
-	if (error.code !== 'ECONNRESET') {
-		console.error('proxy error', error);
-	}
-	if (!res.headersSent) {
-		res.writeHead(500, {'content-type': 'application/json'});
-	}
+  let json;
+  if (error.code !== 'ECONNRESET') {
+    console.error('proxy error', error);
+  }
+  if (!res.headersSent) {
+    res.writeHead(500, {'content-type': 'application/json'});
+  }
 
-	json = {error: 'proxy_error', reason: error.message};
-	res.end(JSON.stringify(json));
+  json = {error: 'proxy_error', reason: error.message};
+  res.end(JSON.stringify(json));
 });
 
 app.use((req, res) => {
-	if (__DEVELOPMENT__) {
-		// Do not cache webpack stats: the script file would change since
-		// hot module replacement is enabled in the development env
-		webpackIsomorphicTools.refresh();
-	}
-	const client = new ApiClient(req);
-	const history = createHistory(req.originalUrl);
+  if (__DEVELOPMENT__) {
+    // Do not cache webpack stats: the script file would change since
+    // hot module replacement is enabled in the development env
+    webpackIsomorphicTools.refresh();
+  }
+  const client = new ApiClient(req);
+  const history = createHistory(req.originalUrl);
 
-	const store = createStore(history, client);
+  const store = createStore(history, client);
 
-	function hydrateOnClient() {
-		res.send('<!doctype html>\n' +
-			ReactDOM.renderToString(<Html assets={webpackIsomorphicTools.assets()} store={store}/>));
-	}
+  function hydrateOnClient() {
+    res.send('<!doctype html>\n' +
+      ReactDOM.renderToString(<Html assets={webpackIsomorphicTools.assets()} store={store}/>));
+  }
 
-	hydrateOnClient();
+  hydrateOnClient();
 });
 
-if(!config.apiHost || !config.port) {
-	console.error('==> ERROR: set API_HOST & PORT env variables, \
-    \n\t current: API_HOST=%s, PORT=%s ', config.apiHost, config.port);
-} else {
-	server.listen(config.port, (err) => {
-		if (err) {
-			console.error(err);
-		}
-		console.info('----\n==> ✅  %s is running, talking to API server on "%s".', config.app.title, config.apiHost);
-		console.info('==> 💻  Open http://%s:%s in a browser to view the app.', config.host, config.port);
-	});
+if (!config.apiHost || !config.port) {
+  console.error('==> ERROR: set API_HOST & PORT env variables, \n\t current: API_HOST=%s, PORT=%s ', config.apiHost, config.port);
+  } else {
+  server.listen(config.port, (err) => {
+    if (err) {
+      console.error(err);
+    }
+    console.info('----\n==> ✅  %s is running, talking to API server on "%s".', config.app.title, config.apiHost);
+    console.info('==> 💻  Open http://%s:%s in a browser to view the app.', config.host, config.port);
+  });
 }

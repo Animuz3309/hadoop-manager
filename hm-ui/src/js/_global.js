@@ -1,3 +1,3 @@
 require('jquery');
-require('script!./ls.js');
-require('script!./common.js');
+require('./ls.js');
+require('./common.js');

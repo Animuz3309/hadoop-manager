@@ -5,7 +5,7 @@ import {reducer as reduxAsyncConnect} from 'redux-async-connect';
 
 import auth from './auth/auth';
 export default combineReducers({
-	routing: routerReducer,
-	reduxAsyncConnect,
-	auth
+  routing: routerReducer,
+  reduxAsyncConnect,
+  auth
 });

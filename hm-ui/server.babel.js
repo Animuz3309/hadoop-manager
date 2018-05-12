@@ -1,13 +1,13 @@
-var fs = require('fs');
+let fs = require('fs');
 
-var babelrc = fs.readFileSync('./.babelrc');
-var config;
+let babelrc = fs.readFileSync('./.babelrc');
+let config;
 
 try {
-    config = JSON.parse(babelrc);
+  config = JSON.parse(babelrc);
 } catch (err) {
-    console.error('==> ERROR: Error parsing your .babelrc.');
-    console.error(err)
+  console.error('==> ERROR: Error parsing your .babelrc.');
+  console.error(err);
 }
 
 require('babel-register')(config);

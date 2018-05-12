@@ -12,7 +12,7 @@ import { Router, browserHistory } from 'react-router';
 import { ReduxAsyncConnect } from 'redux-async-connect';
 import useScroll from 'scroll-behavior/lib/useStandardScroll';
 import {loadFromLS as loadAuth} from 'redux/modules/auth/auth';
-import {loadFromLS as loadMenuLeft} from 'redux/modules/menuLeft/menuLeft'
+import {loadFromLS as loadMenuLeft} from 'redux/modules/menuLeft/menuLeft';
 import {ConfirmDialog, SimpleModal} from './components/index';
 
 import getRoutes from './routes';
@@ -43,12 +43,12 @@ ReactDOM.render(
 );
 
 if (process.env.NODE_ENV !== 'production') {
-	window.React = React; // enable debugger
+  window.React = React; // enable debugger
 }
 
 if (__DEVTOOLS__ && !window.devToolsExtension) {
-	const DevTools = require('./containers/DevTools/DevTools');
-	ReactDOM.render(
+  const DevTools = require('./containers/DevTools/DevTools');
+  ReactDOM.render(
 		<Provider store={store} key="provider">
 			<div>
 				{component}
@@ -60,6 +60,6 @@ if (__DEVTOOLS__ && !window.devToolsExtension) {
 }
 
 (() => {
-	ConfirmDialog.initJs();
-	SimpleModal.initJs(store);
+  ConfirmDialog.initJs();
+  SimpleModal.initJs(store);
 })();
