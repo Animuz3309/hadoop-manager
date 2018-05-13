@@ -1,6 +1,7 @@
 import {ACTIONS} from './actions';
 import _ from 'lodash';
 
+//todo more user actions
 export default function reducer(state = {}, action = {}) {
   switch (action.type) {
     case ACTIONS.GET_CURRENT_USER:
