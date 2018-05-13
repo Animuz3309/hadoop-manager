@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = KvMapTest.AppConfig.class)
 @TestPropertySource(properties = {
-        "hm.kv.etcd-urls = http://222.201.145.145:2370",
+        "hm.kv.etcd-urls = http://localhost:2370",
         "hm.kv.prefix    = /test"
 })
 public class KvMapTest {

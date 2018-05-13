@@ -13,5 +13,11 @@ Accept: application/json
 Content-Type: application/json
 X-Auth-Token: {{auth_token}}
 
+### Get Current user
+GET http://{{app}}/api/users/current
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{auth_token}}
+
 ###
 

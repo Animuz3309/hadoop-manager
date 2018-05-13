@@ -1,5 +1,9 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
+import {
+  Login,
+  LoginSuccess
+} from 'containers';
 
 export default (store) => {
   const requireLogin = (nextState, replace, cb) => {
@@ -36,11 +40,14 @@ export default (store) => {
 
   return (
 		<Route name="Home" path="/">
-      <Route onEnter={requireLogin}/>
+      <Route onEnter={requireLogin}>
+        <IndexRoute name="LoginSuccess" component={LoginSuccess}/>
+        <Route name="Login Successful" path="loginSuccess" component={LoginSuccess}/>
+      </Route>
 
 			{ /* Public Routes */ }
 			<Route onEnter={redirectLogin}>
-				<Route name="Login" path="login"/>
+				<Route name="Login" path="login" component={Login}/>
 			</Route>
 		</Route>
 	);

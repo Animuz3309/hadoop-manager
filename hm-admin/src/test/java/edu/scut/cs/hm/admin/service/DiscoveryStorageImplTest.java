@@ -47,8 +47,8 @@ import static org.mockito.Mockito.when;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @SpringBootTest(classes = DiscoveryStorageImplTest.Config.class)
 @TestPropertySource(properties = {
-        "host            = 222.201.145.145:2381",
-        "hm.kv.etcd-urls = http://222.201.145.145:2370",
+        "host            = localhost:2381",
+        "hm.kv.etcd-urls = http://localhost:2370",
         "hm.kv.prefix    = /test"})
 public class DiscoveryStorageImplTest {
     private static final String REAL = "real";

@@ -78,6 +78,15 @@ export function saveToLS(auth) {
   window.ls.setItem(LS_KEY, JSON.stringify(auth));
 }
 
+export function login(username, password) {
+  return {
+    types: [ACTIONS.LOGIN, ACTIONS.LOGIN_SUCCESS, ACTIONS.LOGIN_FAIL],
+    promise: (client) => {
+      return client.post('/api/token/login', {data: {username: username, password: password}});
+    }
+  };
+}
+
 export function logout() {
   window.ls.removeItem(LS_KEY);
   return {
