@@ -2,6 +2,7 @@ import React from 'react';
 import {IndexRoute, Route} from 'react-router';
 import {
   App,
+  Dashboard,
   Login,
   LoginSuccess,
   NotFound
@@ -21,7 +22,7 @@ export default (store) => {
   };
 
   const redirectLogin = (nextState, replace, cb) => {
-    let redirect = '/loginSuccess';
+    let redirect = '/dashboard';
     if (window && window.location.search) {
       let search = window.location.search.match(/\?back=(.+)/);
       if (search && search[1]) {
@@ -43,6 +44,9 @@ export default (store) => {
   return (
 		<Route name="Home" path="/" component={App}>
       <Route onEnter={requireLogin}>
+        <IndexRoute name="Dashboard" component={Dashboard}/>
+
+        <Route name="Dashboard" path="dashboard" component={Dashboard}/>
         <Route name="Login Successful" path="loginSuccess" component={LoginSuccess}/>
       </Route>
 

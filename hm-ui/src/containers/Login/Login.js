@@ -45,7 +45,9 @@ export default class Login extends Component {
       this.refs.error.textContent = 'Please, fill username and password';
       return;
     }
-    this.props.login(username, password).then(() => {
+    let res = this.props.login(username, password);
+    console.log(res);
+    res.then(() => {
       const {auth} = this.props;
       if (auth && auth.token) {
         iUsername.value = '';
