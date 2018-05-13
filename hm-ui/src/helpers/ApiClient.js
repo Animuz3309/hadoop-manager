@@ -19,7 +19,7 @@ export default class ApiClient {
       methods.forEach((method) => {
         this[method] = (path, {params, data, contentType} = {}) => new Promise((resolve, reject) => {
           const request = superagent[method](formatUrl(path));
-          this.sendRequest(request);
+          this.sendRequest(params, data, contentType, request);
           request.end((err, response = {}) => {
             this.handleResponse(err, response, resolve, reject);
           });

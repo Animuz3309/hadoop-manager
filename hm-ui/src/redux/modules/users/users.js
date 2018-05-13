@@ -15,7 +15,7 @@ export default function reducer(state = {}, action = {}) {
         loadingCurrentUser: false
       };
     case ACTIONS.GET_CURRENT_USER_SUCCESS:
-      let user = _.get(action.result, 'user', 'undefined');
+      let user = _.get(action.result, 'username', 'undefined');
       let role = _.get(action.result, 'roles[0].name', '');
       let credentialsState = _.get(action.result, 'credentialsNonExpired', true);
       return {
@@ -24,7 +24,7 @@ export default function reducer(state = {}, action = {}) {
         currentUser: {
           name: user,
           role: role,
-          credentialsState: credentialsState
+          credentialsNonExpired: credentialsState
         }
       };
     default:

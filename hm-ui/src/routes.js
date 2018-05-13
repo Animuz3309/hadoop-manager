@@ -1,8 +1,10 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
 import {
+  App,
   Login,
-  LoginSuccess
+  LoginSuccess,
+  NotFound
 } from 'containers';
 
 export default (store) => {
@@ -19,7 +21,7 @@ export default (store) => {
   };
 
   const redirectLogin = (nextState, replace, cb) => {
-    let redirect = '/dashboard';
+    let redirect = '/loginSuccess';
     if (window && window.location.search) {
       let search = window.location.search.match(/\?back=(.+)/);
       if (search && search[1]) {
@@ -39,9 +41,8 @@ export default (store) => {
   };
 
   return (
-		<Route name="Home" path="/">
+		<Route name="Home" path="/" component={App}>
       <Route onEnter={requireLogin}>
-        <IndexRoute name="LoginSuccess" component={LoginSuccess}/>
         <Route name="Login Successful" path="loginSuccess" component={LoginSuccess}/>
       </Route>
 
@@ -49,6 +50,7 @@ export default (store) => {
 			<Route onEnter={redirectLogin}>
 				<Route name="Login" path="login" component={Login}/>
 			</Route>
+      <Route name="Not Found" path="*" component={NotFound} status={404}/>
 		</Route>
 	);
 };

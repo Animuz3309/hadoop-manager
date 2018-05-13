@@ -9,6 +9,7 @@ import edu.scut.cs.hm.common.security.SecurityUtils;
 import edu.scut.cs.hm.common.security.SuccessAuthProcessor;
 import edu.scut.cs.hm.common.security.token.TokenValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -29,6 +30,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final AuthenticationProvider provider;
     private final TokenAuthenticationFilterConfigurer<HttpSecurity> configurer;
     private final AccessContextFactory aclContextFactory;
+    @Value("${hm.security.basic.enabled:false}")
+    private boolean basicAuthEnable;
 
 
     @Autowired
@@ -60,7 +63,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().headers().cacheControl().disable()
                 .and().formLogin().loginPage(loginUrl).permitAll().defaultSuccessUrl("/dashboard")
                 .and().logout().logoutUrl(logoutUrl).logoutSuccessUrl(loginUrl)
-                .and().rememberMe().key("uniqueAndSecret").userDetailsService(userDetailsService)
+//                .and().rememberMe().key("uniqueAndSecret").userDetailsService(userDetailsService)
                 .and().apply(configurer);
 
         http.headers()
@@ -69,7 +72,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // acl service
         http.addFilterAfter(new AccessContextFilter(aclContextFactory), SwitchUserFilter.class);
 
-        http.httpBasic();
+        if (!basicAuthEnable) {
+            http.httpBasic().disable();
+        }
     }
 
     @Override

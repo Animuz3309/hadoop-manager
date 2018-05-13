@@ -14,7 +14,7 @@ export default function reducer(state = {}, action = {}) {
         loginError: null
       };
     case ACTIONS.LOGIN_SUCCESS:
-      if (!action.result || !action.result.userName) {
+      if (!action.result || !action.result.username) {
         return {
           ...state,
           token: null,

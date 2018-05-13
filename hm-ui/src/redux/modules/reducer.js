@@ -6,6 +6,7 @@ import {reducer as reduxAsyncConnect} from 'redux-async-connect';
 import auth from './auth/auth';
 import {reducer as form} from 'redux-form';
 import menuLeft from './menuLeft/menuLeft';
+import users from './users/users';
 import errors from './errors/errors';
 
 export default combineReducers({
@@ -15,6 +16,7 @@ export default combineReducers({
   form,
   menuLeft,
   // Begin models data
+  users,
   // End models data
   errors
 });

@@ -18,9 +18,9 @@ module.exports = Object.assign({
   eventServer: apiHost + "/ws/stomp",
   mock: false,
   app: {
-    title: 'Hm',
+    title: 'Hadoop Manager Tool',
     head: {
-      titleTemplate: 'Hm: %s',
+      titleTemplate: 'Hadoop Manager Tool: %s',
       meta: [
           {charset: 'utf-8'}
       ]

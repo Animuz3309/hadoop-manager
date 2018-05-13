@@ -2,3 +2,4 @@ node_modules/
 webpack-assets.json
 env/
 .package-lock.json
+.idea/
