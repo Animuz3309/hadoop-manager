@@ -36,7 +36,7 @@ public class Encrypt {
     @Autowired(required = false)
     private PasswordEncoder passwordEncoder;
 
-    @Value("http://localhost:2370")
+    @Value("123456")
     private String text;
 
     @Test

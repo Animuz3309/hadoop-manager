@@ -307,7 +307,7 @@ public class NodeStorage implements NodeInfoProvider, NodeRegistry {
         forEachInternal(consumer::accept);
     }
 
-    void forEachInternal(Consumer<NodeRegistrationImpl> consumer) {
+    public void forEachInternal(Consumer<NodeRegistrationImpl> consumer) {
         Set<String> keys = nodes.list();
         AccessContext ac = AccessContextFactory.getLocalContext();
         for (String key : keys) {
@@ -367,7 +367,7 @@ public class NodeStorage implements NodeInfoProvider, NodeRegistry {
         }
     }
 
-    private NodeRegistrationImpl getNodeRegistrationInternal(String nodeId) {
+    public NodeRegistrationImpl getNodeRegistrationInternal(String nodeId) {
         if (nodeId == null) {
             return null;
         }

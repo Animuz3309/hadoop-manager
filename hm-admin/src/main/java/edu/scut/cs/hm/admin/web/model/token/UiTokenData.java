@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Value
 @Builder
 @AllArgsConstructor(onConstructor = @__(@JsonCreator))
-public class UITokenData {
+public class UiTokenData {
     private final String username;
     private final String key;
     private final LocalDateTime creationTime;

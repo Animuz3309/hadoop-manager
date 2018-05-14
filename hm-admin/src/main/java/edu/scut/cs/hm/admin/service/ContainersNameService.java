@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.admin.component;
+package edu.scut.cs.hm.admin.service;
 
 import edu.scut.cs.hm.common.utils.StringUtils;
 import edu.scut.cs.hm.docker.DockerService;
@@ -7,6 +7,7 @@ import edu.scut.cs.hm.model.container.ContainerUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,7 +19,7 @@ import java.util.function.Function;
  * Service which do calculation of new container name
  */
 @Slf4j
-@Component
+@Service
 public class ContainersNameService {
 
     private static final long TIMEOUT_NAMES = TimeUnit.MINUTES.toMillis(1L);

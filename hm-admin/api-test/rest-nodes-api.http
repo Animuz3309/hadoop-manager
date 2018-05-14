@@ -1,0 +1,19 @@
+### Get all nodes
+GET http://{{app}}/api/nodes/
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{auth_token}}
+
+### Add nodes
+PUT http://{{app}}/api/nodes/test1?address=222.201.145.145:2381
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{auth_token}}
+
+###
+GET http://{{app}}/api/nodes/test1
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{auth_token}}
+
+###

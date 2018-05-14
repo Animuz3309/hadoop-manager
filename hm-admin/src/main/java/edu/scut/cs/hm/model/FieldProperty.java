@@ -1,5 +1,6 @@
 package edu.scut.cs.hm.model;
 
+import edu.scut.cs.hm.common.pojo.Property;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;

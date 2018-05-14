@@ -39,8 +39,7 @@ public class DockerServiceImplTest {
 
     @SuppressWarnings("unchecked")
     private DockerServiceImpl dockerService() {
-        String host = System.getenv("host");
-        DockerConfig config = DockerConfig.builder().host(host).build();
+        DockerConfig config = DockerConfig.builder().host("localhost:2375").build();
         AsyncRestTemplate restTemplate = new AsyncRestTemplate();
         RegistryRepository registryRepository = mock(RegistryRepository.class);
         restTemplate.setInterceptors(
@@ -98,10 +97,10 @@ public class DockerServiceImplTest {
 
     @Test
     public void testTag() {
-        HttpAuthInterceptor.setCurrentName("ni1.codeabovelab.com");
+        HttpAuthInterceptor.setCurrentName("test.com");
         TagImageArg arg = TagImageArg.builder().remote(true)
                 .imageName("cluster-manager")
-                .repository("ni1.codeabovelab.com")
+                .repository("test.com")
                 .currentTag("latest")
                 .newTag("testTag").build();
 

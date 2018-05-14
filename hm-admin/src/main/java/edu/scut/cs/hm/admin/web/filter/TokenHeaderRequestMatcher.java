@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.admin.filter;
+package edu.scut.cs.hm.admin.web.filter;
 
 import org.springframework.security.web.util.matcher.RequestMatcher;
 

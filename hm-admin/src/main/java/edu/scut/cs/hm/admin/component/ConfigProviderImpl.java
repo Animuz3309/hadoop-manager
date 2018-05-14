@@ -2,7 +2,7 @@ package edu.scut.cs.hm.admin.component;
 
 import edu.scut.cs.hm.common.utils.PojoUtils;
 import edu.scut.cs.hm.docker.model.image.ImageDescriptor;
-import edu.scut.cs.hm.model.Property;
+import edu.scut.cs.hm.common.pojo.Property;
 import edu.scut.cs.hm.model.container.ConfigProvider;
 import edu.scut.cs.hm.model.container.ConfigsFetcher;
 import edu.scut.cs.hm.model.container.ContainerCreationContext;

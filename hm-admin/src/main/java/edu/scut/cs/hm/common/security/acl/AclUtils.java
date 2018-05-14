@@ -3,10 +3,13 @@ package edu.scut.cs.hm.common.security.acl;
 import com.google.common.collect.ImmutableMap;
 import edu.scut.cs.hm.common.security.acl.dto.AccessControlEntryImpl;
 import edu.scut.cs.hm.common.security.acl.dto.AceSource;
+import edu.scut.cs.hm.common.security.acl.dto.AclSource;
 import edu.scut.cs.hm.common.security.acl.dto.ObjectIdentityData;
+import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.security.acls.model.AccessControlEntry;
 import org.springframework.security.acls.model.Acl;
 import org.springframework.security.acls.model.ObjectIdentity;
+import org.springframework.security.acls.model.Sid;
 import org.springframework.util.Assert;
 
 import java.io.Serializable;
@@ -157,5 +160,29 @@ public final class AclUtils {
             }
             to.accept(ace);
         }
+    }
+
+    /**
+     * Test that specified acl contains specified user.
+     * @param acl
+     * @param username
+     * @return
+     */
+    public static boolean isContainsUser(AclSource acl, String username) {
+        Sid owner = acl.getOwner();
+        if(isPrincipal(owner, username)) {
+            return true;
+        }
+        for(AceSource ace: acl.getEntriesMap().values()) {
+            if(isPrincipal(ace.getSid(), username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isPrincipal(Sid sid, String username) {
+        return sid instanceof PrincipalSid &&
+                username.equals(((PrincipalSid) sid).getPrincipal());
     }
 }

@@ -18,5 +18,5 @@ public class NodeStorageConfig {
     /**
      * Time between node update
      */
-    private int updateSeconds = 60;
+    private int updateSeconds = 20;
 }

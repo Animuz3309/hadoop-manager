@@ -1,0 +1,103 @@
+### Get Token
+POST http://{{app}}/api/token/login
+Accept: application/json
+Content-Type: application/json
+
+{ "username": "admin", "password":"password"}
+
+> {%client.global.set("auth_token", response.body.key);%}
+
+### Refresh Token
+PUT http://{{app}}/api/token/refresh
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{auth_token}}
+
+### Get users
+GET http://{{app}}/api/users/
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{auth_token}}
+
+### Get {admin}
+GET http://{{app}}/api/users/admin
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{auth_token}}
+
+### Set {admin}'s email
+POST http://{{app}}/api/users/admin
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{auth_token}}
+
+{"email": "root@root.com"}
+
+### Get Current user
+GET http://{{app}}/api/users/current
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{auth_token}}
+
+### Get {admin} roles
+GET http://{{app}}/api/users/admin/roles/
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{auth_token}}
+
+### Get {admin} acls
+GET http://{{app}}/api/users/admin/acls/
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{auth_token}}
+
+### Add new user 'test1'
+POST http://{{app}}/api/users/test1
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{auth_token}}
+
+{"username": "test1", "tenant": "test", "title": "user test1", "password": "12345"}
+
+### Login with new user
+POST http://{{app}}/api/token/login
+Accept: application/json
+Content-Type: application/json
+
+{ "username": "test1", "password":"12345"}
+
+> {%client.global.set("test1_auth_token", response.body.key);%}
+
+### Update new user's role with admin
+POST http://{{app}}/api/users/test1/roles/
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{auth_token}}
+
+[{"name": "ROLE_TEST_USER", "tenant": "test"}]
+
+### Update new user's role with test1 role -> forbidden
+POST http://{{app}}/api/users/test1/roles/
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{test1_auth_token}}
+
+[{"name": "ROLE_TEST_USER", "tenant": "test"}]
+
+### Get Current user
+GET http://{{app}}/api/users/current
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{test1_auth_token}}
+
+### Detete new user with test1 role -> forbidden
+DELETE http://{{app}}/api/users/test1
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{test1_auth_token}}
+
+### Detete new user with admin
+DELETE http://{{app}}/api/users/test1
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{auth_token}}

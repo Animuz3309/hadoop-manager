@@ -1,8 +1,8 @@
 package edu.scut.cs.hm.admin.web.api;
 
 import edu.scut.cs.hm.admin.config.configurer.TokenServiceConfigurer;
-import edu.scut.cs.hm.admin.filter.TokenAuthenticationFilter;
-import edu.scut.cs.hm.admin.web.model.token.UITokenData;
+import edu.scut.cs.hm.admin.web.filter.TokenAuthenticationFilter;
+import edu.scut.cs.hm.admin.web.model.token.UiTokenData;
 import edu.scut.cs.hm.admin.web.model.token.UiUserCredentials;
 import edu.scut.cs.hm.common.security.token.TokenConfiguration;
 import edu.scut.cs.hm.common.security.token.TokenData;
@@ -36,7 +36,7 @@ public class TokenApi {
 
     @ApiOperation("User header name: " + TokenAuthenticationFilter.X_AUTH_TOKEN)
     @RequestMapping(value = "login", method = POST)
-    public UITokenData getToken(@RequestBody UiUserCredentials credentials) {
+    public UiTokenData getToken(@RequestBody UiUserCredentials credentials) {
         Authentication authentication =
                 new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword());
         final Authentication authenticate = authenticationProvider.authenticate(authentication);
@@ -48,7 +48,7 @@ public class TokenApi {
     }
 
     @RequestMapping(value = "refresh", method = RequestMethod.PUT)
-    public UITokenData refresh() {
+    public UiTokenData refresh() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String name = auth.getName(); //get logged in username
         return createToken(name);
@@ -56,23 +56,23 @@ public class TokenApi {
 
     @ApiOperation("Token should be passed it via " + TokenAuthenticationFilter.X_AUTH_TOKEN)
     @RequestMapping(value = "info", method = RequestMethod.GET)
-    public UITokenData info(@RequestHeader(value= TokenAuthenticationFilter.X_AUTH_TOKEN) String token) {
+    public UiTokenData info(@RequestHeader(value= TokenAuthenticationFilter.X_AUTH_TOKEN) String token) {
         Assert.notNull(token, "token is null pass it via " + TokenAuthenticationFilter.X_AUTH_TOKEN);
         TokenData tokendata = tokenService.getToken(token);
 
         return fillFields(tokendata);
     }
 
-    private UITokenData createToken(String name) {
+    private UiTokenData createToken(String name) {
         TokenConfiguration tokenConfiguration = new TokenConfiguration();
         tokenConfiguration.setUsername(name);
         TokenData token = tokenService.createToken(tokenConfiguration);
         return fillFields(token);
     }
 
-    private UITokenData fillFields(TokenData token) {
+    private UiTokenData fillFields(TokenData token) {
         Instant instant = Instant.ofEpochMilli(token.getCreationTime());
-        return UITokenData.builder()
+        return UiTokenData.builder()
                 .creationTime(LocalDateTime.ofInstant(instant, ZoneOffset.UTC))
                 .expireAtTime(LocalDateTime.ofInstant(instant.plusSeconds(tokenServiceConfigurer.getExpireAfterInSec()), ZoneOffset.UTC))
                 .key(token.getKey())

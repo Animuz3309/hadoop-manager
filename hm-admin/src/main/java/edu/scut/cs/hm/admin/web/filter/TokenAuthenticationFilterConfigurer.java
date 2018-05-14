@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.admin.filter;
+package edu.scut.cs.hm.admin.web.filter;
 
 import lombok.Data;
 import org.springframework.security.authentication.AuthenticationDetailsSource;

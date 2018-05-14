@@ -1,8 +1,8 @@
 package edu.scut.cs.hm.admin.config;
 
-import edu.scut.cs.hm.admin.filter.AccessContextFilter;
-import edu.scut.cs.hm.admin.filter.TokenAuthenticationFilterConfigurer;
-import edu.scut.cs.hm.admin.filter.TokenHeaderRequestMatcher;
+import edu.scut.cs.hm.admin.web.filter.AccessContextFilter;
+import edu.scut.cs.hm.admin.web.filter.TokenAuthenticationFilterConfigurer;
+import edu.scut.cs.hm.admin.web.filter.TokenHeaderRequestMatcher;
 import edu.scut.cs.hm.admin.security.AccessContextFactory;
 import edu.scut.cs.hm.admin.security.authentication.TokenAuthProvider;
 import edu.scut.cs.hm.common.security.SecurityUtils;
@@ -28,7 +28,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final AuthenticationProvider provider;
-    private final TokenAuthenticationFilterConfigurer<HttpSecurity> configurer;
+    private final TokenAuthenticationFilterConfigurer<HttpSecurity> tokenFilterConfigurer;
     private final AccessContextFactory aclContextFactory;
     @Value("${hm.security.basic.enabled:false}")
     private boolean basicAuthEnable;
@@ -42,7 +42,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                                     AccessContextFactory aclContextFactory) {
         this.userDetailsService = userDetailsService;
         this.provider = provider;
-        this.configurer = new TokenAuthenticationFilterConfigurer<>(
+        this.tokenFilterConfigurer = new TokenAuthenticationFilterConfigurer<>(
                 new TokenHeaderRequestMatcher(),
                 new TokenAuthProvider(tokenValidator, this.userDetailsService, authProcessor));
         this.aclContextFactory = aclContextFactory;
@@ -54,17 +54,20 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         final String logoutUrl = "/logout";
         final String apiPrefix = "/api/";
         final String apiLoginUrl = apiPrefix + "token/login";
+        // 节点通信address
+        final String dsUrl = "/discovery/**";
         http.csrf().disable()
                 .authenticationProvider(provider).userDetailsService(userDetailsService)
                 .anonymous().principal(SecurityUtils.USER_ANONYMOUS).and()
-                .authorizeRequests().antMatchers(apiLoginUrl).permitAll()    // ajax获取api token
+                .authorizeRequests().antMatchers(apiLoginUrl).permitAll()                // ajax获取api token
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()          // allow CORS option calls
+                .antMatchers(dsUrl).permitAll()                                          // 节点通信接口
                 .antMatchers("/**", apiPrefix + "**").authenticated()
                 .and().headers().cacheControl().disable()
                 .and().formLogin().loginPage(loginUrl).permitAll().defaultSuccessUrl("/dashboard")
                 .and().logout().logoutUrl(logoutUrl).logoutSuccessUrl(loginUrl)
 //                .and().rememberMe().key("uniqueAndSecret").userDetailsService(userDetailsService)
-                .and().apply(configurer);
+                .and().apply(tokenFilterConfigurer);
 
         http.headers()
                 .frameOptions().sameOrigin();

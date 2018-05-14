@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.model;
+package edu.scut.cs.hm.common.pojo;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Member;

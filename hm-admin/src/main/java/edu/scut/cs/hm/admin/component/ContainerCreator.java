@@ -1,6 +1,7 @@
 package edu.scut.cs.hm.admin.component;
 
 import com.google.common.base.MoreObjects;
+import edu.scut.cs.hm.admin.service.ContainersNameService;
 import edu.scut.cs.hm.common.utils.Consumers;
 import edu.scut.cs.hm.common.utils.ExtendedAssert;
 import edu.scut.cs.hm.common.utils.SourceUtil;

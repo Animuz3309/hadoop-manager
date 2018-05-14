@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.admin.filter;
+package edu.scut.cs.hm.admin.web.filter;
 
 import edu.scut.cs.hm.common.security.token.TokenException;
 import lombok.Setter;

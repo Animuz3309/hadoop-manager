@@ -16,6 +16,11 @@
       "description": "(required) Cipher salt for TextEncryptor."
     },
     {
+      "name": "hm.security.basic.enabled",
+      "type": "java.lang.Boolean",
+      "description": "(optional) enable html basic auth or not."
+    },
+    {
       "name": "hm.bcrypt.strength",
       "type": "java.lang.String",
       "description": "(optional) Log rounds in BCrypt which encrypt and match user password."
@@ -24,5 +29,10 @@
       "name": "hm.ssl.check",
       "type": "java.lang.String",
       "description": "whether use ssl check in restTemplate."
+    },
+    {
+      "name": "dm.agent.notifier.secret",
+      "type": "java.lang.String",
+      "description": "The secret for agent to auth."
     }
   ] }

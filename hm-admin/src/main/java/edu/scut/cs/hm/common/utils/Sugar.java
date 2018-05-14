@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public final class Sugar {
     private Sugar() {}
@@ -14,6 +15,21 @@ public final class Sugar {
             return;
         }
         setter.accept(val);
+    }
+
+    /**
+     * Put value into consumer only if value source {@link Changeable#isChanged()}  is changed}.
+     * @see Keeper
+     * @param consumer
+     * @param valueSource
+     * @param <S>
+     * @param <G>
+     */
+    public static <S, G extends Supplier<S> & Changeable> void setIfChanged(Consumer<S> consumer, G valueSource) {
+        if(valueSource == null || !valueSource.isChanged()) {
+            return;
+        }
+        consumer.accept(valueSource.get());
     }
 
     /**
