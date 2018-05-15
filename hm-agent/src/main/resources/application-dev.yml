@@ -1,0 +1,10 @@
+hm:
+  agent:
+    notifier:
+      secret: 123456
+      # remote server app address
+      server: http://localhost:8080/hm-admin
+      # docker address
+      address: 127.0.0.1:2375
+      initial-delay: 10
+      period: 60

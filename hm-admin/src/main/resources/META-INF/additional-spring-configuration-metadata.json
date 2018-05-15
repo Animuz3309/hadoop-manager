@@ -28,11 +28,16 @@
     {
       "name": "hm.ssl.check",
       "type": "java.lang.String",
-      "description": "whether use ssl check in restTemplate."
+      "description": "(optional) whether use ssl check in restTemplate."
     },
     {
-      "name": "dm.agent.notifier.secret",
+      "name": "hm.agent.notifier.secret",
       "type": "java.lang.String",
-      "description": "The secret for agent to auth."
+      "description": "(optional) The secret for agent to auth."
+    },
+    {
+      "name": "hm.agent.start",
+      "type": "java.lang.String",
+      "description": "(required) The start script for hm-agent."
     }
   ] }

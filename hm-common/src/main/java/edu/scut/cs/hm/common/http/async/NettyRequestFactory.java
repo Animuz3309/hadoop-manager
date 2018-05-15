@@ -84,7 +84,7 @@ public class NettyRequestFactory implements ClientHttpRequestFactory, AsyncClien
     }
 
     /**
-     * Template method for changing properties on the given {@link SocketChannelConfig}.
+     * Template method for changing props on the given {@link SocketChannelConfig}.
      * <p>The default implementation sets the connect timeout based on the set property.
      * @param config the channel configuration
      */

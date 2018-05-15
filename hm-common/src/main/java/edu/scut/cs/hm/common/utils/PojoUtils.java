@@ -22,14 +22,14 @@ public final class PojoUtils {
     private static final int PREFIX_IS_LENGTH = PREFIX_IS.length();
 
     /**
-     * unmodifiable map with class properties
+     * unmodifiable map with class props
      * @param type
      * @return
      */
     public static Map<String, Property> load(Class<?> type) {
         Map<String, MethodsProperty.Builder> map = loadMethodPropertyBuilders(type);
 
-        // build properties
+        // build props
         Map<String, Property> propertyMap  = new TreeMap<>();
         for(MethodsProperty.Builder builder: map.values()) {
             final MethodsProperty property = builder.build();

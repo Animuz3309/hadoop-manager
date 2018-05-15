@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * representation of java pojo class with it`s properties
+ * representation of java pojo class with it`s props
  * <p/>
  */
 public final class PojoClass {
@@ -53,7 +53,7 @@ public final class PojoClass {
     }
 
     /**
-     * unmodifiable set of all type properties
+     * unmodifiable set of all type props
      *
      * @return
      */
@@ -62,7 +62,7 @@ public final class PojoClass {
     }
 
     /**
-     * unmodifiable map of properties
+     * unmodifiable map of props
      *
      * @return
      */

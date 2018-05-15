@@ -1,7 +1,10 @@
 package edu.scut.cs.hm.common.utils;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.net.InetAddress;
 
+@Slf4j
 public class OSUtils {
     /**
      * operating system family
@@ -37,7 +40,7 @@ public class OSUtils {
             name = InetAddress.getLocalHost().getHostName();
         } catch(Exception e) {
             // so we use this
-            System.out.println("can not detect host name forom localhost");
+            log.warn("can not detect host name from localhost");
         }
         // obviously, we don`t need names like `localhost`
         if(name != null && name.contains("localhost")) {

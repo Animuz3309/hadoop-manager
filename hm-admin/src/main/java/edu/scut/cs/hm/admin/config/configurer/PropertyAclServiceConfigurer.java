@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Use *.properties to config AbstractAclService
+ * Use *.props to config AbstractAclService
  */
 @ConfigurationProperties("hm.security.acl")
 @Data
@@ -58,14 +58,14 @@ public class PropertyAclServiceConfigurer implements AclServiceConfigurer {
      * </pre>
      * Above we omit id type, just use pattern like 'type@id' not 'type:idtype:id' ('type:s:id' s means id type is string)
      * see {@link AclUtils#fromId(String)} when id type is null than default id type is 's'(string) <p/>
-     * Because *.properties file doesn't allow ':' in key, so we use '@' instead as divider
+     * Because *.props file doesn't allow ':' in key, so we use '@' instead as divider
      * @param id
      * @param value
      * @return
      */
     private static AclSource.Builder parse(String id, String value) {
         AclSource.Builder asb = AclSource.builder();
-        id = id.replace('@', ':');  // *.properties file doesn't allow ':' in key
+        id = id.replace('@', ':');  // *.props file doesn't allow ':' in key
         asb.setObjectIdentity(AclUtils.fromId(id));
 
         Iterator<String> it = ACL_SPLITTER.split(value).iterator();

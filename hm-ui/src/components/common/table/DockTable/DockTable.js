@@ -259,7 +259,7 @@ export default class DockTable extends Component {
     }
     const currentPage = page ? page : this.state.currentPage;
     let groups = [];
-    //to save order of properties use _.forOwn instead _.values
+    //to save order of props use _.forOwn instead _.values
     _.forOwn(this.groups, (group, key) => groups.push(group));
     let toSkip = this.pageSize * (currentPage - 1);
     let skipped = 0;

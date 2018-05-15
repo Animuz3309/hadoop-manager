@@ -115,7 +115,7 @@ public class AccessContextTest {
 
     @Test
     public void testAcl() {
-        // @see application-test_acl_service.properties
+        // @see application-test_acl_service.props
         // username@root has authority ROLE_USER@root
         // [CONTAINER@container1] grant ROLE_USER@root RUA
         try(TempAuth auth = TempAuth.open(createAuthFromDetails(user))) {

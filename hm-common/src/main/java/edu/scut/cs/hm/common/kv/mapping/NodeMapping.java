@@ -44,13 +44,13 @@ class NodeMapping<T> extends AbstractMapping<T> {
         Collection<KvProperty> props = getProps(object);
         if(props.isEmpty()) {
             throw new IllegalArgumentException("The path '" + path +
-                    "' is mapped to object of type " + object.getClass() + " which has no properties.");
+                    "' is mapped to object of type " + object.getClass() + " which has no props.");
         }
         //store type of object
         KeyValueStorage storage = getStorage();
         saveType(path, object, storage);
 
-        //store properties
+        //store props
         for(KvProperty property: props) {
             String strval = property.get(object);
             String key = property.getKey();

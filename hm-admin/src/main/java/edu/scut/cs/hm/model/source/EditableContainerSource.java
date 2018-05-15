@@ -3,7 +3,7 @@ package edu.scut.cs.hm.model.source;
 import lombok.Data;
 
 /**
- * Part of ContainerSource which has updatable properties.
+ * Part of ContainerSource which has updatable props.
  */
 @Data
 public class EditableContainerSource implements Cloneable {

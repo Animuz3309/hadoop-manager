@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.junit.Assert.assertEquals;
 
 /**
- * You can use this for encode and encrypt text in your *.properties
+ * You can use this for encode and encrypt text in your *.props
  * <a href="https://github.com/ulisesbocchio/jasypt-spring-boot"></a>
  */
 @Slf4j

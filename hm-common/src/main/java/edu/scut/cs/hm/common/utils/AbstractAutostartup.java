@@ -1,4 +1,4 @@
-package edu.scut.cs.hm.model;
+package edu.scut.cs.hm.common.utils;
 
 import edu.scut.cs.hm.common.utils.Closeables;
 import org.springframework.context.SmartLifecycle;

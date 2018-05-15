@@ -8,7 +8,7 @@ import edu.scut.cs.hm.common.utils.Throwables;
 import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.docker.DockerServiceInfo;
 import edu.scut.cs.hm.docker.model.events.DockerServiceEvent;
-import edu.scut.cs.hm.model.AbstractAutostartup;
+import edu.scut.cs.hm.common.utils.AbstractAutostartup;
 import edu.scut.cs.hm.model.StandardAction;
 import edu.scut.cs.hm.model.cluster.DiscoveryStorage;
 import edu.scut.cs.hm.model.ngroup.NodesGroup;

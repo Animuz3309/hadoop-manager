@@ -18,7 +18,7 @@ public class DefaultParser extends AbstractParser {
 
     @Override
     public void parse(String fileName, ContainerCreationContext context) {
-        parse(fileName, context, ".properties");
+        parse(fileName, context, ".props");
         parse(fileName, context, ".yml");
 
     }

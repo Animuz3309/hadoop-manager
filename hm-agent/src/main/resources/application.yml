@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: hm-agent
+
+server:
+  port: 8771
+

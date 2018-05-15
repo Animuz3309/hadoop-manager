@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Resolves properties from multiple sources and merge to one CreateContainerArg
+ * Resolves props from multiple sources and merge to one CreateContainerArg
  */
 @Slf4j
 @Component

@@ -96,7 +96,7 @@ public class Ports {
 
     /**
      * A {@link Binding} represents a socket on the Docker host that is used in a {@link PortBinding}. It is characterized by an
-     * {@link #getHostIp() IP address} and a {@link #getHostPortSpec() port spec}. Both properties may be <code>null</code> in order to
+     * {@link #getHostIp() IP address} and a {@link #getHostPortSpec() port spec}. Both props may be <code>null</code> in order to
      * let Docker assign them dynamically/using defaults.
      *
      * @see Ports#bind(ExposedPort, Binding)

@@ -28,7 +28,7 @@ public final class PojoBeanUtils {
     }
 
     /**
-     * Copy properties into lombok-style builders (it builder do not follow java bean convention)
+     * Copy props into lombok-style builders (it builder do not follow java bean convention)
      * @param src source bean object
      * @param dst destination builder object
      * @return dst object
