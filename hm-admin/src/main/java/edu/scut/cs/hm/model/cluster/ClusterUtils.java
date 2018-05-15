@@ -1,6 +1,6 @@
 package edu.scut.cs.hm.model.cluster;
 
-import edu.scut.cs.hm.common.utils.ExtendedAssert;
+import edu.scut.cs.hm.model.ExtendedAssert;
 import edu.scut.cs.hm.model.ngroup.NodeGroupState;
 import edu.scut.cs.hm.model.ngroup.NodesGroup;
 import org.springframework.util.StringUtils;

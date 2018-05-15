@@ -13,7 +13,7 @@ import edu.scut.cs.hm.common.security.UserIdentifiersDetailsService;
 import edu.scut.cs.hm.common.security.acl.AclUtils;
 import edu.scut.cs.hm.common.security.acl.dto.AclSource;
 import edu.scut.cs.hm.common.security.acl.dto.ObjectIdentityData;
-import edu.scut.cs.hm.common.utils.ExtendedAssert;
+import edu.scut.cs.hm.model.ExtendedAssert;
 import edu.scut.cs.hm.model.HttpException;
 import edu.scut.cs.hm.model.user.UserRegistration;
 import lombok.RequiredArgsConstructor;

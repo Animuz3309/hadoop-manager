@@ -8,7 +8,7 @@ import edu.scut.cs.hm.admin.service.SourceService;
 import edu.scut.cs.hm.admin.service.NodeStorage;
 import edu.scut.cs.hm.admin.web.model.UiPermission;
 import edu.scut.cs.hm.admin.web.model.cluster.UiCluster;
-import edu.scut.cs.hm.common.utils.ExtendedAssert;
+import edu.scut.cs.hm.model.ExtendedAssert;
 import edu.scut.cs.hm.docker.DockerConfig;
 import edu.scut.cs.hm.model.application.Application;
 import edu.scut.cs.hm.model.application.ApplicationService;

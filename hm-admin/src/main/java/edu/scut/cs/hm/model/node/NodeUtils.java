@@ -2,7 +2,7 @@ package edu.scut.cs.hm.model.node;
 
 import com.google.common.net.InternetDomainName;
 import edu.scut.cs.hm.admin.service.NodeStorage;
-import edu.scut.cs.hm.common.utils.ExtendedAssert;
+import edu.scut.cs.hm.model.ExtendedAssert;
 import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.model.container.ContainerRegistration;
 import edu.scut.cs.hm.model.container.ContainerStorage;

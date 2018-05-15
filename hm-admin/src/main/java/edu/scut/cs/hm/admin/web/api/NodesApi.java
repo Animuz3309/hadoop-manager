@@ -4,7 +4,7 @@ import edu.scut.cs.hm.admin.service.FilterService;
 import edu.scut.cs.hm.admin.service.NodeStorage;
 import edu.scut.cs.hm.admin.web.model.UiSearchQuery;
 import edu.scut.cs.hm.admin.web.model.container.UiContainer;
-import edu.scut.cs.hm.common.utils.ExtendedAssert;
+import edu.scut.cs.hm.model.ExtendedAssert;
 import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.docker.arg.GetContainersArg;
 import edu.scut.cs.hm.docker.model.container.DockerContainer;

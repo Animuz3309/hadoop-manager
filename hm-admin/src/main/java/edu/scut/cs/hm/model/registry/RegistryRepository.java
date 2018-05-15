@@ -7,7 +7,7 @@ import edu.scut.cs.hm.common.kv.KvStorageEvent;
 import edu.scut.cs.hm.common.kv.mapping.*;
 import edu.scut.cs.hm.common.mb.MessageBus;
 import edu.scut.cs.hm.common.utils.Closeables;
-import edu.scut.cs.hm.common.utils.ExtendedAssert;
+import edu.scut.cs.hm.model.ExtendedAssert;
 import edu.scut.cs.hm.docker.model.image.ImageCatalog;
 import edu.scut.cs.hm.docker.model.image.ImageName;
 import edu.scut.cs.hm.docker.model.image.SearchResult;

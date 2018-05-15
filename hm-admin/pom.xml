@@ -83,40 +83,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-joda</artifactId>
-        </dependency>
-
-        <!-- etcd -->
-        <dependency>
-            <groupId>org.mousio</groupId>
-            <artifactId>etcd4j</artifactId>
-        </dependency>
-
-        <!-- netty -->
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-        </dependency>
 
         <!-- swagger -->
         <dependency>
@@ -149,6 +115,11 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>bootstrap-table</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>edu.scut.cs</groupId>
+            <artifactId>hm-common</artifactId>
         </dependency>
     </dependencies>
 

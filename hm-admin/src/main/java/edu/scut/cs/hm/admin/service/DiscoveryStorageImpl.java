@@ -21,7 +21,7 @@ import edu.scut.cs.hm.common.security.acl.dto.AclSource;
 import edu.scut.cs.hm.common.security.acl.dto.Action;
 import edu.scut.cs.hm.common.utils.Closeables;
 import edu.scut.cs.hm.common.utils.ExecutorUtils;
-import edu.scut.cs.hm.common.utils.ExtendedAssert;
+import edu.scut.cs.hm.model.ExtendedAssert;
 import edu.scut.cs.hm.common.utils.Throwables;
 import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.model.StandardAction;

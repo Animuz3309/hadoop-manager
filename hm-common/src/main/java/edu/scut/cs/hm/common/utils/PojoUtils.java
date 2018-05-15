@@ -1,6 +1,6 @@
 package edu.scut.cs.hm.common.utils;
 
-import edu.scut.cs.hm.model.MethodsProperty;
+import edu.scut.cs.hm.common.pojo.MethodsProperty;
 import edu.scut.cs.hm.common.pojo.Property;
 
 import java.lang.reflect.Method;

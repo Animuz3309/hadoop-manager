@@ -16,7 +16,7 @@ import edu.scut.cs.hm.common.mb.MessageBus;
 import edu.scut.cs.hm.common.mb.Subscriptions;
 import edu.scut.cs.hm.common.security.acl.dto.Action;
 import edu.scut.cs.hm.common.utils.ExecutorUtils;
-import edu.scut.cs.hm.common.utils.ExtendedAssert;
+import edu.scut.cs.hm.model.ExtendedAssert;
 import edu.scut.cs.hm.docker.DockerConfig;
 import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.docker.model.events.DockerEventConfig;

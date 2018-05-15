@@ -1,7 +1,6 @@
-package edu.scut.cs.hm.common.utils;
+package edu.scut.cs.hm.model;
 
-import edu.scut.cs.hm.model.HttpException;
-import edu.scut.cs.hm.model.NotFoundException;
+import edu.scut.cs.hm.common.utils.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.http.HttpStatus;
 

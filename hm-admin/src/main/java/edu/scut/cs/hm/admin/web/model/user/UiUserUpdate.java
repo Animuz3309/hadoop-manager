@@ -2,7 +2,7 @@ package edu.scut.cs.hm.admin.web.model.user;
 
 import edu.scut.cs.hm.common.security.Authorities;
 import edu.scut.cs.hm.common.security.ExtendedUserDetailsImpl;
-import edu.scut.cs.hm.common.utils.ExtendedAssert;
+import edu.scut.cs.hm.model.ExtendedAssert;
 import edu.scut.cs.hm.common.utils.Sugar;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

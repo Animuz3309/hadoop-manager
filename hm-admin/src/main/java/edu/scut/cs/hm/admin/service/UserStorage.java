@@ -8,7 +8,7 @@ import edu.scut.cs.hm.common.security.ExtendedUserDetails;
 import edu.scut.cs.hm.common.security.ExtendedUserDetailsImpl;
 import edu.scut.cs.hm.common.security.UserIdentifiers;
 import edu.scut.cs.hm.common.security.UserIdentifiersDetailsService;
-import edu.scut.cs.hm.common.utils.ExtendedAssert;
+import edu.scut.cs.hm.model.ExtendedAssert;
 import edu.scut.cs.hm.model.user.UserRegistration;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

@@ -20,6 +20,8 @@
 
     <modules>
         <module>hm-admin</module>
+        <module>hm-agent</module>
+        <module>hm-common</module>
     </modules>
 
     <repositories>
@@ -70,6 +72,8 @@
         <!-- maven plugin version -->
         <minify-maven-plugin.version>1.7.6</minify-maven-plugin.version>
         <lesscss-maven-plugin.version>1.7.0.1.1</lesscss-maven-plugin.version>
+
+        <hm-common.version>0.1.0</hm-common.version>
     </properties>
 
     <dependencyManagement>
@@ -139,6 +143,12 @@
                 <groupId>org.webjars.bower</groupId>
                 <artifactId>bootstrap-table</artifactId>
                 <version>${webjars.bootstrap-table.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>edu.scut.cs</groupId>
+                <artifactId>hm-common</artifactId>
+                <version>${hm-common.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -6,7 +6,7 @@ import edu.scut.cs.hm.common.kv.KvUtils;
 import edu.scut.cs.hm.common.kv.mapping.KvMap;
 import edu.scut.cs.hm.common.kv.mapping.KvMapperFactory;
 import edu.scut.cs.hm.common.mb.MessageBus;
-import edu.scut.cs.hm.common.utils.ExtendedAssert;
+import edu.scut.cs.hm.model.ExtendedAssert;
 import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.docker.arg.StopContainerArg;
 import edu.scut.cs.hm.docker.model.container.ContainerDetails;

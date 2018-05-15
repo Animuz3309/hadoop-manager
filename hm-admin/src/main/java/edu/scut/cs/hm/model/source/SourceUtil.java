@@ -1,12 +1,10 @@
-package edu.scut.cs.hm.common.utils;
+package edu.scut.cs.hm.model.source;
 
+import edu.scut.cs.hm.common.utils.Sugar;
 import edu.scut.cs.hm.docker.model.container.ContainerDetails;
 import edu.scut.cs.hm.docker.model.mount.Mount;
 import edu.scut.cs.hm.docker.model.mount.MountSource;
 import edu.scut.cs.hm.docker.model.swarm.*;
-import edu.scut.cs.hm.model.source.RootSource;
-import edu.scut.cs.hm.model.source.ServiceSource;
-import edu.scut.cs.hm.model.source.ContainerSource;
 import edu.scut.cs.hm.docker.model.image.ImageName;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
