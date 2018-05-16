@@ -59,6 +59,17 @@
             <artifactId>jackson-module-parameter-names</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-manifests</artifactId>
+            <version>1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+
 
         <!-- etcd -->
         <dependency>

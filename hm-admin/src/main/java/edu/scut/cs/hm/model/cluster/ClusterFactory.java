@@ -3,12 +3,15 @@ package edu.scut.cs.hm.model.cluster;
 import edu.scut.cs.hm.admin.security.TempAuth;
 import edu.scut.cs.hm.admin.service.DiscoveryStorageImpl;
 import edu.scut.cs.hm.common.kv.mapping.KvMapperFactory;
+import edu.scut.cs.hm.common.validate.ValidationUtils;
 import edu.scut.cs.hm.docker.DockerConfig;
 import edu.scut.cs.hm.model.ngroup.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.util.Assert;
+
+import javax.validation.Validator;
 
 /**
  * Create ngroup which means {@link edu.scut.cs.hm.model.ngroup.NodesGroup}
@@ -18,11 +21,12 @@ import org.springframework.util.Assert;
 @Slf4j
 public class ClusterFactory {
     private final DiscoveryStorageImpl storage;
+    private final AutowireCapableBeanFactory beanFactory;
+    private final Validator validator;
     private AbstractNodesGroupConfig<?> config;
     private String type;
     private ClusterConfigFactory configFactory;
     private KvMapperFactory kvmf;
-    private final AutowireCapableBeanFactory beanFactory;
 
     /**
      * Set {@link AbstractNodesGroupConfig}
@@ -96,6 +100,11 @@ public class ClusterFactory {
         if(config instanceof DockerBasedClusterConfig) {
             // if config is null set default DockerBasedClusterConfig
             fixConfig((DockerBasedClusterConfig)config);
+        }
+
+        if(ccc.isMustValidated()) {
+            String clusterName = config.getName();
+            ValidationUtils.assertValid(validator, config, clusterName, "Config of " + clusterName + " is invalid.");
         }
     }
 

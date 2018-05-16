@@ -49,11 +49,11 @@ public final class UiUtils {
         }
     }
 
-    static void convertCode(ServiceCallResult res, UiError error) {
+    public static void convertCode(ServiceCallResult res, UiError error) {
         error.setCode(toStatus(res.getCode()).value());
     }
 
-    static ResponseEntity<UiResult> createResponse(ServiceCallResult result) {
+    public static ResponseEntity<UiResult> createResponse(ServiceCallResult result) {
         ResultCode code = result.getCode();
 
         String message = code + " " + (result.getMessage() == null ? "" : result.getMessage());
@@ -148,7 +148,7 @@ public final class UiUtils {
      * @param cluster
      * @return
      */
-    static Map<String, String> mapAppContainer(ApplicationService applicationService, NodesGroup cluster) {
+    public static Map<String, String> mapAppContainer(ApplicationService applicationService, NodesGroup cluster) {
         try {
             Map<String, String> containerApp = new HashMap<>();
             if(ClusterUtils.isDockerBased(cluster)) {
@@ -185,7 +185,7 @@ public final class UiUtils {
         return host + ":" + environment.getProperty("dm.server.port");
     }
 
-    static List<UiContainer> sortAndFilterContainers(List<UiContainer> list) {
+    public static List<UiContainer> sortAndFilterContainers(List<UiContainer> list) {
         List<UiContainer> filteredContainers = filterEmptyContainers(list);
         Collections.sort(filteredContainers);
         return filteredContainers;
@@ -194,7 +194,7 @@ public final class UiUtils {
     /**
      * workaround for preventing getting empty lines at UI
      */
-    static List<UiContainer> filterEmptyContainers(List<UiContainer> list) {
+    public static List<UiContainer> filterEmptyContainers(List<UiContainer> list) {
         return list.stream().filter(c -> StringUtils.hasText(c.getNode())).collect(Collectors.toList());
     }
 

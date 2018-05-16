@@ -11,6 +11,7 @@ import java.util.List;
  * 'service' - in terms of docker swarm-mode. Has id, name and represent couple
  * of instances of equals containers.
  */
+@Data
 public class ContainerService {
     @Data
     public static class Builder {

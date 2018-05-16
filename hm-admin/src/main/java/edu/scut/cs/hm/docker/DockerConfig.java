@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 public class DockerConfig {
 
-    private static final DockerConfig DEFAULT = DockerConfig.builder().build();
+    private static final DockerConfig.Builder DEFAULT = DockerConfig.builder();
 
     @Data
     public static class Builder {
@@ -53,18 +53,18 @@ public class DockerConfig {
             return this;
         }
 
-        public Builder merge(DockerConfig src) {
+        public Builder merge(DockerConfig.Builder src) {
             if(src == null) {
                 return this;
             }
-            Smelter<DockerConfig> s = new Smelter<>(src, DEFAULT);
-            s.set(this::setHost, DockerConfig::getHost);
-            s.setInt(this::setMaxCountOfInstances, DockerConfig::getMaxCountOfInstances);
-            s.set(this::setDockerRestart, DockerConfig::getDockerRestart);
-            s.set(this::setCluster, DockerConfig::getCluster);
-            s.set(this::setRegistries, DockerConfig::getRegistries);
-            s.setLong(this::setCacheTimeAfterWrite, DockerConfig::getCacheTimeAfterWrite);
-            s.setInt(this::setDockerTimeout, DockerConfig::getDockerTimeout);
+            Smelter<DockerConfig.Builder> s = new Smelter<>(src, DEFAULT);
+            s.set(this::setHost, DockerConfig.Builder::getHost);
+            s.setInt(this::setMaxCountOfInstances, DockerConfig.Builder::getMaxCountOfInstances);
+            s.set(this::setDockerRestart, DockerConfig.Builder::getDockerRestart);
+            s.set(this::setCluster, DockerConfig.Builder::getCluster);
+            s.set(this::setRegistries, DockerConfig.Builder::getRegistries);
+            s.setLong(this::setCacheTimeAfterWrite, DockerConfig.Builder::getCacheTimeAfterWrite);
+            s.setInt(this::setDockerTimeout, DockerConfig.Builder::getDockerTimeout);
             return this;
         }
 

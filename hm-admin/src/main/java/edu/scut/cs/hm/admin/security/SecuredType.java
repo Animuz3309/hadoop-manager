@@ -25,6 +25,11 @@ public enum SecuredType {
     CONTAINER,
 
     /**
+     * Docker service
+     */
+    SERVICE,
+
+    /**
      * image placed local node
      */
     LOCAL_IMAGE,
@@ -39,7 +44,10 @@ public enum SecuredType {
      */
     NETWORK,
     ;
-
+    /**
+     * It can not be calculated, because it is used for annotation.
+     */
+    public static final String CLUSTER_ADMIN = "ROLE_CLUSTER_ADMIN";
     private final String adminRole;
     private final String userRole;
 

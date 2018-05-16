@@ -20,6 +20,12 @@ public class ClusterCreationContext {
     private final String cluster;
     private Consumer<AbstractNodesGroup<?>> beforeClusterInit;
 
+    /**
+     * Note: be careful when config loaded from storage - this cases must not
+     * been validated, because user can not delete not loaded clusters.
+     */
+    private boolean mustValidated;
+
     public ClusterCreationContext(ClusterFactory factory, String cluster) {
         this.factory = factory;
         this.cluster = cluster;

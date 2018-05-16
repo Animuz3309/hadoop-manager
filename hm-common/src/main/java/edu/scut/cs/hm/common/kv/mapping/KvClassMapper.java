@@ -2,6 +2,8 @@ package edu.scut.cs.hm.common.kv.mapping;
 
 import com.google.common.base.MoreObjects;
 import edu.scut.cs.hm.common.kv.*;
+import edu.scut.cs.hm.common.validate.Validity;
+import edu.scut.cs.hm.common.validate.ValidityException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -131,7 +133,7 @@ public class KvClassMapper<T> {
      * @return object or null
      */
     public T load(String name) {
-        return load(name, null);
+        return load(name, (Class<T>)null);
     }
 
     /**
@@ -159,5 +161,19 @@ public class KvClassMapper<T> {
             actualType = subType;
         }
         return actualType;
+    }
+
+    /**
+     * Load into existed object
+     * @param name
+     * @param object
+     */
+    public void load(String name, T object) {
+        String path = path(name);
+        this.mapping.load(path, object);
+        Validity validity = mapperFactory.validate(path, object);
+        if(!validity.isValid()) {
+            throw new ValidityException("Invalid : ", validity);
+        }
     }
 }

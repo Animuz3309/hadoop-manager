@@ -16,7 +16,7 @@
     <version>0.1.0</version>
     <packaging>pom</packaging>
     <name>Hadoop Manager Tool</name>
-    <description>An Docker based hadoop manager tool</description>
+    <description>A Docker based hadoop manager tool</description>
 
     <modules>
         <module>hm-admin</module>

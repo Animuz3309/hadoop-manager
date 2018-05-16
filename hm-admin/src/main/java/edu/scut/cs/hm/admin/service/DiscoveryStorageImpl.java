@@ -45,6 +45,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
+import javax.validation.Validator;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -140,7 +141,7 @@ public class DiscoveryStorageImpl implements DiscoveryStorage {
     }
 
     private ClusterFactory clusterFactory() {
-        return  new ClusterFactory(this, beanFactory);
+        return  new ClusterFactory(this, beanFactory, validator);
     }
 
     /**
@@ -295,6 +296,7 @@ public class DiscoveryStorageImpl implements DiscoveryStorage {
     private final MessageBus<NodesGroupEvent> messageBus;
     private final AutowireCapableBeanFactory beanFactory;
     private final ExecutorService executor;
+    private final Validator validator;
 
     @Autowired
     public DiscoveryStorageImpl(KvMapperFactory kvmf,
@@ -303,12 +305,14 @@ public class DiscoveryStorageImpl implements DiscoveryStorage {
                                 NodeStorage nodeStorage,
                                 AccessContextFactory aclContextFactory,
                                 AutowireCapableBeanFactory beanFactory,
+                                Validator validator,
                                 @Qualifier(NodesGroupEvent.BUS) MessageBus<NodesGroupEvent> messageBus) {
         this.beanFactory = beanFactory;
         this.dockerServices = dockerServices;
         this.nodeStorage = nodeStorage;
         this.messageBus = messageBus;
         this.aclContextFactory = aclContextFactory;
+        this.validator = validator;
 
         KeyValueStorage storage = kvmf.getStorage();
         String prefix = storage.getPrefix() + "/clusters/";

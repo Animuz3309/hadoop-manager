@@ -12,7 +12,7 @@
     <artifactId>hm-admin</artifactId>
     <packaging>jar</packaging>
     <name>hm-admin</name>
-    <description>An Docker based hadoop manager tool - Admin</description>
+    <description>A Docker based hadoop manager tool - Admin</description>
 
     <dependencies>
         <dependency>

@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 
+import javax.validation.Validator;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class KvConfiguration {
     }
 
     @Bean
-    public KvMapperFactory kvMapperFactory(ObjectMapper objectMapper, KeyValueStorage storage, TextEncryptor encryptor) {
-        return new KvMapperFactory(objectMapper, storage, encryptor);
+    public KvMapperFactory kvMapperFactory(ObjectMapper objectMapper, KeyValueStorage storage, TextEncryptor encryptor, Validator validator) {
+        return new KvMapperFactory(objectMapper, storage, encryptor, validator);
     }
 }
