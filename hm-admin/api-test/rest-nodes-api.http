@@ -10,8 +10,14 @@ Accept: application/json
 Content-Type: application/json
 X-Auth-Token: {{auth_token}}
 
-###
+### Get the node
 GET http://{{app}}/api/nodes/test1
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{auth_token}}
+
+### Remove node
+DELETE http://{{app}}/api/nodes/zedd-TM1701
 Accept: application/json
 Content-Type: application/json
 X-Auth-Token: {{auth_token}}

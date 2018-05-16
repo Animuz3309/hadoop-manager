@@ -62,7 +62,7 @@ public class NodeInfoImpl implements NodeInfo, Comparable<NodeInfoImpl> {
         }
 
         public Builder addressIfNeed(String host) {
-            if(getAddress() == null || !getAddress().equals(host)) {
+            if(getAddress() == null) {
                 setAddress(host);
             }
             return this;

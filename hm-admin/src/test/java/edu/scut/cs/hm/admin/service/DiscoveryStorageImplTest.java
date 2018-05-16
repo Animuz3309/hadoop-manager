@@ -33,6 +33,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.AsyncRestTemplate;
 
+import javax.validation.Validator;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
@@ -70,6 +71,7 @@ public class DiscoveryStorageImplTest {
                                           DockerServices dockerServices,
                                           NodeStorage nodeStorage,
                                           AccessContextFactory acl,
+                                          Validator validator,
                                           AutowireCapableBeanFactory beanFactory,
                                           @Qualifier(NodesGroupEvent.BUS) MessageBus<NodesGroupEvent> messageBus) {
             return new DiscoveryStorageImpl(
@@ -79,6 +81,7 @@ public class DiscoveryStorageImplTest {
                     nodeStorage,
                     acl,
                     beanFactory,
+                    validator,
                     messageBus);
         }
 
@@ -95,6 +98,7 @@ public class DiscoveryStorageImplTest {
         }
 
         @Bean
+        @Primary
         AccessContextFactory accessContextFactory() {
             AccessContextFactory acf = mock(AccessContextFactory.class);
             AccessContext ac = mock(AccessContext.class);
