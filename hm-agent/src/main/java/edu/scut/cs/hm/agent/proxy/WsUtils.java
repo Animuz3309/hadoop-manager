@@ -2,9 +2,19 @@ package edu.scut.cs.hm.agent.proxy;
 
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 
+import javax.servlet.http.HttpServletRequest;
+
 final class WsUtils {
     private WsUtils() {
+    }
 
+    static String reconstructUri(HttpServletRequest request) {
+        String q = request.getQueryString();
+        String req = request.getRequestURI();
+        if(q == null) {
+            return req;
+        }
+        return req + "?" + q;
     }
 
     static WebSocketVersion getWsVersion(String str) {

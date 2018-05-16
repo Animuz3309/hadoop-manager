@@ -101,3 +101,9 @@ DELETE http://{{app}}/api/users/test1
 Accept: application/json
 Content-Type: application/json
 X-Auth-Token: {{auth_token}}
+
+###
+GET http://{{app}}/api/ws/tty/sockjs?token={{auth_token}}
+Upgrade: websocket
+
+###

@@ -15,13 +15,9 @@ import io.netty.util.ReferenceCountUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.socket.server.standard.SpringConfigurator;
+import org.springframework.stereotype.Component;
 
-import javax.websocket.OnOpen;
-import javax.websocket.RemoteEndpoint;
-import javax.websocket.SendResult;
-import javax.websocket.Session;
-import javax.websocket.server.ServerEndpoint;
+import javax.websocket.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
@@ -29,21 +25,21 @@ import java.nio.charset.StandardCharsets;
  * WebSocket proxy to connect others client outside to docker.sock in this computer
  */
 @Slf4j
+@Component
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-@ServerEndpoint(value = "/containers/{container}/attach/ws", configurator = SpringConfigurator.class)
-public class WsProxy {
+public class WsProxy extends Endpoint {
 
+    // sock("/var/run/docker.sock")
     private final Backend backend;
 
-    @OnOpen
-    public void onOpen(Session session) {
+    @Override
+    public void onOpen(Session session, EndpointConfig config) {
         String id = session.getId();
         log.debug("{}: open ws proxy", id);
         try {
             ChannelFuture cf = backend.connect().sync();
             Channel channel = cf.channel();
 
-            // use ws client to connect to sock(/var/run/docker.sock) to attach to a container
             WebSocketClientProtocolHandler wscph = makeWsProtocolHandler(session);
             WebSocketClientHandshaker handshaker = wscph.handshaker();
             WsHandler handler = new WsHandler(handshaker, channel, session);
@@ -53,11 +49,11 @@ public class WsProxy {
                     handler);
             handshaker.handshake(channel);
             log.debug("{}: wait messages", id);
-            // add message handler to do with message send from other remote ws client
+
             session.addMessageHandler(String.class, handler::onFrontString);
             session.addMessageHandler(ByteBuffer.class, handler::onFrontBytes);
         } catch (Exception e) {
-
+            log.error("{}: can not establish ws connect with backed", id, e);
         }
     }
 

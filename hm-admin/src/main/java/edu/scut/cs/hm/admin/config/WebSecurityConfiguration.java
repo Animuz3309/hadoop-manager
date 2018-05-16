@@ -57,12 +57,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // 节点通信address
         final String dsUrl = "/discovery/**";
         http.csrf().disable()
+                .headers().frameOptions().disable().and()                                // allow
                 .authenticationProvider(provider).userDetailsService(userDetailsService)
                 .anonymous().principal(SecurityUtils.USER_ANONYMOUS).and()
-                .authorizeRequests().antMatchers(apiLoginUrl).permitAll()                // ajax获取api token
+                .authorizeRequests().antMatchers(apiLoginUrl).permitAll()                // rest api get api token
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()          // allow CORS option calls
-                .antMatchers(dsUrl).permitAll()                                          // 节点通信接口
-                .antMatchers("/**", apiPrefix + "**").authenticated()
+                .antMatchers(dsUrl).permitAll()                                          // allow ds agent communicate
+                .antMatchers("/**", apiPrefix + "**").authenticated()        // /api/** and /** need to auth
                 .and().headers().cacheControl().disable()
                 .and().formLogin().loginPage(loginUrl).permitAll().defaultSuccessUrl("/dashboard")
                 .and().logout().logoutUrl(logoutUrl).logoutSuccessUrl(loginUrl)

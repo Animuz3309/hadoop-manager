@@ -10,7 +10,9 @@ import io.netty.channel.unix.DomainSocketChannel;
 import io.netty.handler.codec.http.HttpClientCodec;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
 
+@Component
 class Backend implements InitializingBean, DisposableBean {
 
     private Bootstrap bootstrap;
