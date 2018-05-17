@@ -134,7 +134,7 @@ public class WsProxy extends Endpoint {
         private void handleSend(SendResult res) {
             Throwable th = res.getException();
             if (th != null) {
-                log.error("{}: error on send msg to front, close ", id, th);
+                log.error("{}: error on send event to front, close ", id, th);
                 internalClose();
             }
         }

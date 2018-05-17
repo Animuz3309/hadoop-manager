@@ -11,5 +11,5 @@ public interface EventWithTime {
      * event occure time
      */
     @JsonIgnore
-    long eventTimeMillis();
+    long getTimeInMilliseconds();
 }

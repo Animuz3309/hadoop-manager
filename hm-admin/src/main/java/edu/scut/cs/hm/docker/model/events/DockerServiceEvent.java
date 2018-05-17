@@ -71,7 +71,7 @@ public class DockerServiceEvent implements WithCluster, EventWithTime, WithSever
     }
 
     @Override
-    public long eventTimeMillis() {
+    public long getTimeInMilliseconds() {
         return time.toEpochSecond(ZoneOffset.UTC);
     }
 

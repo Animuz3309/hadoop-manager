@@ -60,7 +60,7 @@ public class Event implements EventWithTime {
     }
 
     @Override
-    public long eventTimeMillis() {
+    public long getTimeInMilliseconds() {
         return date == null? Long.MIN_VALUE : date.getTime();
     }
 }

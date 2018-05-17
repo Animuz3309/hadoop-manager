@@ -2,6 +2,7 @@ package edu.scut.cs.hm.model.node;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import edu.scut.cs.hm.admin.component.PersistentBusFactory;
 import edu.scut.cs.hm.docker.DockerService;
 import edu.scut.cs.hm.admin.security.AccessContextFactory;
 import edu.scut.cs.hm.admin.security.SecuredType;
@@ -53,13 +54,14 @@ public class NodeRegistrationImpl implements NodeRegistration, AutoCloseable {
     private volatile DockerService docker;
     private volatile ScheduledFuture<?> logFuture;  // get log from docker
 
-    public NodeRegistrationImpl(NodeStorage nodeStorage, NodeInfo nodeInfo) {
+    public NodeRegistrationImpl(NodeStorage nodeStorage, PersistentBusFactory pbf, NodeInfo nodeInfo) {
         String name = nodeInfo.getName();
         NodeUtils.checkName(name);
         this.name = name;
         this.nodeStorage = nodeStorage;
         this.oid = SecuredType.NODE.id(name);
-        this.healthBus = MessageBuses.create("node[" + name + "].metrics", NodeHealthEvent.class);
+        // name may contain dots
+        this.healthBus = pbf.create(NodeHealthEvent.class, "node[" + name + "].metrics", 2000/* TODO in config */);
         synchronized (lock) {
             this.builder = NodeInfoImpl.builder(nodeInfo);
         }

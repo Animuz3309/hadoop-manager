@@ -24,7 +24,7 @@ public class ProcessEvent {
     }
 
     /**
-     * Accept null watcher and use {@link MessageFormat} for interpolating 'msg' with args.
+     * Accept null watcher and use {@link MessageFormat} for interpolating 'event' with args.
      * @param watcher
      * @param msg a string or template for {@link MessageFormat}
      * @param args

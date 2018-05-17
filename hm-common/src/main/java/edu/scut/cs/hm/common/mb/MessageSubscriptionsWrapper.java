@@ -1,5 +1,7 @@
 package edu.scut.cs.hm.common.mb;
 
+import edu.scut.cs.hm.common.utils.Key;
+
 import java.util.function.Consumer;
 
 /**
@@ -36,5 +38,15 @@ public class MessageSubscriptionsWrapper<M> implements Subscriptions<M> {
     @Override
     public Class<M> getType() {
         return orig.getType();
+    }
+
+    @Override
+    public <T> T getExtension(Key<T> key) {
+        return orig.getExtension(key);
+    }
+
+    @Override
+    public <T> T getOrCreateExtension(Key<T> key, ExtensionFactory<T, M> factory) {
+        return orig.getOrCreateExtension(key, factory);
     }
 }

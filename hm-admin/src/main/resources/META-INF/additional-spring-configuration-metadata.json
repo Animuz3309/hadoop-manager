@@ -39,5 +39,15 @@
       "name": "hm.agent.start",
       "type": "java.lang.String",
       "description": "(required) The start script for hm-agent."
+    },
+    {
+      "name": "hm.data.location",
+      "type": "java.lang.String",
+      "description": "(optional) Data location."
+    },
+    {
+      "name": "hm.fbstorage.location",
+      "type": "java.lang.String",
+      "description": "(optional) Data location for file base storage."
     }
   ] }

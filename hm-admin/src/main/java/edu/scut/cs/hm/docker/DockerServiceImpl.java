@@ -1207,7 +1207,7 @@ public class DockerServiceImpl implements DockerService {
         } catch (Exception ex) {
             log.error("Can not process status code exception message.", ex);
         }
-        // in some cases msg may be null on success reading value, but anyway we need to make non null value manually
+        // in some cases event may be null on success reading value, but anyway we need to make non null value manually
         if(msg == null) {
             msg = formatHttpException(e);
             res.setMessage(msg);

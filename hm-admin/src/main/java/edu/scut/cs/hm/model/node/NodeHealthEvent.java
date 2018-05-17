@@ -25,7 +25,7 @@ public class NodeHealthEvent implements EventWithTime, WithCluster {
     }
 
     @Override
-    public long eventTimeMillis() {
+    public long getTimeInMilliseconds() {
         ZonedDateTime time = health.getTime();
         if(time == null) {
             return Long.MIN_VALUE;

@@ -22,7 +22,6 @@
         <module>hm-admin</module>
         <module>hm-agent</module>
         <module>hm-common</module>
-        <module>hm-api-test</module>
     </modules>
 
     <repositories>

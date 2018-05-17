@@ -1,10 +1,14 @@
 package edu.scut.cs.hm.admin.config;
 
+import edu.scut.cs.hm.admin.component.ErrorAggregator;
 import edu.scut.cs.hm.common.mb.MessageBus;
 import edu.scut.cs.hm.common.mb.MessageBuses;
+import edu.scut.cs.hm.common.mb.Subscriptions;
 import edu.scut.cs.hm.docker.model.events.DockerLogEvent;
 import edu.scut.cs.hm.docker.model.events.DockerServiceEvent;
+import edu.scut.cs.hm.model.WithSeverity;
 import edu.scut.cs.hm.model.application.ApplicationEvent;
+import edu.scut.cs.hm.model.event.EventsUtils;
 import edu.scut.cs.hm.model.ngroup.NodesGroupEvent;
 import edu.scut.cs.hm.model.node.NodeEvent;
 import org.springframework.context.annotation.Bean;
@@ -36,5 +40,10 @@ public class MbConfiguration {
     @Bean(name = ApplicationEvent.BUS)
     MessageBus<ApplicationEvent> applicationEventMessageBus() {
         return MessageBuses.create(ApplicationEvent.BUS, ApplicationEvent.class);
+    }
+
+    @Bean(name = EventsUtils.BUS_ERRORS)
+    Subscriptions<WithSeverity> errorMessageBus(ErrorAggregator errorAggregator) {
+        return errorAggregator.getSubscriptions();
     }
 }

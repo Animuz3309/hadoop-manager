@@ -2,6 +2,7 @@ package edu.scut.cs.hm.admin.service;
 
 import com.google.common.collect.ImmutableSet;
 import edu.scut.cs.hm.admin.component.DockerServiceFactory;
+import edu.scut.cs.hm.admin.component.PersistentBusFactory;
 import edu.scut.cs.hm.admin.security.AccessContext;
 import edu.scut.cs.hm.admin.security.AccessContextFactory;
 import edu.scut.cs.hm.admin.security.SecuredType;
@@ -52,6 +53,7 @@ public class NodeStorage implements NodeInfoProvider, NodeRegistry {
     @Getter private final DockerEventConfig dockerEventConfig;
     private final MessageBus<NodeEvent> nodeEventBus;
     private final MessageBus<DockerLogEvent> dockerLogBus;
+    private final PersistentBusFactory persistentBusFactory;
     private final KvMap<NodeRegistrationImpl> nodes;
     private final ExecutorService executor;
 
@@ -62,11 +64,13 @@ public class NodeStorage implements NodeInfoProvider, NodeRegistry {
                        DockerEventConfig dockerEventConfig,
                        KvMapperFactory kvmf,
                        @Qualifier(NodeEvent.BUS) MessageBus<NodeEvent> nodeEventBus,
-                       @Qualifier(DockerLogEvent.BUS) MessageBus<DockerLogEvent> dockerLogBus) {
+                       @Qualifier(DockerLogEvent.BUS) MessageBus<DockerLogEvent> dockerLogBus,
+                       PersistentBusFactory persistentBusFactory) {
         this.nodeStorageConfig = nodeStorageConfig;                // get NodeStorageConfig
         this.dockerEventConfig = dockerEventConfig;                // get DockerEventConfig
         this.nodeEventBus = nodeEventBus;
         this.dockerLogBus = dockerLogBus;
+        this.persistentBusFactory = persistentBusFactory;
 
         KeyValueStorage storage = kvmf.getStorage();
         String nodesPrefix = storage.getPrefix() + "/nodes/";
@@ -184,7 +188,7 @@ public class NodeStorage implements NodeInfoProvider, NodeRegistry {
      * @return
      */
     public NodeRegistrationImpl newRegistration(NodeInfo nodeInfo) {
-        NodeRegistrationImpl nr = new NodeRegistrationImpl(this, nodeInfo);
+        NodeRegistrationImpl nr = new NodeRegistrationImpl(this, persistentBusFactory, nodeInfo);
         nr.setTtl(this.nodeStorageConfig.getUpdateSeconds() * 2);
         nr.init();
         return nr;

@@ -1,12 +1,15 @@
 package edu.scut.cs.hm.common.mb;
 
 import edu.scut.cs.hm.common.utils.Closeables;
+import edu.scut.cs.hm.common.utils.Key;
 import lombok.Data;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -69,6 +72,7 @@ public final class MessageBusImpl<M, S extends Subscriptions<M>> implements Mess
     private final S subscriptions;
     private final SubscribeListener<M> onSubscribe;
     private final SubscribeListener<M> onUnsubscribe;
+    private final ConcurrentMap<Key<?>, Object> extensions = new ConcurrentHashMap<>();
 
     private MessageBusImpl(Builder<M, S> b) {
         Assert.hasText(b.id, "id is null or empty");
@@ -207,8 +211,23 @@ public final class MessageBusImpl<M, S extends Subscriptions<M>> implements Mess
     }
 
     @Override
+    public <T> T getOrCreateExtension(Key<T> key, ExtensionFactory<T, M> factory) {
+        Assert.notNull(key, "key is null");
+        Object old = this.extensions.computeIfAbsent(key, (k) -> factory.create(key, this));
+        return key.cast(old);
+    }
+
+    @Override
+    public <T> T getExtension(Key<T> key) {
+        Assert.notNull(key, "key is null");
+        return Key.get(this.extensions, key);
+    }
+
+    @Override
     public void close() throws Exception {
         List<Consumer<M>> old = listenersRef.getAndSet(Collections.emptyList());
         old.forEach(Closeables::closeIfCloseable);
+        this.extensions.values().forEach(Closeables::closeIfCloseable);
+        this.extensions.clear();
     }
 }

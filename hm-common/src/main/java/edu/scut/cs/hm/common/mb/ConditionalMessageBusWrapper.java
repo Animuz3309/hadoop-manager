@@ -1,6 +1,7 @@
 package edu.scut.cs.hm.common.mb;
 
 import edu.scut.cs.hm.common.utils.Closeables;
+import edu.scut.cs.hm.common.utils.Key;
 
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -82,5 +83,15 @@ public final class ConditionalMessageBusWrapper<M, K> implements ConditionalSubs
     @Override
     public Class<M> getType() {
         return subscriptions.getType();
+    }
+
+    @Override
+    public <T> T getOrCreateExtension(Key<T> key, ExtensionFactory<T, M> factory) {
+        return subscriptions.getOrCreateExtension(key, factory);
+    }
+
+    @Override
+    public <T> T getExtension(Key<T> key) {
+        return subscriptions.getExtension(key);
     }
 }

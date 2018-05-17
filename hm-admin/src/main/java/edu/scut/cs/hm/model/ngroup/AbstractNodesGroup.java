@@ -46,7 +46,7 @@ public abstract class AbstractNodesGroup<C extends AbstractNodesGroupConfig<C>> 
     private final Logger log = LoggerFactory.getLogger(getClass());     // not use static or @Sl4j here, because need use log(subclass)
     private final CreateNetworkTask createNetworkTask = new CreateNetworkTask();
     private final AtomicInteger state = new AtomicInteger(S_BEGIN);     // state of nodes group
-    private volatile String stateMessage;                               // state msg
+    private volatile String stateMessage;                               // state event
     private DiscoveryStorageImpl storage;                                   // storage to do with nodes group
     private Class<C> configClass;                                       // class type of NodesGroupConfig
     private String name;                                                // name of nodes group
