@@ -24,7 +24,7 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(wsTtyHandler, "/api/ws/tty")
+        registry.addHandler(wsTtyHandler, "/ws/tty")
                 .setAllowedOrigins("*")
                 .addInterceptors()
                 .withSockJS();
