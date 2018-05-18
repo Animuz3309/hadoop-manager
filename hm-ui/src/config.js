@@ -15,7 +15,7 @@ module.exports = Object.assign({
   host: process.env.HOST || 'localhost',
   port: process.env.PORT,
   apiHost: apiHost,
-  eventServer: apiHost + "/ws/stomp",
+  eventServer: apiHost + "/api/stomp",
   mock: false,
   app: {
     title: 'Hadoop Manager Tool',

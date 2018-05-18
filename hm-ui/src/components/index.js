@@ -4,6 +4,7 @@ export Breadcrumbs from "./common/Breadcrumbs/Breadcrumbs";
 export Chain from "./common/Chain/Chain";
 export ConfirmDialog from "./common/ConfirmDialog/ConfirmDialog";
 export Dialog from './common/Dialog/Dialog';
+export NavContainer from './common/NavContainer/NavContainer';
 export OnOff from './common/OnOff/OnOff';
 export SimpleModal from "./common/SimpleModal/SimpleModal";
 export StatisticsPanel from "./common/StatisticsPanel/StatisticsPanel";
