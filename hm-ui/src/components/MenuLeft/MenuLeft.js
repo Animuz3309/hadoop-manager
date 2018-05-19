@@ -7,6 +7,7 @@ import {connect} from "react-redux";
 import {getCurrentUser} from "../../redux/modules/users/users";
 import _ from "lodash";
 import {Dialog} from "../index";
+import {connectWebsocketEventsListener} from '../common/EventListener/EventListener';
 
 //todo add event listener "ws"
 @connect(
@@ -49,6 +50,7 @@ export default class MenuLeft extends Component {
 
   componentDidMount() {
     this.checkSideBarCollapsed();
+    connectWebsocketEventsListener(this.context.store);
   }
 
   showPasswordChange(title) {

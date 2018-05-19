@@ -1,0 +1,7 @@
+### GET avaliable registries
+GET http://{{app}}/api/registries/
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{auth_token}}
+
+###

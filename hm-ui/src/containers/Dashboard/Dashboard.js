@@ -4,18 +4,26 @@ import {connect} from 'react-redux';
 import _ from 'lodash';
 import {Row, Col} from 'react-bootstrap';
 import {StatisticsPanel, DashboardNodesList, DashboardClustersList} from '../../components';
+import {load as loadClusters} from '../../redux/modules/clusters/clusters';
+import {load as loadNodes} from '../../redux/modules/nodes/nodes';
+import {count as countEvents} from '../../redux/modules/events/events';
 
-//todo dashboard load clusters, nodes, events from server
 @connect(
   state => ({
     clusters: state.clusters,
-    nodes: state.nodes
-  })
-)
+    nodes: state.nodes,
+    lastEvents: state.events.last,
+    alerts: state.events.alerts,
+  }), {loadClusters, loadNodes, countEvents})
 export default class Dashboard extends Component {
   static propTypes = {
     clusters: PropTypes.object,
-    nodes: PropTypes.object
+    nodes: PropTypes.object,
+    lastEvents: PropTypes.array,
+    alerts: PropTypes.object,
+    loadClusters: PropTypes.func.isRequired,
+    loadNodes: PropTypes.func.isRequired,
+    countEvents: PropTypes.func.isRequired,
   };
 
   statisticsMetrics = [
@@ -42,10 +50,23 @@ export default class Dashboard extends Component {
   ];
 
   componentDidMount() {
-    // todo load clusters, nodes, events from api server
+    const {loadClusters, loadNodes, countEvents} = this.props;
+    let clusterNames = [];
+    loadClusters().then(() => {
+      for (let key in this.props.clusters) {
+        if (typeof(this.props.clusters[key] === 'Cluster')) {
+          clusterNames.push('cluster:' + key);
+        }
+      }
+      countEvents('bus.hm.errors', clusterNames);
+    });
+    loadNodes();
   }
 
   render() {
+    const {lastEvents, alerts} = this.props;
+    let events = lastEvents ? lastEvents.slice(0, 20) : null;
+
     const styles = require('./Dashboard.scss');
 
     let activeClusters = 0;
@@ -56,21 +77,20 @@ export default class Dashboard extends Component {
     let top5Memory = [];
     let top5CPU = [];
     let top5Network = [];
+
+    let clustersList = Object.values(this.props.clusters).filter((cluster) => (cluster.features && !_.isEmpty(cluster.features)));
+    let clustersAll = Object.values(this.props.clusters).filter((cluster) => cluster.name === 'all');
+
+    // 处理cluster与activeCluster的数量
     if (this.props.clusters) {
-      let clustersList = Object.values(this.props.clusters).filter((cluster) => (cluster.features && !_.isEmpty(cluster.features)));
-      let clustersAll = Object.values(this.props.clusters).filter((cluster) => cluster.name === 'all');
-
-      // 处理cluster与activeCluster的数量
-      if (this.props.clusters) {
-        const clusters = clustersList;
-        activeClusters = clusters.length;
-      }
-
-      // 处理运行容器的数量
-      clustersAll.forEach((cluster) => {
-        runningContainers += cluster.containers.on || 0;
-      });
+      const clusters = clustersList;
+      activeClusters = clusters.length;
     }
+
+    // 处理运行容器的数量
+    clustersAll.forEach((cluster) => {
+      runningContainers += cluster.containers.on || 0;
+    });
 
     // 处理nodes数量以及nodes的mem, cpu, network负载
     if (this.props.nodes) {
@@ -123,7 +143,13 @@ export default class Dashboard extends Component {
       });
     }
 
-    let clusters = [];
+    let clusters;
+    if (this.props.clusters) {
+      clusters = clustersList.map((element)=> {
+        let alertsCount = alerts ? alerts[element.name] : 0;
+        return Object.assign(element, alertsCount);
+      });
+    }
 
     return (
       <div className={styles.home}>

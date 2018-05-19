@@ -3,9 +3,13 @@ import {IndexRoute, Route} from 'react-router';
 import {
   App,
   Dashboard,
+  ClustersPanel,
+  NodesPanel,
   Login,
   LoginSuccess,
-  NotFound
+  NotFound,
+  SettingsPanel,
+  AgentPanel,
 } from 'containers';
 
 export default (store) => {
@@ -48,6 +52,11 @@ export default (store) => {
 
         <Route name="Dashboard" path="dashboard" component={Dashboard}/>
         <Route name="Login Successful" path="loginSuccess" component={LoginSuccess}/>
+        <Route name="Clusters" path="clusters" component={ClustersPanel}/>
+        <Route name="Nodes" path="nodes" component={NodesPanel}/>
+        <Route name="Nodes" path="clusters/:name/nodes" component={NodesPanel}/>
+        <Route name="Settings" path="settings" component={SettingsPanel}/>
+        <Route name="Agent" path="agent" component={AgentPanel}/>
       </Route>
 
 			{ /* Public Routes */ }

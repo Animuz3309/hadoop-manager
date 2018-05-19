@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {CommonModel} from '../common/CommonModel';
+import {CommonModel} from '../core/CommonModel';
 
 export class Cluster extends CommonModel {
   name;

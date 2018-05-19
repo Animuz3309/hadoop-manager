@@ -8,7 +8,7 @@ import edu.scut.cs.hm.model.WithCluster;
  */
 public class ClusterFilter implements Filter {
 
-    public static final String PROTO = "ngroup";
+    public static final String PROTO = "cluster";
     private final String pattern;
     private final String expr;
 

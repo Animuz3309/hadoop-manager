@@ -8,8 +8,12 @@ import {reducer as form} from 'redux-form';
 import menuLeft from './menuLeft/menuLeft';
 import clusters from './clusters/clusters';
 import clustersUI from './clusters/clustersUI';
+import containers from './containers/containers';
+import containersUI from './containers/containersUI';
 import nodes from './nodes/nodes';
 import nodesUI from './nodes/nodesUI';
+import images from './images/images';
+import imagesUI from './images/imagesUI';
 import registries from './registries/registries';
 import registriesUI from './registries/registriesUI';
 import events from './events/events';
@@ -25,14 +29,18 @@ export default combineReducers({
   menuLeft,
   // Begin models data
   clusters,
+  containers,
   nodes,
+  images,
   registries,
   events,
   settings,
   users,
   // End models data
+  imagesUI,
   registriesUI,
   clustersUI,
+  containersUI,
   nodesUI,
   errors
 });
