@@ -63,7 +63,7 @@ export default class App extends Component {
           title: 'Server connection problem',
           message: msg,
           level: 'error',
-          autoDismiss: 1,
+          autoDismiss: 2,
           position: 'tc',
           onRemove: this.removeNotification.bind(this)
         });

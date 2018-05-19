@@ -28,6 +28,8 @@ public class UiClusterEditablePart {
     private DockerConfig.Builder config;
     @ApiModelProperty("(Just for cluster 'DOCKER') List of node names which is will be joined into cluster as managers.")
     private List<String> managers;
+    @ApiModelProperty("(Just for cluster 'DOCKER') The swarm listening port ")
+    private int swarmPort = -1;
 
     public void toCluster(NodesGroupConfig ng) {
         Sugar.setIfChanged(ng::setDescription, getDescription());
@@ -36,6 +38,9 @@ public class UiClusterEditablePart {
         if(ng instanceof DockerClusterConfig) {
             DockerClusterConfig dcc = (DockerClusterConfig) ng;
             dcc.setManagers(managers);
+            if (swarmPort != -1) {
+                dcc.setSwarmPort(swarmPort);
+            }
         }
     }
 }
