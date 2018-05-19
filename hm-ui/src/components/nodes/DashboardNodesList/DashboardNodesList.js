@@ -72,13 +72,13 @@ export default class DashboardNodesList extends Component {
         bytesIn += _.get(el, 'bytesIn', 0);
         bytesOut += _.get(el, 'bytesOut', 0);
       });
-      let metricValueIn = (bytesIn / 1024 / 1024 / 1024).toFixed(1);
-      let metricValueOut = (bytesOut / 1024 / 1024 / 1024).toFixed(1);
+      let metricValueIn = (bytesIn / 1024 / 1024 / 1024).toFixed(2);
+      let metricValueOut = (bytesOut / 1024 / 1024 / 1024).toFixed(2);
       metricValue = `${metricValueIn}G/${metricValueOut}G`;
     }
 
     if (this.props.metric === "sysCpuLoad") {
-      metricValue = metricValue + '%';
+      metricValue = metricValue.toFixed(2) + '%';
     }
     return (
       <td key="metric">

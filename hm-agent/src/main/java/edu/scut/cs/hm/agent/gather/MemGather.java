@@ -47,6 +47,6 @@ public class MemGather implements Gather {
         long val = Long.parseLong(matcher.group(1));
         String multStr = matcher.group(2);
         long mult = DataSize.parseMultiplier(multStr);
-        return val + mult;
+        return val * mult;
     }
 }

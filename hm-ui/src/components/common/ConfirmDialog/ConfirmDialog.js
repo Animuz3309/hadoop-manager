@@ -32,7 +32,7 @@ export default class ConfirmDialog extends Component {
       this.reject = reject;
     });
     let $el = $('#confirm');
-    $el.model('show');
+    $el.modal('show');
     $el.find('.btn-primary').focus();
     $el.on('hidden.bs.modal', () => this.reject());
   }

@@ -195,13 +195,13 @@ export default class ClustersPanel extends Component {
                       currentUserRole={_.get(this.props.users, 'currentUser.role', '')}
         />
 
-        {/* <Panel header={eventsHeaderBar}>
+        <Panel header={eventsHeaderBar}>
           {this.props.events && (
             <EventLog data={this.state.clumanErrors}
                       loading={!this.props.events}
             />
           )}
-        </Panel> */}
+        </Panel>
 
         {(this.state && this.state.actionDialog) && (
           <div>
@@ -311,6 +311,7 @@ export default class ClustersPanel extends Component {
         return;
 
       case "delete":
+        console.log('delete');
         confirm('Are you sure you want to delete cluster "' + cluster + '" ?')
           .then(() => {
             this.props.deleteCluster(cluster).catch(() => null)

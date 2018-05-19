@@ -149,6 +149,7 @@ export function update(name, data) {
 }
 
 export function deleteCluster(clusterId) {
+  console.log('test');
   return {
     types: [ACTIONS.DELETE, ACTIONS.DELETE_SUCCESS, ACTIONS.DELETE_FAIL],
     promise: (client) => client.del(`/api/clusters/${clusterId}`)

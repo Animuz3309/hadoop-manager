@@ -1,8 +1,8 @@
-import React, {Component, PropTypes} from 'react';
-import {Link} from 'react-router';
-import {DockTable, OnOff, Chain, ActionMenu} from '../index';
+import React, { Component, PropTypes } from 'react';
+import { Link } from 'react-router';
+import { DockTable, OnOff, Chain, ActionMenu } from '../index';
 import _ from 'lodash';
-import {Label, Badge, ButtonToolbar, SplitButton, MenuItem, Panel, Button, ProgressBar, Glyphicon} from 'react-bootstrap';
+import { Label, Badge, ButtonToolbar, SplitButton, MenuItem, Panel, Button, ProgressBar, Glyphicon } from 'react-bootstrap';
 
 export default class ClustersList extends Component {
   static propTypes = {
@@ -25,6 +25,12 @@ export default class ClustersList extends Component {
       name: 'description',
       label: 'Description',
       sortable: true
+    },
+    {
+      name: 'state',
+      label: 'State',
+      sortable: true,
+      render: this.stateRender
     },
     {
       name: 'features',
@@ -94,7 +100,7 @@ export default class ClustersList extends Component {
   ];
 
   componentDidMount() {
-    $(window).resize(()=> {
+    $(window).resize(() => {
       let $box = $("#contentBox");
       let $toolBar = $("#toolBar");
       if ($box.width() < 480) {
@@ -112,7 +118,6 @@ export default class ClustersList extends Component {
 
       </div>
     );
-
     return (
       <Panel header={panelHeader}>
         {this.props.loading && (
@@ -127,13 +132,13 @@ export default class ClustersList extends Component {
                   bsStyle="primary"
                   onClick={this.props.onNewCluster}
                 >
-                  <i className="fa fa-plus"/>&nbsp;
+                  <i className="fa fa-plus" />&nbsp;
                   New Cluster
                 </Button>
               </ButtonToolbar>
             )}
             <DockTable columns={this.COLUMNS}
-                       rows={this.props.data}
+              rows={this.props.data}
             />
           </div>
         )}
@@ -145,6 +150,15 @@ export default class ClustersList extends Component {
     return (
       <td key="name">
         <Link to={`/clusters/${cluster.name}`}>{cluster.name}</Link>
+      </td>
+    );
+  }
+
+  stateRender(cluster) {
+    let onColor = cluster.state.ok ? 'up-status-count' : 'down-status-count';
+    return (
+      <td key="state">
+        <Badge bsClass={"badge " + onColor}>{cluster.state.message}</Badge>
       </td>
     );
   }
@@ -161,8 +175,8 @@ export default class ClustersList extends Component {
     return (
       <td key="containers">
         <OnOff on={cluster.containers.on}
-               off={cluster.containers.off}
-               href={"/clusters/" + cluster.name}/>
+          off={cluster.containers.off}
+          href={"/clusters/" + cluster.name} />
       </td>
     );
   }
@@ -171,8 +185,8 @@ export default class ClustersList extends Component {
     return (
       <td key="nodes">
         <OnOff on={cluster.nodes.on}
-               off={cluster.nodes.off}
-               href="/nodes"/>
+          off={cluster.nodes.off}
+          href="/nodes" />
       </td>
     );
   }
@@ -181,8 +195,8 @@ export default class ClustersList extends Component {
     return (
       <td key="actions" className="td-actions">
         <ActionMenu subject={cluster.name}
-                    actions={this.ACTIONS}
-                    actionHandler={this.props.onActionInvoke.bind(this)}
+          actions={this.ACTIONS}
+          actionHandler={this.props.onActionInvoke.bind(this)}
         />
       </td>
     );
@@ -192,8 +206,8 @@ export default class ClustersList extends Component {
     return (
       <td key="applications">
         <Chain data={cluster.applications || []}
-               link={"/clusters/" + cluster.name + "/applications"}
-               maxCount={3}
+          link={"/clusters/" + cluster.name + "/applications"}
+          maxCount={3}
         />
       </td>
     );

@@ -206,20 +206,20 @@ public abstract class AbstractNodesGroup<C extends AbstractNodesGroupConfig<C>> 
         switch (state.get()) {
             case S_BEGIN:
             case S_INITING:
-                b.message("Not inited.").ok(false).inited(false);
+                b.message("Not inited").ok(false).inited(false);
                 break;
             case S_INITED:
-                b.message("Inited.").ok(true);                      // the only state is OK
+                b.message("Inited").ok(true);                      // the only state is OK
                 break;
             case S_CLENING:
             case S_CLENED:
                 b.message("Cleaning or cleaned").ok(false);
                 break;
             case S_FAILED:
-                b.message("Failed.").ok(false);
+                b.message("Failed").ok(false);
                 break;
             default:
-                b.message("Unknown state.").ok(false);
+                b.message("Unknown state").ok(false);
         }
         if(msg != null) {
             b.message(msg);

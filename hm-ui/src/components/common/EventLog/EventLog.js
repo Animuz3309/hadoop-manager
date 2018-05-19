@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {DockTable} from '../table/DockTable/DockTable';
+import {DockTable} from 'components';
 import {Link} from 'react-router';
 import {ProgressBar} from 'react-bootstrap';
 

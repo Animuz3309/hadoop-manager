@@ -46,7 +46,7 @@ export default class Login extends Component {
       return;
     }
     let res = this.props.login(username, password);
-    console.log(res);
+
     res.then(() => {
       const {auth} = this.props;
       if (auth && auth.token) {
