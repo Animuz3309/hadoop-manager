@@ -1,6 +1,7 @@
 package edu.scut.cs.hm.docker.model.mount;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.scut.cs.hm.common.json.JtEnumLower;
 import edu.scut.cs.hm.common.utils.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,6 +51,7 @@ public class Mount {
         return Arrays.stream(getSource().split("/")).anyMatch(s -> s.trim().length() == 64 && StringUtils.matchHex(s));
     }
 
+    @JtEnumLower
     public enum Type {
         /**
          * the type for mounting host dir
@@ -68,6 +70,7 @@ public class Mount {
     /**
      * Propagation represents the propagation of a mount.
      */
+    @JtEnumLower
     public enum Propagation {
         RPRIVATE,
         PRIVATE,

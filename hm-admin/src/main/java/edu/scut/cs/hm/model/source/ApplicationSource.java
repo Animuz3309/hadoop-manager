@@ -1,5 +1,6 @@
 package edu.scut.cs.hm.model.source;
 
+import edu.scut.cs.hm.common.json.JtToMap;
 import edu.scut.cs.hm.common.utils.Cloneables;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -13,6 +14,7 @@ import java.util.List;
 public class ApplicationSource implements Cloneable, Comparable<ApplicationSource> {
 
     private String name;
+    @JtToMap(key = "name")
     @Setter(AccessLevel.NONE)
     private List<ContainerSource> containers = new ArrayList<>();
     //TODO + networks

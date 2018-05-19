@@ -1,6 +1,7 @@
 package edu.scut.cs.hm.model.node;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import edu.scut.cs.hm.common.json.JtEnumLower;
 import edu.scut.cs.hm.model.Event;
 import edu.scut.cs.hm.model.StandardAction;
 import edu.scut.cs.hm.model.WithAction;
@@ -109,6 +110,7 @@ public class NodeEvent extends Event implements WithCluster, WithAction {
         }
     }
 
+    @JtEnumLower
     public enum Action {
         ONLINE, OFFLINE,
         CREATE, UPDATE, DELETE,

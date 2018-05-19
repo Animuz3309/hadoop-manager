@@ -1,5 +1,6 @@
 package edu.scut.cs.hm.model.source;
 
+import edu.scut.cs.hm.common.json.JtToMap;
 import edu.scut.cs.hm.common.utils.Cloneables;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -18,7 +19,7 @@ public class RootSource implements Cloneable {
      */
     public static final String V_1_0 = "1.0";
     private String version = V_1_0;
-
+    @JtToMap(key = "name")
     @Setter(AccessLevel.NONE)
     private List<ClusterSource> clusters = new ArrayList<>();
 

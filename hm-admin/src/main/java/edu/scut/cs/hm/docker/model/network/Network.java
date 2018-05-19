@@ -3,6 +3,7 @@ package edu.scut.cs.hm.docker.model.network;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.scut.cs.hm.common.json.JtEnumLower;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -82,6 +83,7 @@ public class Network {
     @JsonProperty("Peers")
     private final List<PeerInfo> peers;
 
+    @JtEnumLower
     public enum Scope {
         GLOBAL, LOCAL, SWARM
     }

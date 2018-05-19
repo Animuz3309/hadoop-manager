@@ -1,6 +1,7 @@
 package edu.scut.cs.hm.docker.model.swarm;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.scut.cs.hm.common.json.JtEnumLower;
 import edu.scut.cs.hm.model.ProtocolType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,6 +47,7 @@ public class Endpoint {
     /**
      * The mode of resolution to use for internal load balancing between tasks (vip or dnsrr).
      */
+    @JtEnumLower
     public enum ResolutionMode {
         /**
          * VIP resolution mode specifies that the
@@ -99,6 +101,7 @@ public class Endpoint {
         private final PortConfigPublishMode publishMode;
     }
 
+    @JtEnumLower
     public enum PortConfigPublishMode {
         /**
          * used for ports published

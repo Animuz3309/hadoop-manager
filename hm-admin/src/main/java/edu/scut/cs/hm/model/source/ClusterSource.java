@@ -1,6 +1,7 @@
 package edu.scut.cs.hm.model.source;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import edu.scut.cs.hm.common.json.JtToMap;
 import edu.scut.cs.hm.docker.DockerConfig;
 import edu.scut.cs.hm.model.ngroup.NodesGroupConfig;
 import lombok.AccessLevel;
@@ -19,6 +20,7 @@ import java.util.List;
 @Data
 @JsonPropertyOrder({"title", "description", "config", "nodes", "applications", "containers"})
 public class ClusterSource extends ApplicationSource implements NodesGroupConfig {
+    @JtToMap(key = "name")
     @Setter(AccessLevel.NONE)
     private List<ApplicationSource> applications = new ArrayList<>();
     @Setter(AccessLevel.NONE)

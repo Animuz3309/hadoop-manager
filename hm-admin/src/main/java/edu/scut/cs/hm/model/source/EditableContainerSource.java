@@ -1,5 +1,6 @@
 package edu.scut.cs.hm.model.source;
 
+import edu.scut.cs.hm.common.json.JtMemory;
 import lombok.Data;
 
 /**
@@ -44,9 +45,13 @@ public class EditableContainerSource implements Cloneable {
      */
     private String restart;
 
+    @JtMemory
     private Long memoryLimit;
+    @JtMemory
     private Long memorySwap;
+    @JtMemory
     private Long memoryReservation;
+    @JtMemory
     private Long kernelMemory;
 
     @Override

@@ -1,6 +1,7 @@
 package edu.scut.cs.hm.docker.model.swarm;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.scut.cs.hm.common.json.JtEnumLower;
 import edu.scut.cs.hm.docker.model.discovery.Node;
 import lombok.Data;
 
@@ -160,6 +161,7 @@ public class SwarmNode {
      *
      * see https://github.com/moby/moby/blob/master/api/types/swarm/node.go#L103
      */
+    @JtEnumLower
     public enum NodeState {
         UNKNOWN,
         DOWN,
@@ -170,6 +172,7 @@ public class SwarmNode {
     /**
      * https://github.com/moby/moby/blob/master/api/types/swarm/node.go#L84
      */
+    @JtEnumLower
     public enum Reachability {
         UNKNOWN,
         UNREACHABLE,
@@ -179,6 +182,7 @@ public class SwarmNode {
     /**
      * https://github.com/moby/moby/blob/master/api/types/swarm/node.go#L38
      */
+    @JtEnumLower
     public enum NodeAvailability {
         ACTIVE,
         PAUSE,
@@ -188,6 +192,7 @@ public class SwarmNode {
     /**
      * https://github.com/moby/moby/blob/master/api/types/swarm/node.go#L28
      */
+    @JtEnumLower
     public enum NodeRole {
         WORKER,
         MANAGER

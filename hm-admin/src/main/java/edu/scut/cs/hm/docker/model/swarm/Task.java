@@ -1,6 +1,7 @@
 package edu.scut.cs.hm.docker.model.swarm;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.scut.cs.hm.common.json.JtEnumLower;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -137,12 +138,14 @@ public class Task {
         private final long window;
     }
 
+    @JtEnumLower
     public enum RestartPolicyCondition {
         NONE,
         ON_FAILURE,
         ANY
     }
 
+    @JtEnumLower
     public enum TaskState {
         NEW,
         ALLOCATED,

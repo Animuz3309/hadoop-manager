@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import edu.scut.cs.hm.common.json.DmJacksonModule;
 
 import java.util.TimeZone;
 
@@ -54,6 +55,7 @@ public final class JacksonUtils {
 
     public static void registerModules(ObjectMapper objectMapper) {
         objectMapper.registerModules(
+                new DmJacksonModule(),      // customize for Keep and MimeType de/se
                 new ParameterNamesModule(), // support for detecting constructor and factory method ("creator") parameters
                 new Jdk8Module(),           // support for other new Java 8 datatypes outside of date/time
                 new JavaTimeModule());      // support for Java 8 date/time types

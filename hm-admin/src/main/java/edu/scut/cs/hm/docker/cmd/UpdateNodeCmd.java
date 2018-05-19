@@ -2,6 +2,7 @@ package edu.scut.cs.hm.docker.cmd;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.scut.cs.hm.common.json.JtEnumLower;
 import lombok.Data;
 
 import java.util.Map;
@@ -46,10 +47,12 @@ public class UpdateNodeCmd {
     @JsonProperty("Availability")
     private Availability availability;
 
+    @JtEnumLower
     public enum Role {
         WORKER, MANAGER
     }
 
+    @JtEnumLower
     public enum Availability {
         ACTIVE, PAUSE, DRAIN
     }

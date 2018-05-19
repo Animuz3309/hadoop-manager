@@ -1,6 +1,7 @@
 package edu.scut.cs.hm.docker.model.swarm;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.scut.cs.hm.common.json.JtEnumLower;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,6 +43,7 @@ public class Service {
         private final String message;
     }
 
+    @JtEnumLower
     public enum UpdateState {
         UPDATING,
         PAUSED,
@@ -169,6 +171,7 @@ public class Service {
         private final float maxFailureRatio;
     }
 
+    @JtEnumLower
     public enum FailureAction {
         PAUSE, CONTINUE
     }

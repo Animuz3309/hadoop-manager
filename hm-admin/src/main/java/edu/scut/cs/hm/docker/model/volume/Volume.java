@@ -1,6 +1,7 @@
 package edu.scut.cs.hm.docker.model.volume;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.scut.cs.hm.common.json.JtEnumLower;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -95,6 +96,7 @@ public class Volume {
     /**
      * The level at which the volume exists.
      */
+    @JtEnumLower
     public enum Scope {
         /**
          * `global` for ngroup-wide
