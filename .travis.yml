@@ -19,4 +19,4 @@ addons:
 
 install: true
 script:
-  - mvn clean deploy -U -Pstaging
+  - mvn clean package -U -Pstaging
