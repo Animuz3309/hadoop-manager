@@ -58,7 +58,7 @@ public class WsProxy extends Endpoint {
     }
 
     private WebSocketClientProtocolHandler makeWsProtocolHandler(Session session) {
-        WebSocketVersion version = WsUtils.getWsVersion(session.getProtocolVersion());
+        WebSocketVersion version = ProxyUtils.getWsVersion(session.getProtocolVersion());
         WebSocketClientHandshaker wshs = WebSocketClientHandshakerFactory.newHandshaker(
                 session.getRequestURI(), version, null, true, new DefaultHttpHeaders());
         return new WebSocketClientProtocolHandler(wshs);

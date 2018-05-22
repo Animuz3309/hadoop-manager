@@ -1,11 +1,14 @@
 package edu.scut.cs.hm.agent.proxy;
 
+import com.google.common.collect.Iterators;
+import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 
-final class WsUtils {
-    private WsUtils() {
+final class ProxyUtils {
+    private ProxyUtils() {
     }
 
     static String reconstructUri(HttpServletRequest request) {
@@ -29,5 +32,14 @@ final class WsUtils {
                 return WebSocketVersion.V13;
         }
         return WebSocketVersion.UNKNOWN;
+    }
+
+    static void copyHeaders(HttpServletRequest request, HttpHeaders to) {
+        Enumeration<String> headers = request.getHeaderNames();
+        while(headers.hasMoreElements()) {
+            String header = headers.nextElement();
+            Iterable<String> iter = () -> Iterators.forEnumeration(request.getHeaders(header));
+            to.add(header, iter);
+        }
     }
 }

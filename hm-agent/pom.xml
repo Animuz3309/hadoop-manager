@@ -12,7 +12,11 @@
     <artifactId>hm-agent</artifactId>
     <packaging>jar</packaging>
     <name>hm-agent</name>
-    <description>An agent running in node</description>
+    <description>Agent module. Proxy 'docker.sock' to http port</description>
+
+    <properties>
+        <start-class>edu.scut.cs.hm.Application</start-class>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -61,5 +65,19 @@
             <artifactId>hm-common</artifactId>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>staging</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

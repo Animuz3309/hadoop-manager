@@ -178,11 +178,11 @@ public final class UiUtils {
      * @return host:port or null
      */
     public static String getAppAddress(Environment environment) {
-        String host = environment.getProperty("dm.server.host");
+        String host = environment.getProperty("server.address");
         if(host == null) {
             return null;
         }
-        return host + ":" + environment.getProperty("dm.server.port");
+        return host + ":" + environment.getProperty("server.port");
     }
 
     public static List<UiContainer> sortAndFilterContainers(List<UiContainer> list) {
