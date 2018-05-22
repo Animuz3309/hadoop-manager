@@ -16,6 +16,7 @@ import edu.scut.cs.hm.common.kv.mapping.KvMapperFactory;
 import edu.scut.cs.hm.common.mb.MessageBus;
 import edu.scut.cs.hm.common.mb.Subscriptions;
 import edu.scut.cs.hm.common.security.acl.dto.Action;
+import edu.scut.cs.hm.common.utils.Closeables;
 import edu.scut.cs.hm.common.utils.ExecutorUtils;
 import edu.scut.cs.hm.model.ExtendedAssert;
 import edu.scut.cs.hm.docker.DockerConfig;
@@ -368,6 +369,7 @@ public class NodeStorage implements NodeInfoProvider, NodeRegistry {
         fireNodeEventSync(ne);
         if(!cancel.get()) {
             nodes.remove(name);
+            Closeables.close(nr);
         }
     }
 
