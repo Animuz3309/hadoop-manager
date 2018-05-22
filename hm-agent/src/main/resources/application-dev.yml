@@ -3,8 +3,6 @@ hm:
     notifier:
       secret: 123456
       # remote server app address
-      server: http://localhost:8080/hm-admin
-      # docker address
-      address: 192.168.0.107:2375
+      server: http://localhost:8080
       initial-delay: 10
       period: 60

@@ -198,7 +198,7 @@ public class NodeRegistrationImpl implements NodeRegistration, AutoCloseable {
         String eventCluster = nodeStorage.getNodeCluster(localNodeName);
         String thisCluster = getCluster();
         if (!Objects.equals(thisCluster, eventCluster)) {
-            log.warn("Current node ngroup '{}' differ from event ngroup '{}'", thisCluster, eventCluster);
+            log.warn("Current node cluster '{}' differ from event cluster '{}'", thisCluster, eventCluster);
         }
         logEvent.setCluster(eventCluster);
         logEvent.setType(type);

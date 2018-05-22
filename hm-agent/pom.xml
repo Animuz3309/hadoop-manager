@@ -15,8 +15,21 @@
     <description>Agent module. Proxy 'docker.sock' to http port</description>
 
     <properties>
-        <start-class>edu.scut.cs.hm.Application</start-class>
+        <start-class>edu.scut.cs.hm.agent.Application</start-class>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <dependency>

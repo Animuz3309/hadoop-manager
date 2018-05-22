@@ -23,3 +23,11 @@ Content-Type: application/json
 X-Auth-Token: {{auth_token}}
 
 ###
+POST http://{{app}}/discovery/nodes/zedd-TM1701
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{auth_token}}
+
+{"name": 1}
+
+###

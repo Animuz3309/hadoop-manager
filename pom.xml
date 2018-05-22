@@ -27,7 +27,7 @@
     </developers>
 
     <scm>
-        <connection>scm:git@github.com:Animuz3309/hadoop-manager.git</connection>
+        <connection>scm:git:git@github.com:Animuz3309/hadoop-manager.git</connection>
         <tag>hm-parent-0.1.0</tag>
     </scm>
 
@@ -387,7 +387,7 @@
                             <version>${exec-maven-plugin.version}</version>
                             <executions>
                                 <execution>
-                                    <phase>deploy</phase>
+                                    <phase>package</phase>
                                     <goals>
                                         <goal>exec</goal>
                                     </goals>
