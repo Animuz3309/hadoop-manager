@@ -34,7 +34,7 @@ import static org.springframework.http.HttpStatus.OK;
  */
 public final class UiUtils {
 
-    static HttpStatus toStatus(ResultCode resultCode) {
+    public static HttpStatus toStatus(ResultCode resultCode) {
         switch (resultCode) {
             case OK:
                 return OK;
@@ -64,14 +64,14 @@ public final class UiUtils {
         }
     }
 
-    static ResponseEntity<UiResult> errResponse(ResultCode code, String message) {
+    public static ResponseEntity<UiResult> errResponse(ResultCode code, String message) {
         UiError err = new UiError();
         err.setMessage(message);
         err.setCode(toStatus(code).value());
         return new ResponseEntity<>(err, toStatus(code));
     }
 
-    static ResponseEntity<UiResult> okResponse(String message) {
+    public static ResponseEntity<UiResult> okResponse(String message) {
         UiResult res = new UiResult();
         res.setMessage(message);
         res.setCode(OK.value());
@@ -113,7 +113,7 @@ public final class UiUtils {
         return round(cpuPercent, 2);
     }
 
-    static double round(double value, int places) {
+    public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
         long factor = (long) Math.pow(10, places);

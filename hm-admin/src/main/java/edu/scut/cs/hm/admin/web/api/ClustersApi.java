@@ -259,13 +259,11 @@ public class ClustersApi {
     }
 
     @RequestMapping(value = "/{cluster}/info", method = GET)
-    @Cacheable("SwarmInfo")
     public DockerServiceInfo info(@PathVariable("cluster") String cluster) {
         return discoveryStorage.getService(cluster).getInfo();
     }
 
     @RequestMapping(value = "/{cluster}/nodes-detailed", method = GET)
-    @Cacheable("UiNode")
     public Collection<NodeInfo> listNodesDetailed(@PathVariable("cluster") String cluster) {
         return getNodesInternal(cluster);
     }

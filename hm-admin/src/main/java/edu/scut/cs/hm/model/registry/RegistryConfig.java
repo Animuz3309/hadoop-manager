@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.EXISTING_PROPERTY,
+        include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
         property = "registryType",
         defaultImpl = PrivateRegistryConfig.class,
         visible = true)

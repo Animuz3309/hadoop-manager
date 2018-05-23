@@ -78,7 +78,7 @@ public abstract class AbstractNodesGroup<C extends AbstractNodesGroupConfig<C>> 
         try {
             log.info("Begin init of ngroup '{}'", getName());
             initImpl();
-            if (changeState(S_INITING, S_CLENED)) {
+            if (changeState(S_INITING, S_INITED)) {
                 log.info("Success init of ngroup '{}'", getName());
             }
         } finally {

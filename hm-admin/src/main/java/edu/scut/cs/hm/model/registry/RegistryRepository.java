@@ -110,22 +110,8 @@ public class RegistryRepository implements SupportSearch {
     }
 
     public void init(List<RegistryConfig> configs) {
-        //init from KV
         try {
             this.map.load();
-//            Collection<String> list = this.map.list();
-//            log.debug("Loading repositories from storage: {}", list);
-//            for (String repoName : list) {
-//                try {
-//                    this.map.get(repoName);
-//                } catch (ValidityException e) {
-//                    log.error("Repository: \"{}\" is invalid, deleting.", repoName, e);
-//                    //delete broken registry
-//                    this.map.remove(repoName);
-//                } catch (Exception e) {
-//                    log.error("Can not load repository: \"{}\" from storage", repoName, e);
-//                }
-//            }
         } catch (Exception e) {
             log.error("Can not list repositories in storage, due to error.", e);
         }

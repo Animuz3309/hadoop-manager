@@ -85,7 +85,6 @@ public final class ContainerUtils {
      * @param imageName full image name
      * @return image name without any '/'
      */
-    @Deprecated
     public static String getImageNameWithoutPrefix(String imageName) {
         String name = getImageVersionName(imageName);
         int lastIndex = name.lastIndexOf(':');

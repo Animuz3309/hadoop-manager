@@ -569,7 +569,7 @@ public class DockerCluster extends AbstractNodesGroup<DockerClusterConfig> {
             return;
         }
         try {
-            if (InetAddresses.forString(address).isLoopbackAddress()) {
+            if (InetAddresses.forString(sn.getStatus().getAddress()).isLoopbackAddress()) {
                 // local node address it a wrong config, or user simply use single-node cluster - we can not detect
                 // this, and just report it
                 log.warn("Node {} report local address '{}', it may be wrong configuration.", nodeName, address);
