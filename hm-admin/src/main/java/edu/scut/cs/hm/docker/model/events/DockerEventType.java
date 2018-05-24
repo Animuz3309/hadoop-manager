@@ -11,12 +11,22 @@ import java.util.Map;
  */
 public enum DockerEventType {
 
+    /**
+     * @since 1.24
+     */
     CONTAINER("container"),
+    /**
+     * @since 1.24
+     */
     DAEMON("daemon"),
+    /**
+     * @since 1.24
+     */
     IMAGE("image"),
     NETWORK("network"),
     PLUGIN("plugin"),
     VOLUME("volume"),
+    NODE("node"),
     ;
     private static final Map<String, DockerEventType> EVENT_TYPES = new HashMap<>();
 

@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.*;
+import io.netty.handler.timeout.ReadTimeoutException;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletOutputStream;
@@ -91,6 +92,7 @@ class NettyHandler extends ChannelInboundHandlerAdapter implements AutoCloseable
         }
     }
 
+    @Override
     public void close() throws Exception {
         log.debug("{}: close handler", id);
         ServletOutputStream stream = this.stream;
@@ -117,7 +119,10 @@ class NettyHandler extends ChannelInboundHandlerAdapter implements AutoCloseable
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         try {
             this.hasError = true;
-            log.error("{}: Error in pipeline: ", id, cause);
+            String uri = ProxyUtils.reconstructUri(this.frontReq);
+            if (!(uri.contains("events") && cause instanceof ReadTimeoutException)) {
+                log.error("{}: Error in pipeline for {} causes of {}", id, uri, cause);
+            }
             ctx.close();
             synchronized (frontResp) {
                 if (!frontResp.isCommitted()) {

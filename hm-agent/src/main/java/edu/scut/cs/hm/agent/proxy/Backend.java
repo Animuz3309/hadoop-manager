@@ -8,9 +8,12 @@ import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.unix.DomainSocketAddress;
 import io.netty.channel.unix.DomainSocketChannel;
 import io.netty.handler.codec.http.HttpClientCodec;
+import io.netty.handler.timeout.ReadTimeoutHandler;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.TimeUnit;
 
 @Component
 class Backend implements InitializingBean, DisposableBean {
@@ -33,6 +36,7 @@ class Backend implements InitializingBean, DisposableBean {
                     @Override
                     protected void initChannel(DomainSocketChannel ch) throws Exception {
                         ch.pipeline().addLast(new HttpClientCodec());
+                        ch.pipeline().addLast(new ReadTimeoutHandler(8_000, TimeUnit.MILLISECONDS));
                     }
                 });
     }
