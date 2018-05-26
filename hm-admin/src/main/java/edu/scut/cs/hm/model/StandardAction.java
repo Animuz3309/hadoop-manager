@@ -20,7 +20,7 @@ public enum StandardAction {
 
     private String value;
 
-    StandardAction(java.lang.String value) {
+    StandardAction(String value) {
         this.value = value;
     }
 

@@ -102,7 +102,7 @@ public class ContainerStorageImpl implements ContainerStorage {
                 .filter(c -> Objects.equals(c.getNode(), nodeName));
     }
 
-    Set<String> getContainersIdsByNode(String nodeName) {
+    public Set<String> getContainersIdsByNode(String nodeName) {
         return containersByNode(nodeName)
                 .map(ContainerRegistration::getId)
                 .collect(Collectors.toSet());
@@ -123,11 +123,11 @@ public class ContainerStorageImpl implements ContainerStorage {
         return cr;
     }
 
-    void remove(Set<String> ids) {
+    public void remove(Set<String> ids) {
         ids.forEach(this::deleteContainer);
     }
 
-    void removeNodeContainers(String nodeName) {
+    public void removeNodeContainers(String nodeName) {
         Set<String> nodeIds = getContainersIdsByNode(nodeName);
         remove(nodeIds);
     }

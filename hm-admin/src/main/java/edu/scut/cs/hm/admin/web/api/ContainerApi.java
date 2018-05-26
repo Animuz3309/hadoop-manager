@@ -234,7 +234,6 @@ public class ContainerApi {
     }
 
     @RequestMapping(value = "/{id}/statistics", method = RequestMethod.GET)
-    @Cacheable("UIStatistics")
     @SuppressWarnings("unchecked")
     public UiStatistics getStatistics(@PathVariable("id") String id) throws Exception {
         DockerService service = getService(id);
